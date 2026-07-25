@@ -31,8 +31,14 @@ Final previewable output: `/mnt/ssd/.hermes/document_cache/bizmatch-competitive-
 
 ## Risk / Verification Needed
 
-- [ ] Login/demo/paywall-gated flows may still need manual account inspection for some products
-- [ ] Crunchbase/LinkedIn/PitchBook-style sources may be JS/paywalled; verify manually if investor/funding precision is mission-critical
+- [⏸] Login/demo/paywall-gated post-signup flows → **Phase A DEFERRED** (out of scope for now); board parked in `signup-audit-kanban.md`
+- [x] Crunchbase/LinkedIn/PitchBook funding gaps → **Phase C** desk pass done (`phase-cd-findings.md`); rest = "not public, final"
+- [x] Contradiction / unsupported-claim flags triaged → `phase-b-triage.md`
+
+## Finalization — ✅ COMPLETE (2026-07-25)
+
+Phases B, C, D, E done; Phase A deferred. Findings applied to CSV + XLSX + cards + table.
+See `research-plan.md` (full A–E plan + Phase E change log) and `phase-cd-findings.md`.
 
 ## Completed / Ready for Report
 
