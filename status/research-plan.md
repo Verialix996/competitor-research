@@ -18,7 +18,7 @@ Tracker of record: `data/bizmatch-competitive-research-cited.csv` (36 companies,
 - **Registration-flow screenshots captured for all 36** (103 images in
   `sites/full-report-site/assets/registration-flows/`) — but visitor-side only (see Gap A).
 - **Published surfaces**: research table (`sites/full-report-site/index.html`), 36 company
-  cards, citation site, and the interactive Competitor Ranker (`ranker.html`).
+  cards, citation site, the ChatGPT competitor ranker (`ranker-chatgpt.html`), and the preserved Claude competitor ranker (`ranker-claude.html`).
 
 ## 2. Remaining gaps — what is NOT final
 

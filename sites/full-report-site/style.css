@@ -122,3 +122,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .ranker-legend { display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--muted); margin-bottom:10px; }
 .ranker-legend span { display:inline-flex; align-items:center; gap:5px; }
 .ranker-legend i { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.ranker-model-note { margin-top:0; }
+.ranker-criteria-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px; margin-top:12px; }
+.ranker-criteria-card { border:1px solid var(--line); border-radius:8px; background:#fbfdff; padding:12px; }
+.ranker-criteria-card h3 { margin-bottom:6px; }
+.ranker-criteria-card p { color:var(--muted); font-size:12.5px; margin:0; }

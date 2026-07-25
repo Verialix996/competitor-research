@@ -1,48 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>BizMatch Competitor Ranker</title><link href="style.css" rel="stylesheet"/></head><body>
-<header class="site-header"><div class="header-inner"><h1>Competitor Ranker</h1><p>Rank all 36 tracked competitors by any combination of six scored research criteria, with adjustable weights and segment filters.</p><div class="nav"><a href="index.html">Research Table</a><a href="ranker.html">Competitor Ranker</a><a href="../../reports/bizmatch-competitive-research-cited-report.html">Original Report HTML</a><a href="../../data/competitive-research-tracker.xlsx">Tracker XLSX</a><a href="../../data/competitive-research-tracker.csv">Tracker CSV</a><a href="../citation-site/company-profiles.html">Company Profiles</a><a href="../citation-site/product-flows.html">Product Flows</a><a href="../citation-site/ai-capabilities.html">AI Capabilities</a><a href="../citation-site/security-data-room.html">Security &amp; Data Room</a><a href="../citation-site/pricing-business-model.html">Pricing</a><a href="../citation-site/funding.html">Funding</a><a href="../citation-site/traction-market-signal.html">Traction</a><a href="../citation-site/threat-scoring.html">Threat Scoring</a><a href="../citation-site/risks-gaps.html">Risks &amp; Gaps</a><a href="../citation-site/all-sources.html">All Sources</a></div></div></header>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta http-equiv="refresh" content="0; url=ranker-chatgpt.html"/><title>BizMatch Competitor Rankers</title><link href="style.css" rel="stylesheet"/></head><body>
+<header class="site-header"><div class="header-inner"><h1>Competitor Rankers</h1><p>The old generic ranker path now points to the ChatGPT ranker. The original implementation is preserved as the Claude ranker.</p><div class="nav"><a href="ranker-chatgpt.html">Competitor Ranker - ChatGPT</a><a href="ranker-claude.html">Competitor Ranker - Claude</a><a href="index.html">Research Table</a></div></div></header>
 <main>
-<div class="ranker-layout">
-<aside class="ranker-rail">
-  <div class="panel ranker-rail-section">
-    <p class="ranker-rail-title">Presets</p>
-    <div class="ranker-preset-row">
-      <button class="ranker-preset-btn" data-preset="recommended">Recommended (default)</button>
-      <button class="ranker-preset-btn" data-preset="ai">AI capability</button>
-      <button class="ranker-preset-btn" data-preset="growth">Growth &amp; funding</button>
-      <button class="ranker-preset-btn" data-preset="all">All criteria, equal weight</button>
-    </div>
-  </div>
-  <div class="panel">
-    <div class="ranker-rail-section">
-      <p class="ranker-rail-title">Criteria &amp; weight</p>
-      <div class="ranker-crit-list" id="critList"></div>
-    </div>
-    <div class="ranker-rail-section">
-      <p class="ranker-rail-title">Segment</p>
-      <div class="ranker-cat-list" id="catList"></div>
-    </div>
-    <div class="ranker-rail-section">
-      <p class="ranker-rail-title">Must have feature</p>
-      <div class="ranker-cat-list" id="featList"></div>
-    </div>
-    <div class="ranker-rail-section">
-      <div class="ranker-rail-actions">
-        <button class="secondary" id="rankerClear">Clear all</button>
-        <button class="secondary" id="rankerReset">Reset</button>
-      </div>
-    </div>
-  </div>
-</aside>
-<section>
-  <div class="ranker-legend">
-    <span><i style="background:var(--warn)"></i>Top tier</span>
-    <span><i style="background:#b8862c"></i>Mid tier</span>
-    <span><i style="background:#166534"></i>Lower tier</span>
-  </div>
-  <div class="ranker-summary" id="rankerSummary"></div>
-  <div class="ranker-results" id="rankerResults"></div>
+<section class="panel">
+  <h2>Choose a Ranker</h2>
+  <p><a href="ranker-chatgpt.html">Open Competitor Ranker - ChatGPT</a></p>
+  <p><a href="ranker-claude.html">Open Competitor Ranker - Claude</a></p>
 </section>
-</div>
-<p class="footer">Scores sourced from competitive-research-tracker.csv (2026-07-19). Composite score = weighted average of selected criteria, each on a 1&ndash;5 scale.</p>
-</main><script src="ranker.js"></script></body></html>
+</main></body></html>
