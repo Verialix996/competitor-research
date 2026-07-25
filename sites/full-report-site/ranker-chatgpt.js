@@ -18,7 +18,7 @@ const CRITERIA = [
   {
     key: 'market_collision',
     label: 'Market collision',
-    desc: 'Direct overlap with BizMatch users, jobs-to-be-done, and competitor group',
+    desc: 'How directly this company competes for the same founders, investors, and matching use cases as BizMatch.',
     why: 'This is the first filter because a weaker product can still be dangerous if it attacks the same founder/investor workflow.',
     score: d => clamp(
       d.product_overlap_score * 0.4 +
@@ -30,7 +30,7 @@ const CRITERIA = [
   {
     key: 'workflow_coverage',
     label: 'Workflow coverage',
-    desc: 'How much of the match-to-deal workflow the product already covers',
+    desc: 'How much of the journey it covers, from discovery and matching through profiles, documents, and deal actions.',
     why: 'BizMatch is exposed to products that can connect discovery, profiles, matching, data exchange, and signing without forcing users into separate tools.',
     score: d => clamp(
       d.feature_maturity_score * 0.3 +
@@ -42,7 +42,7 @@ const CRITERIA = [
   {
     key: 'ai_leverage',
     label: 'AI leverage',
-    desc: 'Depth of AI matching, scoring, and pitch/deck analysis',
+    desc: 'How strongly AI improves matching, scoring, investor fit, or pitch/deck evaluation inside the product.',
     why: 'The research graph separates AI pitch reviewers from marketplaces, so this criterion rewards companies that can use AI inside an actual matching or capital workflow.',
     score: d => clamp(
       d.ai_depth_score * 0.45 +
@@ -54,7 +54,7 @@ const CRITERIA = [
   {
     key: 'secure_deal_readiness',
     label: 'Secure deal readiness',
-    desc: 'NDA/data-room/e-signature strength for gated collaboration',
+    desc: 'How ready the product is for private collaboration, including data rooms, NDA-style gating, and e-signature.',
     why: 'Data-room and NDA-gated flows are a distinct competitor cluster in the graph, and they matter when BizMatch moves beyond discovery into private deal execution.',
     score: d => clamp(
       d.nda_security_strength_score * 0.55 +
@@ -65,7 +65,7 @@ const CRITERIA = [
   {
     key: 'traction_resilience',
     label: 'Traction resilience',
-    desc: 'Evidence of usage, funding, and defensible network effects',
+    desc: 'How hard the competitor may be to displace based on traction, funding, usage proof, and network effects.',
     why: 'Market traction and network effects decide whether a feature-similar product can keep compounding after BizMatch enters the same surface area.',
     score: d => clamp(
       d.market_traction_score * 0.45 +
@@ -76,7 +76,7 @@ const CRITERIA = [
   {
     key: 'founder_ux_readiness',
     label: 'Founder UX readiness',
-    desc: 'Polished founder-facing usability across web/mobile and match mechanics',
+    desc: 'How polished and usable the founder-facing experience appears across onboarding, web/mobile, and matching mechanics.',
     why: 'The registration-flow assets show that onboarding and interaction quality are part of the competitive surface, not just backend feature coverage.',
     score: d => clamp(
       d.feature_maturity_score * 0.35 +
@@ -130,7 +130,7 @@ const summaryEl = document.querySelector('#rankerSummary');
 CRITERIA.forEach(c => {
   const card = document.createElement('div');
   card.className = 'ranker-criteria-card';
-  card.innerHTML = `<h3>${c.label}</h3><p>${c.why}</p>`;
+  card.innerHTML = `<h3>${c.label}</h3><p class="ranker-criteria-desc">${c.desc}</p><p>${c.why}</p>`;
   criteriaExplainerEl.appendChild(card);
 });
 
