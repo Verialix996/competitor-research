@@ -37,7 +37,7 @@ function toggleCol(col, show){
 }
 function setPreset(preset){
   const sets = {
-    core: ['company','source_category','account_created','target_users','product_category','pricing_model','total_funding','users_traction'],
+    core: ['company','source_category','target_users','product_category','pricing_model','total_funding','users_traction'],
     flows: ['company','swipe_card_interface','mutual_match','ai_matching_scoring','ai_deck_scoring','founder_to_founder_flow','founder_to_investor_flow','project_profiles','e_signature','messaging_collaboration','mobile_app','web_app'],
     funding: ['company','pricing_model','business_model','total_funding','funding_rounds','investors','funding_source_type','last_funding_date','deals_funding_facilitated'],
     all: uniqueCols
