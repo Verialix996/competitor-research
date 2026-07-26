@@ -62,8 +62,10 @@ input[type="range"]::-moz-range-thumb { width:18px; height:18px; background:var(
 .filter-btn { padding:6px 14px; border:1px solid var(--line); border-radius:20px; background:#fff; font-size:13px; cursor:pointer; transition:all 0.15s; }
 .filter-btn:hover { border-color:var(--accent); }
 .filter-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.filter-btn.excluded { background:var(--warn-light); color:var(--warn); border-color:var(--warn); text-decoration:line-through; }
 .feat-toggle { border-style:dashed; border-color:var(--muted); }
 .feat-toggle.active { background:var(--accent); color:#fff; border-color:var(--accent); border-style:solid; }
+.feat-toggle.excluded { background:var(--warn-light); color:var(--warn); border-color:var(--warn); border-style:solid; text-decoration:line-through; }
 
 /* Ranking table */
 .rank-table-wrap { overflow-x:auto; margin:16px 0; }
@@ -276,18 +278,18 @@ table.rank-table .cat-badge { display:inline-block; padding:2px 8px; border-radi
 <!-- ========== RANKER TOOL ========== -->
 <section id="ranker">
   <h2>Interactive Ranker</h2>
-  <p>Companies are ranked by weighted composite score. Click any row for full details. Use filters to focus on specific categories.</p>
+  <p>Companies are ranked by weighted composite score. Click any row for full details. Click a category or feature below to <strong>hide</strong> it from the table — click again to bring it back.</p>
 
+  <div style="margin-top:10px; font-size:13px; color:var(--muted);">Hide category:</div>
   <div class="filter-row">
-    <button class="filter-btn active" onclick="filterCategory('all', this)">All (36)</button>
-    <button class="filter-btn" onclick="filterCategory('Direct competitors', this)">Direct Competitors (6)</button>
-    <button class="filter-btn" onclick="filterCategory('Cofounder-matching platforms', this)">Cofounder Matching (6)</button>
-    <button class="filter-btn" onclick="filterCategory('Capital & discovery marketplaces', this)">Capital & Discovery (9)</button>
-    <button class="filter-btn" onclick="filterCategory('NDA & deal-room tools', this)">NDA & Deal-Room (7)</button>
-    <button class="filter-btn" onclick="filterCategory('AI pitch-deck reviewers', this)">AI Pitch-Deck (8)</button>
+    <button class="filter-btn" onclick="toggleCategory('Direct competitors', this)">Direct Competitors (6)</button>
+    <button class="filter-btn" onclick="toggleCategory('Cofounder-matching platforms', this)">Cofounder Matching (6)</button>
+    <button class="filter-btn" onclick="toggleCategory('Capital & discovery marketplaces', this)">Capital & Discovery (9)</button>
+    <button class="filter-btn" onclick="toggleCategory('NDA & deal-room tools', this)">NDA & Deal-Room (7)</button>
+    <button class="filter-btn" onclick="toggleCategory('AI pitch-deck reviewers', this)">AI Pitch-Deck (8)</button>
   </div>
 
-  <div style="margin-top:10px; font-size:13px; color:var(--muted);">Filter by feature (toggle multiple, all must be present):</div>
+  <div style="margin-top:10px; font-size:13px; color:var(--muted);">Hide companies that have this feature (toggle multiple):</div>
   <div class="filter-row" id="featureFilters">
     <button class="filter-btn feat-toggle" onclick="toggleFeature('swipe_card', this)">Swipe/Card UI</button>
     <button class="filter-btn feat-toggle" onclick="toggleFeature('mutual_match', this)">Mutual Match</button>
@@ -301,6 +303,9 @@ table.rank-table .cat-badge { display:inline-block; padding:2px 8px; border-radi
     <button class="filter-btn feat-toggle" onclick="toggleFeature('messaging', this)">Messaging/Collab</button>
     <button class="filter-btn feat-toggle" onclick="toggleFeature('mobile_app', this)">Mobile App</button>
     <button class="filter-btn feat-toggle" onclick="toggleFeature('web_app', this)">Web App</button>
+  </div>
+  <div class="filter-row">
+    <button class="filter-btn" onclick="clearFilters()">Clear all hidden</button>
   </div>
   <div id="filterCount" style="margin-top:6px; font-size:13px; color:var(--muted);"></div>
 
@@ -426,9 +431,9 @@ const CAT_SHORT = {
   "AI pitch-deck reviewers": "AI Pitch"
 };
 
-let currentFilter = "all";
 let currentSort = { key: "composite", desc: true };
-let activeFeatures = new Set();
+let excludedCategories = new Set();
+let excludedFeatures = new Set();
 
 function getWeights() {
   const w = {};
@@ -468,13 +473,31 @@ function applyPreset(name, btn) {
 }
 
 function toggleFeature(feature, btn) {
-  if (activeFeatures.has(feature)) {
-    activeFeatures.delete(feature);
-    btn.classList.remove("active");
+  if (excludedFeatures.has(feature)) {
+    excludedFeatures.delete(feature);
+    btn.classList.remove("excluded");
   } else {
-    activeFeatures.add(feature);
-    btn.classList.add("active");
+    excludedFeatures.add(feature);
+    btn.classList.add("excluded");
   }
+  renderTable();
+}
+
+function toggleCategory(category, btn) {
+  if (excludedCategories.has(category)) {
+    excludedCategories.delete(category);
+    btn.classList.remove("excluded");
+  } else {
+    excludedCategories.add(category);
+    btn.classList.add("excluded");
+  }
+  renderTable();
+}
+
+function clearFilters() {
+  excludedCategories.clear();
+  excludedFeatures.clear();
+  document.querySelectorAll(".filter-btn.excluded").forEach(b => b.classList.remove("excluded"));
   renderTable();
 }
 
@@ -525,16 +548,16 @@ function renderTable() {
     composite: computeScore(c, weights)
   }));
 
-  // Category filter
-  if (currentFilter !== "all") {
-    rows = rows.filter(r => r.category === currentFilter);
+  // Hide excluded categories
+  if (excludedCategories.size > 0) {
+    rows = rows.filter(r => !excludedCategories.has(r.category));
   }
 
-  // Feature filters (AND logic)
-  if (activeFeatures.size > 0) {
+  // Hide companies that have any excluded feature
+  if (excludedFeatures.size > 0) {
     rows = rows.filter(r => {
-      for (const f of activeFeatures) {
-        if (!hasFeature(r, f)) return false;
+      for (const f of excludedFeatures) {
+        if (hasFeature(r, f)) return false;
       }
       return true;
     });
@@ -571,11 +594,11 @@ function renderTable() {
   // Update count
   const countEl = document.getElementById("filterCount");
   if (countEl) {
-    const activeFeatList = Array.from(activeFeatures).map(f => f.replace(/_/g, " ")).join(", ");
-    if (activeFeatures.size > 0) {
-      countEl.textContent = "Showing " + rows.length + " of " + COMPANIES.length + " companies with: " + activeFeatList;
-    } else if (currentFilter !== "all") {
-      countEl.textContent = "Showing " + rows.length + " of " + COMPANIES.length + " companies";
+    const hidden = [];
+    if (excludedCategories.size > 0) hidden.push(...Array.from(excludedCategories));
+    if (excludedFeatures.size > 0) hidden.push(...Array.from(excludedFeatures).map(f => f.replace(/_/g, " ")));
+    if (hidden.length > 0) {
+      countEl.textContent = "Showing " + rows.length + " of " + COMPANIES.length + " companies — hiding: " + hidden.join(", ");
     } else {
       countEl.textContent = "Showing all " + rows.length + " companies";
     }
