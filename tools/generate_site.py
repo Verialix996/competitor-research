@@ -54,14 +54,14 @@ SCORE_FIELDS = [
 ]
 
 STRATEGIC = {
-    "Cherub": ("Direct competitor", "Founder-investor matching", "swipe/card, mutual match, investor trust, lightweight data room", "Founder/investor discovery; trust-gated investor intros; controlled startup disclosure"),
+    "Cherub": ("Direct competitor", "Founder-investor matching", "One-page deal profile, investor discovery, mutual interest, controlled document sharing", "Create a browsable startup deal profile and connect it with relevant investors"),
     "Comatch": ("Direct competitor", "Cofounder matching", "mobile swipe, personality matching, chat", "Founder/cofounder discovery; lightweight matching-to-chat flow"),
     "CoffeeSpace": ("Direct competitor", "Cofounder matching", "swipe/card, mutual match, AI recommendations, mobile app, talent marketplace", "Founder/cofounder discovery; founder/talent matching; mobile matching UX"),
     "SwipeDeck": ("Direct competitor", "Founder-investor matching", "swipe/card, mutual match, investor discovery, document upload", "Founder/investor discovery; fast investor-card screening"),
-    "Foundersbase": ("Direct competitor", "Cofounder and startup network", "cofounder discovery, startup profiles, local ecosystem relevance", "Founder/cofounder discovery; Israeli ecosystem scanning; community network"),
+    "Foundersbase": ("Direct competitor", "Founder and startup professional network", "Professional profiles, community discovery, co-founder discovery, investor visibility", "Build a startup identity and discover founders, collaborators and investors"),
     "Swipe Invest": ("Substitute", "Founder-investor event/discovery", "swipe concept, investor access, early-stage Europe", "Investor discovery and event-based access"),
     "SWIP": ("Substitute", "Pre-launch cofounder matching", "waitlist, AI match simulator, founder cohorts", "Founder/cofounder discovery concept benchmark"),
-    "YC Co-Founder Matching": ("Substitute", "Cofounder matching network", "mutual interest, founder profiles, YC network", "Founder/cofounder discovery; free high-trust network access"),
+    "YC Co-Founder Matching": ("Substitute / network threat", "Cofounder matching network", "Free matching product, mutual interest, founder profiles, YC ecosystem trust", "Find a potential co-founder through a trusted startup ecosystem"),
     "CoFoundersLab": ("Substitute", "Cofounder matching network", "founder profiles, community, advisor/investor paths", "Founder/cofounder discovery; large cofounder network"),
     "Cofounder.org": ("Substitute", "Cofounder matching", "curated matching, founder profiles", "Founder/cofounder discovery"),
     "Tertle": ("Substitute", "Cofounder matching", "founder discovery, AI claims, messaging", "Founder/cofounder discovery"),
@@ -71,10 +71,10 @@ STRATEGIC = {
     "Crunchbase": ("Substitute", "Company/investor discovery database", "discovery, research, investor/company data", "Investor/company discovery and market research"),
     "Republic": ("Substitute", "Investment marketplace", "startup investing, investor network, fundraising marketplace", "Capital access and investor network growth"),
     "StartEngine": ("Substitute", "Investment marketplace", "crowdfunding, investor network, issuer onboarding", "Capital access and investor acquisition"),
-    "OpenVC": ("Substitute", "Investor discovery and outreach", "investor database, AI pitch/review tools, outreach", "Investor discovery and fundraising outreach"),
+    "OpenVC": ("Substitute", "Investor database and discovery platform", "Investor database, search, filters, outreach, fundraising readiness", "Find, filter and contact relevant investors"),
     "Visible.vc": ("Substitute", "Investor relations workspace", "updates, data room-like sharing, investor discovery", "Investor updates and fundraising workspace"),
     "Signal (NFX)": ("Substitute", "Investor discovery network", "investor matching, NFX network, AI scoring claims", "Investor discovery and warm-intro substitute"),
-    "Foundersuite": ("Substitute", "Fundraising CRM/workspace", "investor pipeline, CRM, documents, email workflows", "Fundraising pipeline management and investor follow-up"),
+    "Foundersuite": ("Substitute", "Investor database and fundraising workspace", "Investor database, research, outreach, CRM, pipeline tracking", "Find relevant investors and manage the fundraising pipeline"),
     "PitchBob": ("Feature benchmark", "AI pitch deck review", "deck feedback, AI startup tools, templates", "Pitch-deck review as supporting workflow"),
     "PitchGrade": ("Feature benchmark", "AI pitch deck review", "deck scoring, feedback", "Pitch-deck review as supporting workflow"),
     "Slidebean": ("Feature benchmark", "Pitch deck tooling", "deck review, design, fundraising content", "Pitch-deck review and presentation workflow"),
@@ -94,11 +94,54 @@ STRATEGIC = {
 
 PRIORITY = {
     "CoffeeSpace": ("Benchmark for matching and swipe UX.", "Founder/cofounder discovery with mobile mutual matching.", "Use frequent recommendations, profile quality prompts, and simple match-to-chat UX.", "Do not copy the broad talent marketplace before BizMatch has trust and collaboration depth.", "High", "High"),
-    "Cherub": ("Benchmark for founder-investor matching plus trust cues.", "Founder/investor discovery and controlled startup disclosure.", "Learn from investor verification, lightweight data-room language, and paid founder-side packaging.", "Do not treat creator/influencer equity flows as BizMatch's core wedge.", "High", "High"),
-    "Foundersuite": ("Benchmark for fundraising process management.", "Investor pipeline, CRM, outreach, and fundraising workspace.", "Learn pipeline discipline and workspace continuity after a match.", "Do not build a full fundraising CRM before the match-to-collaboration workflow works.", "Medium-High", "High"),
-    "YC Co-Founder Matching": ("Network threat because it is free, trusted, and attached to YC.", "Founder/cofounder discovery.", "Learn from trust-by-network and a low-friction founder profile loop.", "Do not compete on generic 'find a cofounder' breadth alone.", "High", "High"),
-    "OpenVC": ("Substitute for investor search and access.", "Investor discovery, outreach, and fundraising readiness.", "Learn searchable investor fit and practical outreach data.", "Do not let investor lists become the product center of gravity.", "Medium-High", "High"),
-    "Foundersbase": ("Relevant because of Israeli/ecosystem proximity and founder-network overlap.", "Founder/cofounder discovery and startup community.", "Learn from local network density and community positioning.", "Do not copy low-structure community browsing without gated collaboration depth.", "Medium", "Medium"),
+    "Cherub": ("Benchmark for startup one-pagers, investor discovery, and controlled disclosure.", "Create a browsable startup deal profile and connect it with relevant investors.", "Use a concise public project profile before requesting access to sensitive materials.", "Do not claim or build around an explicit NDA/e-signature step until the workflow is validated and sourced.", "High", "High"),
+    "Foundersuite": ("Benchmark for investor database plus fundraising workflow continuity.", "Find relevant investors and manage the fundraising pipeline.", "Maintain continuity from investor discovery through outreach and follow-up.", "Do not build a complete fundraising CRM before the match-to-collaboration workflow is validated.", "Medium-High", "High"),
+    "YC Co-Founder Matching": ("Network threat because it is free, trusted, and connected to the YC ecosystem.", "Find a potential co-founder through a trusted startup ecosystem.", "Learn from trust-by-network, free access, and a low-friction founder profile loop.", "Do not describe or compete with it as the YC program itself.", "High", "High"),
+    "OpenVC": ("Substitute for investor search, filtering, and outreach.", "Find, filter and contact relevant investors.", "Provide searchable investor fit and actionable outreach context.", "Do not make a static investor list the center of BizMatch.", "Medium-High", "High"),
+    "Foundersbase": ("Relevant because of founder-network overlap and possible Israeli ecosystem relevance.", "Build a startup identity and discover founders, collaborators and investors.", "Use professional identity and local network density.", "Do not rely on unstructured profile browsing without matching and gated collaboration.", "Medium", "Medium"),
+}
+
+STRATEGIC_DETAILS = {
+    "Cherub": {
+        "plain_language_description": "Founders provide structured information about their startup to create a browsable one-page deal profile. Investors can discover these project profiles and, when interested, access or request additional startup materials.",
+        "primary_job_solved": "Create a browsable startup deal profile and connect it with relevant investors",
+        "product_model": "Structured startup submission creates a concise deal profile or one-pager for investor discovery; additional materials can be shared through a controlled document experience.",
+        "bizmatch_lesson": "Use a concise public project profile before requesting access to sensitive materials.",
+        "do_not_copy": "Do not claim or build around an explicit NDA/e-signature step until the workflow is validated and sourced.",
+        "important_clarification": "Controlled access is confirmed, but an explicit NDA/e-signature step was not found. The public/browsable deal profile and additional private materials are not necessarily the same level of disclosure.",
+    },
+    "Foundersuite": {
+        "plain_language_description": "Foundersuite is a fundraising workspace built around an investor database, investor research, outreach and pipeline management.",
+        "primary_job_solved": "Find relevant investors and manage the fundraising pipeline",
+        "product_model": "Search and filter an investor database, research targets, manage outreach, and continue into fundraising CRM and pipeline follow-up.",
+        "bizmatch_lesson": "Maintain continuity from investor discovery through outreach and follow-up.",
+        "do_not_copy": "Do not build a complete fundraising CRM before the match-to-collaboration workflow is validated.",
+        "important_clarification": "Investor database plus fundraising workflow, not merely a CRM.",
+    },
+    "Foundersbase": {
+        "plain_language_description": "Foundersbase operates like a LinkedIn-style professional network for founders, potential co-founders, startup contributors and investors.",
+        "primary_job_solved": "Build a startup identity and discover founders, collaborators and investors",
+        "product_model": "Profile and community-driven professional network for discovering founders, co-founders, collaborators, and investors; broader and less workflow-structured than BizMatch.",
+        "bizmatch_lesson": "Use professional identity and local network density.",
+        "do_not_copy": "Do not rely on unstructured profile browsing without matching and gated collaboration.",
+        "important_clarification": "LinkedIn-style is an explanatory analogy, not an affiliation. Relevance to BizMatch comes from founder-network overlap and possible Israeli ecosystem relevance.",
+    },
+    "YC Co-Founder Matching": {
+        "plain_language_description": "YC Co-Founder Matching is a free co-founder-matching network operated by Y Combinator and connected to the YC and Startup School ecosystem.",
+        "primary_job_solved": "Find a potential co-founder through a trusted startup ecosystem",
+        "product_model": "Free ecosystem-supported matching network where founders create profiles, browse or receive potential matches, and connect through mutual interest.",
+        "bizmatch_lesson": "Learn from trust-by-network, free access, strong brand trust, and network effects.",
+        "do_not_copy": "Do not compete on generic co-founder discovery alone, and do not describe it as the YC program itself.",
+        "important_clarification": "Matching-product participation does not imply acceptance into YC. It is not an investor database and not a full BizMatch-style protected-collaboration platform.",
+    },
+    "OpenVC": {
+        "plain_language_description": "OpenVC is primarily a searchable investor database and fundraising platform that helps founders find, filter and approach relevant investors.",
+        "primary_job_solved": "Find, filter and contact relevant investors",
+        "product_model": "Searchable investor database with investor-fit information, filters, outreach support, and fundraising-readiness tools.",
+        "bizmatch_lesson": "Provide searchable investor fit and actionable outreach context.",
+        "do_not_copy": "Do not make a static investor list the center of BizMatch.",
+        "important_clarification": "Primarily an investor database and outreach tool, not mutual matching or a match-to-collaboration platform.",
+    },
 }
 
 VALIDATION_ROADMAP = [
@@ -130,10 +173,11 @@ RUBRIC = {
     "Build-versus-buy value": ("Likely cheaper or more strategic to build internally.", "Could buy temporarily but may need replacement.", "Buying saves major time/risk without weakening differentiation."),
 }
 
-RELATION_ORDER = ["Direct competitor", "Substitute", "Feature benchmark", "Infrastructure / potential partner"]
+RELATION_ORDER = ["Direct competitor", "Substitute / network threat", "Substitute", "Feature benchmark", "Infrastructure / potential partner"]
 
 def slug(name):
-    return name.lower().replace("&", "and").replace("(", "").replace(")", "").replace(".", "-").replace(" ", "-").replace("--", "-").strip("-")
+    cleaned = name.lower().replace("&", "and").replace("/", " ").replace("(", "").replace(")", "").replace(".", "-").replace(" ", "-")
+    return re.sub(r"-+", "-", cleaned).strip("-")
 
 def urls(text):
     return re.findall(r"https?://[^\s;,)]+", text or "")
@@ -231,7 +275,7 @@ def score(row, key, default=1.0):
 
 def relationship_score(row):
     rel = row["competitive_relationship"]
-    if rel in ("Direct competitor", "Substitute"):
+    if rel == "Direct competitor" or rel.startswith("Substitute"):
         components = {
             "User/use-case overlap": score(row, "product_overlap_score"),
             "Product-process overlap": score(row, "feature_maturity_score"),
@@ -271,10 +315,17 @@ def enrich(rows):
         row["overall_confidence"] = overall_confidence(row.get("source_confidence", ""))
         row["confidence_note"] = row.get("source_confidence", "")
         rel, pc, sec, jobs = STRATEGIC.get(row["company"], ("Substitute", row.get("source_category", ""), "", ""))
+        details = STRATEGIC_DETAILS.get(row["company"], {})
         row["competitive_relationship"] = rel
         row["primary_category"] = pc
         row["secondary_capabilities"] = sec
         row["bizmatch_jobs_competed_for"] = jobs
+        row["plain_language_description"] = details.get("plain_language_description", row.get("notes", "") or jobs)
+        row["primary_job_solved"] = details.get("primary_job_solved", jobs)
+        row["product_model"] = details.get("product_model", row.get("product_category", ""))
+        row["bizmatch_lesson"] = details.get("bizmatch_lesson", "")
+        row["do_not_copy"] = details.get("do_not_copy", "")
+        row["important_clarification"] = details.get("important_clarification", "")
         caps = {}
         for key, label in FEATURES:
             note = row.get(key, "")
@@ -298,7 +349,20 @@ def enrich(rows):
 def write_csv(rows):
     existing = list(csv.DictReader(CSV_PATH.open(encoding="utf-8")))
     fields = list(existing[0].keys())
-    for f in ("competitive_relationship", "primary_category", "secondary_capabilities", "bizmatch_jobs_competed_for", "overall_confidence", "confidence_note"):
+    for f in (
+        "competitive_relationship",
+        "primary_category",
+        "secondary_capabilities",
+        "bizmatch_jobs_competed_for",
+        "plain_language_description",
+        "primary_job_solved",
+        "product_model",
+        "bizmatch_lesson",
+        "do_not_copy",
+        "important_clarification",
+        "overall_confidence",
+        "confidence_note",
+    ):
         if f not in fields:
             fields.append(f)
     with CSV_PATH.open("w", encoding="utf-8", newline="") as f:
@@ -350,11 +414,15 @@ def one_sentence(text, fallback="Research note not available."):
     return parts[0][:240]
 
 def row_strength(row):
+    if row.get("bizmatch_lesson"):
+        return row["bizmatch_lesson"]
     if row["company"] in PRIORITY:
         return PRIORITY[row["company"]][2]
     return one_sentence(row.get("secondary_capabilities") or row.get("notes"), "Clear capability evidence exists in the tracker.")
 
 def row_weakness(row):
+    if row.get("important_clarification"):
+        return row["important_clarification"]
     note = row.get("notes", "")
     if "weak" in note.lower():
         return one_sentence(note[note.lower().find("weak"):])
@@ -455,19 +523,19 @@ def priority_card(row, compact=False):
 <article class="priority-card">
   <h3><a href="companies/{slug(row['company'])}.html">{escape(row['company'])}</a></h3>
   <p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence', conf))} <span class="score-pill">Threat: {escape(threat)}</span></p>
-  <p>{escape(why)}</p>
+  <p>{escape(row.get('plain_language_description') or why)}</p>
 </article>"""
     return f"""
 <article class="priority-card">
   <h3><a href="companies/{slug(row['company'])}.html">{escape(row['company'])}</a></h3>
   <p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence', conf))} <span class="score-pill">Threat: {escape(threat)}</span></p>
-  <dl class="mini-dl"><dt>Why it matters</dt><dd>{escape(why)}</dd><dt>Job solved</dt><dd>{escape(job)}</dd><dt>Learn</dt><dd>{escape(learn)}</dd><dt>Do not copy</dt><dd>{escape(avoid)}</dd></dl>
+  <dl class="mini-dl"><dt>What it is</dt><dd>{escape(row.get('plain_language_description') or why)}</dd><dt>Primary job</dt><dd>{escape(row.get('primary_job_solved') or job)}</dd><dt>Lesson</dt><dd>{escape(row.get('bizmatch_lesson') or learn)}</dd><dt>Do not copy</dt><dd>{escape(row.get('do_not_copy') or avoid)}</dd></dl>
 </article>"""
 
 def priority_page(rows):
     selected = [next(r for r in rows if r["company"] == name) for name in PRIORITY_ORDER]
     compare_rows = "".join(
-        f"<tr><th><a href='#pc-{slug(r['company'])}'>{escape(r['company'])}</a></th><td>{relationship_badge(r['competitive_relationship'])}</td><td>{escape(PRIORITY[r['company']][1])}</td><td>{escape(threat_band(r['relationship_score']))}</td><td>{r['relationship_score']:.1f}/5</td><td>{confidence_badge(r.get('overall_confidence',''))}</td></tr>"
+        f"<tr><th><a href='#pc-{slug(r['company'])}'>{escape(r['company'])}</a></th><td>{relationship_badge(r['competitive_relationship'])}</td><td>{escape(r.get('primary_job_solved') or PRIORITY[r['company']][1])}</td><td>{escape(threat_band(r['relationship_score']))}</td><td>{r['relationship_score']:.1f}/5</td><td>{confidence_badge(r.get('overall_confidence',''))}</td></tr>"
         for r in selected
     )
     sections = []
@@ -482,8 +550,9 @@ def priority_page(rows):
 <section class="panel competitor-deep" id="pc-{slug(r['company'])}">
   <h2>{escape(r['company'])}</h2>
   <p>{relationship_badge(r['competitive_relationship'])} {confidence_badge(r.get('overall_confidence',''))} <span class="score-pill">{escape(threat_band(r['relationship_score']))}</span> <span class="score-pill">{r['relationship_score']:.1f}/5</span></p>
-  <div class="split-grid"><div><dl class="field-grid"><dt>Competitive relationship</dt><dd>{escape(r['competitive_relationship'])}</dd><dt>Job solved</dt><dd>{escape(job)}</dd><dt>Target audience</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Major strengths</dt><dd>{escape(row_strength(r))}</dd><dt>Important weaknesses or gaps</dt><dd>{escape(row_weakness(r))}</dd><dt>Evidence-backed traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Pricing model</dt><dd>{escape(r.get('pricing_model',''))}</dd></dl></div><div><h3>Relevant workflow coverage</h3><ul class="clean-list">{coverage}</ul></div></div>
-  <div class="split-grid"><div><h3>What BizMatch should learn</h3><p>{escape(learn)}</p><h3>What BizMatch should not copy</h3><p>{escape(avoid)}</p><h3>Recommended counter-positioning</h3><p>Position BizMatch around curated local trust, explained matching, and controlled progression from match to meeting rather than copying {escape(r['company'])}'s broadest category frame.</p></div><aside class="score-box"><h3>Score-factor breakdown</h3><dl class="score-list">{comps}</dl><p class="muted">Confidence: {escape(r.get('confidence_note') or r.get('source_confidence',''))}</p></aside></div>
+  <div class="profile-card quick-read"><h3>Product model</h3><dl class="field-grid"><dt>What it is</dt><dd>{escape(r.get('plain_language_description') or why)}</dd><dt>Who uses it</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Primary job solved</dt><dd>{escape(r.get('primary_job_solved') or job)}</dd><dt>How it works</dt><dd>{escape(r.get('product_model') or r.get('product_category',''))}</dd><dt>Why it matters to BizMatch</dt><dd>{escape(r.get('bizmatch_lesson') or learn)}</dd><dt>Important clarification</dt><dd>{escape(r.get('important_clarification') or row_weakness(r))}</dd></dl></div>
+  <div class="split-grid"><div><dl class="field-grid"><dt>Competitive relationship</dt><dd>{escape(r['competitive_relationship'])}</dd><dt>Primary category</dt><dd>{escape(r['primary_category'])}</dd><dt>Secondary capabilities</dt><dd>{escape(r['secondary_capabilities'])}</dd><dt>Evidence-backed traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Pricing model</dt><dd>{escape(r.get('pricing_model',''))}</dd><dt>Important weaknesses or gaps</dt><dd>{escape(row_weakness(r))}</dd></dl></div><div><h3>Relevant workflow coverage</h3><ul class="clean-list">{coverage}</ul></div></div>
+  <div class="split-grid"><div><h3>What BizMatch should learn</h3><p>{escape(r.get('bizmatch_lesson') or learn)}</p><h3>What BizMatch should not copy</h3><p>{escape(r.get('do_not_copy') or avoid)}</p><h3>Recommended counter-positioning</h3><p>Position BizMatch around curated local trust, explained matching, and controlled progression from match to meeting rather than copying {escape(r['company'])}'s broadest category frame.</p></div><aside class="score-box"><h3>Score-factor breakdown</h3><dl class="score-list">{comps}</dl><p class="muted">Confidence: {escape(r.get('confidence_note') or r.get('source_confidence',''))}</p></aside></div>
   <h3>Sources</h3><div class="source-grid">{source_cards(r, 'Priority-competitor claims, traction, pricing, and workflow coverage')}</div>
 </section>""")
     body = f"""
@@ -495,7 +564,14 @@ def research_table(rows):
     table_rows = []
     for idx, r in enumerate(rows):
         links = urls(r.get("primary_sources", ""))[:2] + urls(r.get("secondary_sources", ""))[:1]
-        company_text = " ".join([r["company"], r.get("primary_category",""), r.get("bizmatch_jobs_competed_for","")])
+        company_text = " ".join([
+            r["company"],
+            r.get("primary_category",""),
+            r.get("primary_job_solved",""),
+            r.get("plain_language_description",""),
+            r.get("product_model",""),
+            r.get("important_clarification",""),
+        ])
         capability_text = " ".join(c["label"] + " " + c["status"] + " " + c["note"] for c in r["capabilities"].values())
         evidence_text = " ".join(str(v) for k, v in r.items() if isinstance(v, str) and k not in ("company", "primary_category", "bizmatch_jobs_competed_for"))
         caps = "".join(f"<li><strong>{escape(c['label'])}:</strong> {escape(c['status'])} - {escape(one_sentence(c['note']))}</li>" for c in r["capabilities"].values())
@@ -503,7 +579,7 @@ def research_table(rows):
 <td><a class="company-link" href="companies/{slug(r['company'])}.html">{escape(r['company'])}</a><div class="match-note" aria-live="polite"></div></td>
 <td>{relationship_badge(r['competitive_relationship'])}</td>
 <td>{escape(r['primary_category'])}</td>
-<td>{escape(r['bizmatch_jobs_competed_for'])}</td>
+<td>{escape(r.get('primary_job_solved') or r['bizmatch_jobs_competed_for'])}</td>
 <td><span class="score-pill" title="{escape(r['score_formula'])}">{r['relationship_score']:.1f}/5</span></td>
 <td>{escape(threat_band(r['relationship_score']))}</td>
 <td>{confidence_badge(r.get('overall_confidence',''))}</td>
@@ -511,7 +587,7 @@ def research_table(rows):
 <td>{escape(row_weakness(r))}</td>
 <td><a href="companies/{slug(r['company'])}.html">Open profile</a></td>
 </tr>
-<tr class="detail-row" data-detail-for="{idx}"><td colspan="10"><details><summary>Research details</summary><div class="split-grid"><dl class="field-grid"><dt>Target users</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Funding</dt><dd>{escape(r.get('total_funding',''))}</dd><dt>Traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Confidence note</dt><dd>{escape(r.get('confidence_note',''))}</dd><dt>Unsupported claims</dt><dd>{escape(r.get('unsupported_claims',''))}</dd><dt>Contradictions</dt><dd>{escape(r.get('contradictions',''))}</dd><dt>Sources</dt><dd>{" ".join(source_anchor(u) for u in links)}</dd></dl><div><h3>Capability evidence</h3><ul class="clean-list">{caps}</ul></div></div></details></td>
+<tr class="detail-row" data-detail-for="{idx}"><td colspan="10"><details><summary>Research details</summary><div class="split-grid"><dl class="field-grid"><dt>What it is</dt><dd>{escape(r.get('plain_language_description',''))}</dd><dt>Product model</dt><dd>{escape(r.get('product_model',''))}</dd><dt>Important clarification</dt><dd>{escape(r.get('important_clarification',''))}</dd><dt>Target users</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Funding</dt><dd>{escape(r.get('total_funding',''))}</dd><dt>Traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Confidence note</dt><dd>{escape(r.get('confidence_note',''))}</dd><dt>Unsupported claims</dt><dd>{escape(r.get('unsupported_claims',''))}</dd><dt>Contradictions</dt><dd>{escape(r.get('contradictions',''))}</dd><dt>Sources</dt><dd>{" ".join(source_anchor(u) for u in links)}</dd></dl><div><h3>Capability evidence</h3><ul class="clean-list">{caps}</ul></div></div></details></td>
 </tr>""")
     filters = "".join(f'<option value="{escape(rel)}">{escape(rel)}</option>' for rel in RELATION_ORDER)
     body = f"""
@@ -525,7 +601,7 @@ def category_page(rows):
     for rel in RELATION_ORDER:
         rs = sorted([r for r in rows if r["competitive_relationship"] == rel], key=lambda r: r["relationship_score"], reverse=True)
         formula = rs[0]["score_formula"] if rs else ""
-        cards = "".join(f'<article class="category-card"><h3><a href="companies/{slug(r["company"])}.html">{escape(r["company"])}</a> - {escape(threat_band(r["relationship_score"]))}, {r["relationship_score"]:.1f}/5</h3><p>{confidence_badge(r.get("overall_confidence",""))}</p><p>{escape(one_sentence(r.get("notes"), r["bizmatch_jobs_competed_for"]))}</p><dl class="score-list">{"".join(f"<dt>{escape(k)}</dt><dd>{v:.1f}</dd>" for k, v in r["score_components"].items())}</dl></article>' for r in rs)
+        cards = "".join(f'<article class="category-card"><h3><a href="companies/{slug(r["company"])}.html">{escape(r["company"])}</a> - {escape(threat_band(r["relationship_score"]))}, {r["relationship_score"]:.1f}/5</h3><p>{confidence_badge(r.get("overall_confidence",""))}</p><p>{escape(one_sentence(r.get("plain_language_description") or r.get("notes"), r["bizmatch_jobs_competed_for"]))}</p><p class="muted"><strong>Job:</strong> {escape(r.get("primary_job_solved") or r["bizmatch_jobs_competed_for"])}</p><dl class="score-list">{"".join(f"<dt>{escape(k)}</dt><dd>{v:.1f}</dd>" for k, v in r["score_components"].items())}</dl></article>' for r in rs)
         blocks.append(f'<section class="panel"><h2>{escape(rel)}</h2><p class="muted"><strong>Formula:</strong> {escape(formula)}</p><div class="category-grid">{cards}</div></section>')
     return page("Category Analysis", "Category Analysis", "".join(blocks), "Separate scoring models for each competitive relationship.")
 
@@ -563,7 +639,7 @@ def methodology_page(rows):
     )
     body = f"""
 <section class="panel"><h2>Single Source Of Truth</h2><p>The canonical source for active research is <a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. The generated site data file <code>canonical-data.js</code>, the table, company profiles, category pages, priority competitor page, and strategic conclusions are generated from that file plus the explicit strategic classification rules in <code>tools/generate_site.py</code>.</p><p>Older files under <code>reports/</code> and <code>data/bizmatch-competitive-research-cited.*</code> are archived context only and should not be used as active facts when they conflict with the canonical tracker.</p></section>
-<section class="panel"><h2>Strategic Classification Rules</h2><ul class="clean-list"><li><strong>Direct competitor:</strong> competes for a core BizMatch discovery or matching workflow.</li><li><strong>Substitute:</strong> solves an adjacent job users could choose instead of BizMatch.</li><li><strong>Feature benchmark:</strong> helps evaluate a supporting capability but is not the full product category.</li><li><strong>Infrastructure / potential partner:</strong> can support signing, disclosure, security, or data-room needs without being the core network.</li></ul></section>
+<section class="panel"><h2>Strategic Classification Rules</h2><ul class="clean-list"><li><strong>Direct competitor:</strong> competes for a core BizMatch discovery or matching workflow.</li><li><strong>Substitute / network threat:</strong> solves an adjacent job and has unusually strong network, brand, or ecosystem pull.</li><li><strong>Substitute:</strong> solves an adjacent job users could choose instead of BizMatch.</li><li><strong>Feature benchmark:</strong> helps evaluate a supporting capability but is not the full product category.</li><li><strong>Infrastructure / potential partner:</strong> can support signing, disclosure, security, or data-room needs without being the core network.</li></ul></section>
 <section class="panel"><h2>Segmented Scoring Formulas</h2><div class="category-grid">{"".join(formula_blocks)}</div></section>
 <section class="panel"><h2>Scoring Rubric</h2><p class="muted">Anchors make scores reproducible. Intermediate values 2 and 4 are used when evidence sits between the defined anchors.</p><div class="table-wrap"><table><thead><tr><th>Dimension</th><th>1 means</th><th>3 means</th><th>5 means</th></tr></thead><tbody>{rubric_rows}</tbody></table></div></section>
 <section class="panel"><h2>Research Limitations</h2><ul class="clean-list">{"".join(f"<li>{escape(x)}</li>" for x in limitations)}</ul></section>
@@ -584,6 +660,7 @@ def company_page(row):
     body = f"""
 <div class="profile-layout"><div>
 <section class="profile-card"><h2>{escape(row['company'])}</h2><p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence',''))}</p><dl class="field-grid"><dt>Primary category</dt><dd>{escape(row['primary_category'])}</dd><dt>Secondary capabilities</dt><dd>{escape(row['secondary_capabilities'])}</dd><dt>BizMatch jobs competed for</dt><dd>{escape(row['bizmatch_jobs_competed_for'])}</dd><dt>Status</dt><dd>{escape(row['current_status'])}</dd><dt>Target users</dt><dd>{escape(row['target_users'])}</dd><dt>Funding</dt><dd>{escape(row['total_funding'])}</dd><dt>Traction</dt><dd>{escape(row['users_traction'])}</dd><dt>Confidence note</dt><dd>{escape(row.get('confidence_note',''))}</dd></dl></section>
+<section class="profile-card"><h2>Strategic Positioning</h2><dl class="field-grid"><dt>What it is</dt><dd>{escape(row.get('plain_language_description',''))}</dd><dt>Primary job solved</dt><dd>{escape(row.get('primary_job_solved',''))}</dd><dt>Product model</dt><dd>{escape(row.get('product_model',''))}</dd><dt>BizMatch lesson</dt><dd>{escape(row.get('bizmatch_lesson',''))}</dd><dt>Do not copy</dt><dd>{escape(row.get('do_not_copy',''))}</dd><dt>Important clarification</dt><dd>{escape(row.get('important_clarification',''))}</dd></dl></section>
 <section class="profile-card"><h2>Capability Evidence</h2><div class="cap-grid">{caps}</div></section>
 <section class="profile-card"><h2>Evidence Notes</h2><dl class="field-grid"><dt>Unsupported claims</dt><dd>{escape(row.get('unsupported_claims',''))}</dd><dt>Contradictions corrected</dt><dd>{escape(row.get('contradictions',''))}</dd><dt>Last checked</dt><dd>{escape(row.get('last_checked',''))}</dd></dl></section>
 <section class="profile-card"><h2>Sources</h2><div class="source-grid">{source_cards(row, 'Company profile, traction, pricing, funding, and capability evidence')}</div></section>
@@ -602,6 +679,12 @@ def data_js(rows):
             "primary_category": r["primary_category"],
             "secondary_capabilities": r["secondary_capabilities"],
             "bizmatch_jobs_competed_for": r["bizmatch_jobs_competed_for"],
+            "plain_language_description": r["plain_language_description"],
+            "primary_job_solved": r["primary_job_solved"],
+            "product_model": r["product_model"],
+            "bizmatch_lesson": r["bizmatch_lesson"],
+            "do_not_copy": r["do_not_copy"],
+            "important_clarification": r["important_clarification"],
             "source_confidence": r["source_confidence"],
             "overall_confidence": r["overall_confidence"],
             "confidence_note": r["confidence_note"],
