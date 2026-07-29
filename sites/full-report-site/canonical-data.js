@@ -12,6 +12,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "swipe/card, mutual match, investor trust, lightweight data room",
       "bizmatch_jobs_competed_for": "Founder/investor discovery; trust-gated investor intros; controlled startup disclosure",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.65,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -167,6 +169,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "mobile swipe, personality matching, chat",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery; lightweight matching-to-chat flow",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 2.95,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -322,6 +326,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "swipe/card, mutual match, AI recommendations, mobile app, talent marketplace",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery; founder/talent matching; mobile matching UX",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.95,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -477,6 +483,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "swipe/card, mutual match, investor discovery, document upload",
       "bizmatch_jobs_competed_for": "Founder/investor discovery; fast investor-card screening",
       "source_confidence": "Low",
+      "overall_confidence": "Low",
+      "confidence_note": "Low",
       "relationship_score": 2.25,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -632,6 +640,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "swipe concept, investor access, early-stage Europe",
       "bizmatch_jobs_competed_for": "Investor discovery and event-based access",
       "source_confidence": "Low-Medium",
+      "overall_confidence": "Low",
+      "confidence_note": "Low-Medium",
       "relationship_score": 2.5,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -787,6 +797,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "waitlist, AI match simulator, founder cohorts",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery concept benchmark",
       "source_confidence": "Low",
+      "overall_confidence": "Low",
+      "confidence_note": "Low",
       "relationship_score": 2.05,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -942,6 +954,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "mutual interest, founder profiles, YC network",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery; free high-trust network access",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.75,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -1097,6 +1111,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "founder profiles, community, advisor/investor paths",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery; large cofounder network",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 3.4,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -1252,6 +1268,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "cofounder discovery, startup profiles, local ecosystem relevance",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery; Israeli ecosystem scanning; community network",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 3.35,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -1407,6 +1425,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "curated matching, founder profiles",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery",
       "source_confidence": "Low",
+      "overall_confidence": "Low",
+      "confidence_note": "Low",
       "relationship_score": 2.25,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -1562,6 +1582,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "founder discovery, AI claims, messaging",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 2.6,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -1717,6 +1739,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "founder profiles, startup community",
       "bizmatch_jobs_competed_for": "Founder discovery and startup community",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 2.45,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -1872,6 +1896,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "investor discovery, fundraising workflows, network effects",
       "bizmatch_jobs_competed_for": "Fundraising discovery; investor network access",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.05,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2027,6 +2053,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "investor relations, application/fundraising workflows",
       "bizmatch_jobs_competed_for": "Fundraising workspace and investor application management",
       "source_confidence": "High for product/traction; Medium for funding due to unavailable public funding data",
+      "overall_confidence": "High",
+      "confidence_note": "High for product/traction; Medium for funding due to unavailable public funding data",
       "relationship_score": 3.25,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2182,6 +2210,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "discovery, research, investor/company data",
       "bizmatch_jobs_competed_for": "Investor/company discovery and market research",
       "source_confidence": "High for product; Medium for corporate funding due to secondary-source reliance",
+      "overall_confidence": "High",
+      "confidence_note": "High for product; Medium for corporate funding due to secondary-source reliance",
       "relationship_score": 3.25,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2337,6 +2367,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "startup investing, investor network, fundraising marketplace",
       "bizmatch_jobs_competed_for": "Capital access and investor network growth",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.6,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2492,6 +2524,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "crowdfunding, investor network, issuer onboarding",
       "bizmatch_jobs_competed_for": "Capital access and investor acquisition",
       "source_confidence": "High for operations/traction; Medium for corporate funding due to secondary-source reliance",
+      "overall_confidence": "High",
+      "confidence_note": "High for operations/traction; Medium for corporate funding due to secondary-source reliance",
       "relationship_score": 3.05,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2647,6 +2681,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "investor database, AI pitch/review tools, outreach",
       "bizmatch_jobs_competed_for": "Investor discovery and fundraising outreach",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.4,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2802,6 +2838,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "updates, data room-like sharing, investor discovery",
       "bizmatch_jobs_competed_for": "Investor updates and fundraising workspace",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 3.1,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -2957,6 +2995,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "investor matching, NFX network, AI scoring claims",
       "bizmatch_jobs_competed_for": "Investor discovery and warm-intro substitute",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.0,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -3112,6 +3152,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "investor pipeline, CRM, documents, email workflows",
       "bizmatch_jobs_competed_for": "Fundraising pipeline management and investor follow-up",
       "source_confidence": "High for product/pricing/traction; Medium for funding unavailable",
+      "overall_confidence": "High",
+      "confidence_note": "High for product/pricing/traction; Medium for funding unavailable",
       "relationship_score": 3.6,
       "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
       "score_components": {
@@ -3267,6 +3309,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "document analytics, controlled links, data room-like sharing",
       "bizmatch_jobs_competed_for": "Controlled project/deck disclosure and investor analytics",
       "source_confidence": "Medium (direct site fetch blocked; relied on search-engine cached snippets, third-party review sites, and prior-pass partial evidence rather than full first-party page fetch)",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium (direct site fetch blocked; relied on search-engine cached snippets, third-party review sites, and prior-pass partial evidence rather than full first-party page fetch)",
       "relationship_score": 4.3,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -3422,6 +3466,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "watermark, permissions, audit trail, document security",
       "bizmatch_jobs_competed_for": "Controlled project disclosure and secure document access",
       "source_confidence": "Medium-High",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium-High",
       "relationship_score": 4.65,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -3577,6 +3623,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "data room, security, audit trail, permissions",
       "bizmatch_jobs_competed_for": "NDA/data-room infrastructure for controlled disclosure",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.7,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -3732,6 +3780,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "data room, AI document handling, deal workflow",
       "bizmatch_jobs_competed_for": "Secure disclosure and diligence room infrastructure",
       "source_confidence": "Medium-High",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium-High",
       "relationship_score": 3.5,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -3887,6 +3937,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "startup data room, cap table adjacent, investor diligence",
       "bizmatch_jobs_competed_for": "Data room benchmark and possible startup-stack adjacency",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.35,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -4042,6 +4094,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "legally binding signatures, templates, API",
       "bizmatch_jobs_competed_for": "NDA signing infrastructure",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.6,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -4197,6 +4251,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "documents, templates, e-signature, API",
       "bizmatch_jobs_competed_for": "NDA and document workflow infrastructure",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.3,
       "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
       "score_components": {
@@ -4352,6 +4408,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck analysis, investor matching campaign, readiness score",
       "bizmatch_jobs_competed_for": "Pitch-deck review and investor-readiness support",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 3.3,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -4506,6 +4564,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "AI scoring, investor readiness, accelerator workflow",
       "bizmatch_jobs_competed_for": "Startup scoring and investor-readiness support",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 2.85,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -4660,6 +4720,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck scoring, feedback",
       "bizmatch_jobs_competed_for": "Pitch-deck review as supporting workflow",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 3.3,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -4814,6 +4876,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck feedback, AI startup tools, templates",
       "bizmatch_jobs_competed_for": "Pitch-deck review as supporting workflow",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 3.85,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -4968,6 +5032,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck review, investor platform, funding path",
       "bizmatch_jobs_competed_for": "Pitch-deck review and fundraising-readiness support",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 4.4,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -5122,6 +5188,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck review, design, fundraising content",
       "bizmatch_jobs_competed_for": "Pitch-deck review and presentation workflow",
       "source_confidence": "High",
+      "overall_confidence": "High",
+      "confidence_note": "High",
       "relationship_score": 4.0,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -5276,6 +5344,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck scoring, benchmarking, investor visibility",
       "bizmatch_jobs_competed_for": "Pitch-deck review and public benchmarking",
       "source_confidence": "Medium",
+      "overall_confidence": "Medium",
+      "confidence_note": "Medium",
       "relationship_score": 2.6,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
@@ -5430,6 +5500,8 @@ window.BIZMATCH_RESEARCH = {
       "secondary_capabilities": "deck review, idea validation, collaboration",
       "bizmatch_jobs_competed_for": "Pitch-deck review and idea-validation support",
       "source_confidence": "Low",
+      "overall_confidence": "Low",
+      "confidence_note": "Low",
       "relationship_score": 2.6,
       "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
       "score_components": {
