@@ -9,8 +9,9 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
 SITE = ROOT / "sites" / "full-report-site"
+CITATION_SITE = ROOT / "sites" / "citation-site"
 REPORTS = ROOT / "reports"
-TODAY = "2026-07-29"
+RECONCILIATION_DATE = "2026-07-30"
 
 FEATURES = [
     ("swipe_card_interface", "Swipe/card interface"),
@@ -44,14 +45,54 @@ JOURNEY_STAGES = [
 
 PRIORITY_ORDER = ["CoffeeSpace", "Cherub", "Foundersuite", "YC Co-Founder Matching", "OpenVC", "Foundersbase"]
 
-SCORE_FIELDS = [
+LEGACY_SCORE_FIELDS = [
     "product_overlap_score",
     "feature_maturity_score",
     "market_traction_score",
+    "funding_strength_score",
     "ai_depth_score",
     "nda_security_strength_score",
     "network_moat_score",
+    "direct_threat_score",
 ]
+
+# These are the pre-existing analytical weights. They are preserved for audit and
+# documentation only. The required explicit research inputs do not yet exist in
+# the 65-column canonical schema, so no numeric relationship score is published.
+RELATIONSHIP_SCORE_MODELS = {
+    "competitive": {
+        "matches": ("Direct competitor", "Substitute"),
+        "components": (
+            ("User/use-case overlap", "relationship_use_case_overlap_score", 0.30),
+            ("Product-process overlap", "relationship_workflow_overlap_score", 0.25),
+            ("Traction/network effect", "relationship_traction_network_score", 0.20),
+            ("Geographic/niche fit", "relationship_geographic_fit_score", 0.10),
+            ("Business/pricing model", "relationship_pricing_overlap_score", 0.10),
+            ("Technology/AI depth", "relationship_ai_depth_score", 0.05),
+        ),
+    },
+    "feature": {
+        "matches": ("Feature benchmark",),
+        "components": (
+            ("Capability quality", "relationship_capability_quality_score", 0.30),
+            ("Maturity", "relationship_maturity_score", 0.25),
+            ("Price", "relationship_price_score", 0.15),
+            ("UX", "relationship_ux_score", 0.15),
+            ("Ease to integrate/imitate", "relationship_ease_score", 0.15),
+        ),
+    },
+    "infrastructure": {
+        "matches": ("Infrastructure / potential partner",),
+        "components": (
+            ("Security", "relationship_security_score", 0.25),
+            ("API/integration", "relationship_api_score", 0.20),
+            ("Pricing", "relationship_price_score", 0.15),
+            ("MVP fit", "relationship_mvp_fit_score", 0.15),
+            ("Build-versus-buy", "relationship_build_buy_score", 0.15),
+            ("NDA/controlled disclosure fit", "relationship_nda_fit_score", 0.10),
+        ),
+    },
+}
 
 STRATEGIC = {
     "Cherub": ("Direct competitor", "Founder-investor matching", "One-page deal profile, investor discovery, mutual interest, controlled document sharing", "Create a browsable startup deal profile and connect it with relevant investors"),
@@ -210,7 +251,7 @@ def source_cards(row, claim="Company profile evidence"):
     if not cards:
         return '<p class="muted">No source URL recorded.</p>'
     return "".join(
-        f"""<article class="source-card"><h3><a href="{escape(u)}" rel="noopener" target="_blank">{escape(source_title(u))}</a></h3><dl class="mini-dl"><dt>Source type</dt><dd>{escape(kind)}</dd><dt>Publication</dt><dd>{escape(urlparse(u).netloc.replace('www.', '') or org)}</dd><dt>Checked</dt><dd>{escape(row.get('last_checked','') or TODAY)}</dd><dt>Supports</dt><dd>{escape(claim)}</dd></dl>{'<p class="source-note">Company-reported; not independently verified.</p>' if 'Company claim' in kind else ''}</article>"""
+        f"""<article class="source-card"><h3><a href="{escape(u)}" rel="noopener" target="_blank">{escape(source_title(u))}</a></h3><dl class="mini-dl"><dt>Source type</dt><dd>{escape(kind)}</dd><dt>Publication</dt><dd>{escape(urlparse(u).netloc.replace('www.', '') or org)}</dd><dt>Checked</dt><dd>{escape(row.get('last_checked','') or 'not recorded')}</dd><dt>Supports</dt><dd>{escape(claim)}</dd></dl>{'<p class="source-note">Company-reported; not independently verified.</p>' if 'Company claim' in kind else ''}</article>"""
         for u, kind, org in cards
     )
 
@@ -221,9 +262,11 @@ def overall_confidence(text):
     t = (text or "").strip()
     if t.startswith("High"):
         return "High"
+    if t.startswith("Medium"):
+        return "Medium"
     if t.startswith("Low"):
         return "Low"
-    return "Medium"
+    return "Insufficient Evidence"
 
 def text_status(text):
     t = (text or "").strip().lower()
@@ -267,65 +310,82 @@ def confidence(row, status):
         return "Medium" if "High" in base else "Low"
     return "Medium" if base.startswith("High") else "Low"
 
-def score(row, key, default=1.0):
-    try:
-        return float(row.get(key, default) or default)
-    except ValueError:
-        return default
-
 def relationship_score(row):
-    rel = row["competitive_relationship"]
-    if rel == "Direct competitor" or rel.startswith("Substitute"):
-        components = {
-            "User/use-case overlap": score(row, "product_overlap_score"),
-            "Product-process overlap": score(row, "feature_maturity_score"),
-            "Traction/network effect": (score(row, "market_traction_score") + score(row, "network_moat_score")) / 2,
-            "Geographic/niche fit": 4 if row["company"] in ("Foundersbase", "CoffeeSpace", "Cherub", "YC Co-Founder Matching", "OpenVC") else 3,
-            "Business/pricing model": 3 if "free" in row.get("pricing_model", "").lower() else 2.5,
-            "Technology/AI depth": score(row, "ai_depth_score"),
+    relationship = (row.get("competitive_relationship") or "").strip()
+    selected = None
+    for model in RELATIONSHIP_SCORE_MODELS.values():
+        if any(relationship == match or relationship.startswith(match) for match in model["matches"]):
+            selected = model
+            break
+    if selected is None:
+        return {
+            "value": None,
+            "status": "Insufficient Evidence",
+            "formula": "No approved model for this relationship type.",
+            "components": {},
+            "missing_inputs": ["approved relationship scoring model"],
         }
-        weights = [0.30, 0.25, 0.20, 0.10, 0.10, 0.05]
-        formula = "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only."
-    elif rel == "Feature benchmark":
-        components = {
-            "Capability quality": max(score(row, "ai_depth_score"), score(row, "feature_maturity_score")),
-            "Maturity": score(row, "feature_maturity_score"),
-            "Price": 4 if "free" in row.get("pricing_model", "").lower() else 3,
-            "UX": score(row, "feature_maturity_score"),
-            "Ease to integrate/imitate": 4 if score(row, "network_moat_score") <= 3 else 2,
+
+    components = {}
+    missing = []
+    for label, field, weight in selected["components"]:
+        raw = (row.get(field) or "").strip()
+        component = {
+            "field": field,
+            "raw": raw or None,
+            "source": None,
+            "evidence_type": None,
+            "checked_at": None,
+            "confidence": None,
+            "weight": weight,
+            "score": None,
         }
-        weights = [0.30, 0.25, 0.15, 0.15, 0.15]
-        formula = "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate."
-    else:
-        components = {
-            "Security": score(row, "nda_security_strength_score"),
-            "API/integration": 4 if row["company"] in ("Dropbox Sign", "PandaDoc", "DocSend", "Digify") else 3,
-            "Pricing": 3 if "custom" in row.get("pricing_model", "").lower() else 4,
-            "MVP fit": 5 if row["company"] in ("Dropbox Sign", "DocSend", "PandaDoc", "Digify") else 3,
-            "Build-versus-buy": 5 if row["company"] in ("Dropbox Sign", "DocSend", "Digify") else 3,
-            "NDA/controlled disclosure fit": score(row, "nda_security_strength_score"),
+        if not raw:
+            missing.append(field)
+        else:
+            try:
+                numeric = float(raw)
+            except ValueError:
+                missing.append(field)
+            else:
+                if 1 <= numeric <= 5:
+                    component["score"] = numeric
+                    component["source"] = row.get(f"{field}_source") or None
+                    component["evidence_type"] = row.get(f"{field}_evidence_type") or None
+                    component["checked_at"] = row.get(f"{field}_checked_at") or None
+                    component["confidence"] = row.get(f"{field}_confidence") or None
+                    if not all(
+                        component[key]
+                        for key in ("source", "evidence_type", "checked_at", "confidence")
+                    ):
+                        missing.append(field)
+                else:
+                    missing.append(field)
+        components[label] = component
+
+    formula = " + ".join(f"{weight:.0%} {label}" for label, _field, weight in selected["components"])
+    if missing:
+        return {
+            "value": None,
+            "status": "Insufficient Evidence",
+            "formula": formula,
+            "components": components,
+            "missing_inputs": sorted(set(missing)),
         }
-        weights = [0.25, 0.20, 0.15, 0.15, 0.15, 0.10]
-        formula = "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit."
-    val = sum(v * w for v, w in zip(components.values(), weights))
-    return round(val, 2), formula, components
+
+    value = sum(component["score"] * component["weight"] for component in components.values())
+    return {
+        "value": round(value, 2),
+        "status": "Comparable",
+        "formula": formula,
+        "components": components,
+        "missing_inputs": [],
+    }
 
 def enrich(rows):
     for row in rows:
         row["overall_confidence"] = overall_confidence(row.get("source_confidence", ""))
         row["confidence_note"] = row.get("source_confidence", "")
-        rel, pc, sec, jobs = STRATEGIC.get(row["company"], ("Substitute", row.get("source_category", ""), "", ""))
-        details = STRATEGIC_DETAILS.get(row["company"], {})
-        row["competitive_relationship"] = rel
-        row["primary_category"] = pc
-        row["secondary_capabilities"] = sec
-        row["bizmatch_jobs_competed_for"] = jobs
-        row["plain_language_description"] = details.get("plain_language_description", row.get("notes", "") or jobs)
-        row["primary_job_solved"] = details.get("primary_job_solved", jobs)
-        row["product_model"] = details.get("product_model", row.get("product_category", ""))
-        row["bizmatch_lesson"] = details.get("bizmatch_lesson", "")
-        row["do_not_copy"] = details.get("do_not_copy", "")
-        row["important_clarification"] = details.get("important_clarification", "")
         caps = {}
         for key, label in FEATURES:
             note = row.get(key, "")
@@ -340,36 +400,13 @@ def enrich(rows):
                 "confidence": confidence(row, status),
             }
         row["capabilities"] = caps
-        s, formula, comps = relationship_score(row)
-        row["relationship_score"] = s
-        row["score_formula"] = formula
-        row["score_components"] = comps
+        score_result = relationship_score(row)
+        row["relationship_score"] = score_result["value"]
+        row["score_status"] = score_result["status"]
+        row["score_formula"] = score_result["formula"]
+        row["score_components"] = score_result["components"]
+        row["score_missing_inputs"] = score_result["missing_inputs"]
     return rows
-
-def write_csv(rows):
-    existing = list(csv.DictReader(CSV_PATH.open(encoding="utf-8")))
-    fields = list(existing[0].keys())
-    for f in (
-        "competitive_relationship",
-        "primary_category",
-        "secondary_capabilities",
-        "bizmatch_jobs_competed_for",
-        "plain_language_description",
-        "primary_job_solved",
-        "product_model",
-        "bizmatch_lesson",
-        "do_not_copy",
-        "important_clarification",
-        "overall_confidence",
-        "confidence_note",
-    ):
-        if f not in fields:
-            fields.append(f)
-    with CSV_PATH.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fields)
-        writer.writeheader()
-        for r in rows:
-            writer.writerow({k: r.get(k, "") for k in fields})
 
 def nav(active, prefix=""):
     items = [
@@ -388,7 +425,7 @@ def page(title, active, body, subtitle="", prefix="", data_prefix="../../"):
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>{escape(title)}</title><link rel="icon" href="data:,"><link href="{prefix}style.css" rel="stylesheet"/></head><body>
 <header class="site-header"><div class="header-inner"><h1>{escape(title)}</h1><p>{escape(subtitle)}</p>{nav(active, prefix)}</div></header>
-<main>{body}<p class="footer">Canonical source: <a href="{data_prefix}data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. Last site update: {TODAY}. Research checked mostly on 2026-07-19.</p></main></body></html>"""
+<main>{body}<p class="footer">Canonical source: <a href="{data_prefix}data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. Technical reconciliation: {RECONCILIATION_DATE}. Row-level research dates are preserved in the canonical tracker.</p></main></body></html>"""
 
 def confidence_badge(text):
     t = escape(overall_confidence(text) if text not in ("High", "Medium", "Low") else text)
@@ -416,8 +453,6 @@ def one_sentence(text, fallback="Research note not available."):
 def row_strength(row):
     if row.get("bizmatch_lesson"):
         return row["bizmatch_lesson"]
-    if row["company"] in PRIORITY:
-        return PRIORITY[row["company"]][2]
     return one_sentence(row.get("secondary_capabilities") or row.get("notes"), "Clear capability evidence exists in the tracker.")
 
 def row_weakness(row):
@@ -429,13 +464,6 @@ def row_weakness(row):
     if row.get("contradictions"):
         return one_sentence(row.get("contradictions"))
     return one_sentence(row.get("unsupported_claims"), "Main gap requires deeper validation.")
-
-def threat_band(score_value):
-    if score_value >= 3.8:
-        return "High threat" 
-    if score_value >= 3.0:
-        return "Medium threat"
-    return "Low / benchmark"
 
 def stage_status(row, stage_key, feature_key):
     if feature_key is None:
@@ -495,10 +523,11 @@ def strategic_page(rows):
     open_decisions = ["Exact founder segment.", "Technical vs. non-technical founder balance.", "Whether investors enter in the first or second launch phase.", "Industry scope.", "Geographic scope beyond Israel.", "Verification requirements.", "First acquisition partners."]
     cold_start = ["Recruit a curated founder/co-founder cohort.", "Verify and improve profiles manually.", "Guarantee a minimum number of relevant recommendations.", "Measure match quality and response rate.", "Add invited mentors and angels.", "Introduce project disclosure and NDA flows.", "Expand only after local match liquidity reaches an acceptable level."]
     body = f"""
+<section class="panel warning-panel"><h2>Phase 0 evidence notice</h2><p>The strategic narrative below is retained as a historical hypothesis. Phase 0 did not re-run White Space, MVP, Build/Buy, or strategy research. Previous numeric threat scores are deprecated; no conclusion on this page should be read as score-backed until explicit scoring inputs are researched and approved.</p></section>
 <section class="hero-panel">
   <p class="eyebrow">Executive summary</p>
-  <h2>No single competitor strongly owns the full BizMatch journey.</h2>
-  <p>Most researched companies solve one slice: matching, investor discovery, pitch review, document security, or e-signature. BizMatch's opening is the managed transition from business discovery to verified, protected, structured collaboration.</p>
+  <h2>Historical hypothesis: no single researched competitor appeared to own the full BizMatch journey.</h2>
+  <p>The prior analysis observed that most researched companies solve one slice. Its proposed opening is retained for future validation, not asserted as a verified White Space conclusion.</p>
   <p class="positioning">BizMatch connects founders, partners, and investors and manages the journey from initial compatibility to a verified, protected, and structured business collaboration.</p>
   <div class="journey">Discovery <span>-></span> Mutual Match <span>-></span> Structured Conversation <span>-></span> Access Request <span>-></span> NDA <span>-></span> Controlled Disclosure <span>-></span> Meeting <span>-></span> Collaboration</div>
 </section>
@@ -517,48 +546,46 @@ def strategic_page(rows):
     return page("Strategic Conclusions", "Strategic Conclusions", body, "What we learned, where BizMatch may have an opening, and what remains unproven.")
 
 def priority_card(row, compact=False):
-    why, job, learn, avoid, threat, conf = PRIORITY[row["company"]]
     if compact:
         return f"""
 <article class="priority-card">
   <h3><a href="companies/{slug(row['company'])}.html">{escape(row['company'])}</a></h3>
-  <p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence', conf))} <span class="score-pill">Threat: {escape(threat)}</span></p>
-  <p>{escape(row.get('plain_language_description') or why)}</p>
+  <p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence',''))}</p>
+  <p>{escape(row.get('plain_language_description') or row.get('notes',''))}</p>
 </article>"""
     return f"""
 <article class="priority-card">
   <h3><a href="companies/{slug(row['company'])}.html">{escape(row['company'])}</a></h3>
-  <p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence', conf))} <span class="score-pill">Threat: {escape(threat)}</span></p>
-  <dl class="mini-dl"><dt>What it is</dt><dd>{escape(row.get('plain_language_description') or why)}</dd><dt>Primary job</dt><dd>{escape(row.get('primary_job_solved') or job)}</dd><dt>Lesson</dt><dd>{escape(row.get('bizmatch_lesson') or learn)}</dd><dt>Do not copy</dt><dd>{escape(row.get('do_not_copy') or avoid)}</dd></dl>
+  <p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence',''))}</p>
+  <dl class="mini-dl"><dt>What it is</dt><dd>{escape(row.get('plain_language_description') or row.get('notes',''))}</dd><dt>Primary job</dt><dd>{escape(row.get('primary_job_solved') or row.get('bizmatch_jobs_competed_for',''))}</dd><dt>Lesson</dt><dd>{escape(row.get('bizmatch_lesson',''))}</dd><dt>Do not copy</dt><dd>{escape(row.get('do_not_copy',''))}</dd></dl>
 </article>"""
 
 def priority_page(rows):
     selected = [next(r for r in rows if r["company"] == name) for name in PRIORITY_ORDER]
     compare_rows = "".join(
-        f"<tr><th><a href='#pc-{slug(r['company'])}'>{escape(r['company'])}</a></th><td>{relationship_badge(r['competitive_relationship'])}</td><td>{escape(r.get('primary_job_solved') or PRIORITY[r['company']][1])}</td><td>{escape(threat_band(r['relationship_score']))}</td><td>{r['relationship_score']:.1f}/5</td><td>{confidence_badge(r.get('overall_confidence',''))}</td></tr>"
+        f"<tr><th><a href='#pc-{slug(r['company'])}'>{escape(r['company'])}</a></th><td>{relationship_badge(r['competitive_relationship'])}</td><td>{escape(r.get('primary_job_solved') or r.get('bizmatch_jobs_competed_for',''))}</td><td>Insufficient Evidence</td><td>{confidence_badge(r.get('overall_confidence',''))}</td></tr>"
         for r in selected
     )
     sections = []
     for r in selected:
-        why, job, learn, avoid, threat, conf = PRIORITY[r["company"]]
         coverage = "".join(
             f"<li><strong>{escape(label)}:</strong> {escape(stage_status(r, key, feature))}</li>"
             for key, label, feature in JOURNEY_STAGES
         )
-        comps = "".join(f"<dt>{escape(k)}</dt><dd>{v:.1f}</dd>" for k, v in r["score_components"].items())
         sections.append(f"""
 <section class="panel competitor-deep" id="pc-{slug(r['company'])}">
   <h2>{escape(r['company'])}</h2>
-  <p>{relationship_badge(r['competitive_relationship'])} {confidence_badge(r.get('overall_confidence',''))} <span class="score-pill">{escape(threat_band(r['relationship_score']))}</span> <span class="score-pill">{r['relationship_score']:.1f}/5</span></p>
-  <div class="profile-card quick-read"><h3>Product model</h3><dl class="field-grid"><dt>What it is</dt><dd>{escape(r.get('plain_language_description') or why)}</dd><dt>Who uses it</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Primary job solved</dt><dd>{escape(r.get('primary_job_solved') or job)}</dd><dt>How it works</dt><dd>{escape(r.get('product_model') or r.get('product_category',''))}</dd><dt>Why it matters to BizMatch</dt><dd>{escape(r.get('bizmatch_lesson') or learn)}</dd><dt>Important clarification</dt><dd>{escape(r.get('important_clarification') or row_weakness(r))}</dd></dl></div>
+  <p>{relationship_badge(r['competitive_relationship'])} {confidence_badge(r.get('overall_confidence',''))} <span class="score-pill">Insufficient Evidence</span></p>
+  <div class="profile-card quick-read"><h3>Product model</h3><dl class="field-grid"><dt>What it is</dt><dd>{escape(r.get('plain_language_description') or r.get('notes',''))}</dd><dt>Who uses it</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Primary job solved</dt><dd>{escape(r.get('primary_job_solved') or r.get('bizmatch_jobs_competed_for',''))}</dd><dt>How it works</dt><dd>{escape(r.get('product_model') or r.get('product_category',''))}</dd><dt>Why it matters to BizMatch</dt><dd>{escape(r.get('bizmatch_lesson',''))}</dd><dt>Important clarification</dt><dd>{escape(r.get('important_clarification') or row_weakness(r))}</dd></dl></div>
   <div class="split-grid"><div><dl class="field-grid"><dt>Competitive relationship</dt><dd>{escape(r['competitive_relationship'])}</dd><dt>Primary category</dt><dd>{escape(r['primary_category'])}</dd><dt>Secondary capabilities</dt><dd>{escape(r['secondary_capabilities'])}</dd><dt>Evidence-backed traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Pricing model</dt><dd>{escape(r.get('pricing_model',''))}</dd><dt>Important weaknesses or gaps</dt><dd>{escape(row_weakness(r))}</dd></dl></div><div><h3>Relevant workflow coverage</h3><ul class="clean-list">{coverage}</ul></div></div>
-  <div class="split-grid"><div><h3>What BizMatch should learn</h3><p>{escape(r.get('bizmatch_lesson') or learn)}</p><h3>What BizMatch should not copy</h3><p>{escape(r.get('do_not_copy') or avoid)}</p><h3>Recommended counter-positioning</h3><p>Position BizMatch around curated local trust, explained matching, and controlled progression from match to meeting rather than copying {escape(r['company'])}'s broadest category frame.</p></div><aside class="score-box"><h3>Score-factor breakdown</h3><dl class="score-list">{comps}</dl><p class="muted">Confidence: {escape(r.get('confidence_note') or r.get('source_confidence',''))}</p></aside></div>
+  <div class="split-grid"><div><h3>What BizMatch should learn</h3><p>{escape(r.get('bizmatch_lesson',''))}</p><h3>What BizMatch should not copy</h3><p>{escape(r.get('do_not_copy',''))}</p><h3>Historical counter-positioning hypothesis</h3><p>Retained for future validation; Phase 0 did not re-run strategic analysis.</p></div><aside class="score-box"><h3>Relationship score</h3><p><strong>Insufficient Evidence</strong></p><p class="muted">Missing explicit, sourced component inputs. This company is not ranked.</p></aside></div>
   <h3>Sources</h3><div class="source-grid">{source_cards(r, 'Priority-competitor claims, traction, pricing, and workflow coverage')}</div>
 </section>""")
     body = f"""
-<section class="panel"><h2>Priority Competitors</h2><p class="muted">These are the companies that should shape product decisions first. This page expands the homepage summary into evidence, workflow coverage, and counter-positioning.</p><div class="table-wrap"><table><thead><tr><th>Company</th><th>Relationship</th><th>Job solved</th><th>Band</th><th>Segment score</th><th>Confidence</th></tr></thead><tbody>{compare_rows}</tbody></table></div></section>
+<section class="panel warning-panel"><h2>Priority list status</h2><p>This is the pre-existing editorial review list, not a score-based ranking. Phase 0 retained its scope but removed numeric threat bands because explicit score inputs are missing.</p></section>
+<section class="panel"><h2>Priority Competitors</h2><div class="table-wrap"><table><thead><tr><th>Company</th><th>Relationship</th><th>Job solved</th><th>Score status</th><th>Confidence</th></tr></thead><tbody>{compare_rows}</tbody></table></div></section>
 {"".join(sections)}"""
-    return page("Priority Competitors", "Priority Competitors", body, "Focused benchmarks and threats for BizMatch product decisions.")
+    return page("Priority Competitors", "Priority Competitors", body, "Pre-existing review scope with score status and evidence.")
 
 def research_table(rows):
     table_rows = []
@@ -580,30 +607,30 @@ def research_table(rows):
 <td>{relationship_badge(r['competitive_relationship'])}</td>
 <td>{escape(r['primary_category'])}</td>
 <td>{escape(r.get('primary_job_solved') or r['bizmatch_jobs_competed_for'])}</td>
-<td><span class="score-pill" title="{escape(r['score_formula'])}">{r['relationship_score']:.1f}/5</span></td>
-<td>{escape(threat_band(r['relationship_score']))}</td>
+<td><span class="score-pill">Insufficient Evidence</span></td>
 <td>{confidence_badge(r.get('overall_confidence',''))}</td>
 <td>{escape(row_strength(r))}</td>
 <td>{escape(row_weakness(r))}</td>
 <td><a href="companies/{slug(r['company'])}.html">Open profile</a></td>
 </tr>
-<tr class="detail-row" data-detail-for="{idx}"><td colspan="10"><details><summary>Research details</summary><div class="split-grid"><dl class="field-grid"><dt>What it is</dt><dd>{escape(r.get('plain_language_description',''))}</dd><dt>Product model</dt><dd>{escape(r.get('product_model',''))}</dd><dt>Important clarification</dt><dd>{escape(r.get('important_clarification',''))}</dd><dt>Target users</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Funding</dt><dd>{escape(r.get('total_funding',''))}</dd><dt>Traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Confidence note</dt><dd>{escape(r.get('confidence_note',''))}</dd><dt>Unsupported claims</dt><dd>{escape(r.get('unsupported_claims',''))}</dd><dt>Contradictions</dt><dd>{escape(r.get('contradictions',''))}</dd><dt>Sources</dt><dd>{" ".join(source_anchor(u) for u in links)}</dd></dl><div><h3>Capability evidence</h3><ul class="clean-list">{caps}</ul></div></div></details></td>
+<tr class="detail-row" data-detail-for="{idx}"><td colspan="9"><details><summary>Research details</summary><div class="split-grid"><dl class="field-grid"><dt>What it is</dt><dd>{escape(r.get('plain_language_description',''))}</dd><dt>Product model</dt><dd>{escape(r.get('product_model',''))}</dd><dt>Important clarification</dt><dd>{escape(r.get('important_clarification',''))}</dd><dt>Target users</dt><dd>{escape(r.get('target_users',''))}</dd><dt>Funding</dt><dd>{escape(r.get('total_funding',''))}</dd><dt>Traction</dt><dd>{escape(r.get('users_traction',''))}</dd><dt>Confidence note</dt><dd>{escape(r.get('confidence_note',''))}</dd><dt>Score status</dt><dd>Insufficient Evidence — missing: {escape(', '.join(r['score_missing_inputs']))}</dd><dt>Unsupported claims</dt><dd>{escape(r.get('unsupported_claims',''))}</dd><dt>Contradictions</dt><dd>{escape(r.get('contradictions',''))}</dd><dt>Sources</dt><dd>{" ".join(source_anchor(u) for u in links)}</dd></dl><div><h3>Capability evidence</h3><ul class="clean-list">{caps}</ul></div></div></details></td>
 </tr>""")
     filters = "".join(f'<option value="{escape(rel)}">{escape(rel)}</option>' for rel in RELATION_ORDER)
     body = f"""
 <section class="panel"><h2>Filters</h2><div class="controls"><div><label for="search">Search</label><input id="search" placeholder="CoffeeSpace, NDA, Israel, pitch deck..."></div><div><label for="searchScope">Search scope</label><select id="searchScope"><option value="all">All</option><option value="companies">Companies</option><option value="capabilities">Capabilities</option><option value="evidence">Evidence</option></select></div><div><label for="relationshipFilter">Competition type</label><select id="relationshipFilter"><option value="">All</option>{filters}</select></div><div><label for="confidenceFilter">Confidence</label><select id="confidenceFilter"><option value="">All</option><option>High</option><option>Medium</option><option>Low</option></select></div><div><label>&nbsp;</label><button class="secondary" id="resetFilters">Reset</button></div></div></section>
-<section class="panel"><h2>Full Research Table <span class="muted">(<span id="visibleCount">{len(rows)}</span> visible)</span></h2><p class="muted">Default columns are intentionally compact. Expand a row or open the company profile for funding, traction, sources, capability evidence, contradictions, and unsupported claims.</p><div class="table-wrap"><table id="researchTable"><thead><tr><th>Company</th><th>Competitive relationship</th><th>Primary category</th><th>Main job competed for</th><th>Segment score</th><th>Threat or benchmark band</th><th>Overall confidence</th><th>One key strength</th><th>One key weakness</th><th>Profile link</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div></section>
+<section class="panel warning-panel"><h2>Numeric ranking paused</h2><p>The canonical schema does not yet contain the explicit, sourced inputs required by the documented relationship-score formulas. Missing data is not assigned a default; every company is therefore shown as Insufficient Evidence and is not ranked.</p></section>
+<section class="panel"><h2>Full Research Table <span class="muted">(<span id="visibleCount">{len(rows)}</span> visible)</span></h2><p class="muted">Expand a row or open the company profile for funding, traction, sources, capability evidence, contradictions, unsupported claims, and missing score inputs.</p><div class="table-wrap"><table id="researchTable"><thead><tr><th>Company</th><th>Competitive relationship</th><th>Primary category</th><th>Main job competed for</th><th>Relationship score</th><th>Overall confidence</th><th>One key strength</th><th>One key weakness</th><th>Profile link</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div></section>
 <script src="app.js"></script>"""
     return page("Full Research Table", "Full Research Table", body, "Canonical tracker table with strategic relationship filters and source-linked claims.")
 
 def category_page(rows):
     blocks = []
     for rel in RELATION_ORDER:
-        rs = sorted([r for r in rows if r["competitive_relationship"] == rel], key=lambda r: r["relationship_score"], reverse=True)
+        rs = [r for r in rows if r["competitive_relationship"] == rel]
         formula = rs[0]["score_formula"] if rs else ""
-        cards = "".join(f'<article class="category-card"><h3><a href="companies/{slug(r["company"])}.html">{escape(r["company"])}</a> - {escape(threat_band(r["relationship_score"]))}, {r["relationship_score"]:.1f}/5</h3><p>{confidence_badge(r.get("overall_confidence",""))}</p><p>{escape(one_sentence(r.get("plain_language_description") or r.get("notes"), r["bizmatch_jobs_competed_for"]))}</p><p class="muted"><strong>Job:</strong> {escape(r.get("primary_job_solved") or r["bizmatch_jobs_competed_for"])}</p><dl class="score-list">{"".join(f"<dt>{escape(k)}</dt><dd>{v:.1f}</dd>" for k, v in r["score_components"].items())}</dl></article>' for r in rs)
-        blocks.append(f'<section class="panel"><h2>{escape(rel)}</h2><p class="muted"><strong>Formula:</strong> {escape(formula)}</p><div class="category-grid">{cards}</div></section>')
-    return page("Category Analysis", "Category Analysis", "".join(blocks), "Separate scoring models for each competitive relationship.")
+        cards = "".join(f'<article class="category-card"><h3><a href="companies/{slug(r["company"])}.html">{escape(r["company"])}</a></h3><p>{confidence_badge(r.get("overall_confidence",""))} <span class="score-pill">Insufficient Evidence</span></p><p>{escape(one_sentence(r.get("plain_language_description") or r.get("notes"), r["bizmatch_jobs_competed_for"]))}</p><p class="muted"><strong>Job:</strong> {escape(r.get("primary_job_solved") or r["bizmatch_jobs_competed_for"])}</p></article>' for r in rs)
+        blocks.append(f'<section class="panel"><h2>{escape(rel)}</h2><p class="muted"><strong>Preserved analytical weights:</strong> {escape(formula)}. No ranking is produced until every required component has an explicit value and evidence metadata.</p><div class="category-grid">{cards}</div></section>')
+    return page("Category Analysis", "Category Analysis", "".join(blocks), "Relationship groups shown without unsupported numeric rankings.")
 
 def methodology_page(rows):
     limitations = [
@@ -638,10 +665,11 @@ def methodology_page(rows):
         for name, (v1, v3, v5) in RUBRIC.items()
     )
     body = f"""
-<section class="panel"><h2>Single Source Of Truth</h2><p>The canonical source for active research is <a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. The generated site data file <code>canonical-data.js</code>, the table, company profiles, category pages, priority competitor page, and strategic conclusions are generated from that file plus the explicit strategic classification rules in <code>tools/generate_site.py</code>.</p><p>Older files under <code>reports/</code> and <code>data/bizmatch-competitive-research-cited.*</code> are archived context only and should not be used as active facts when they conflict with the canonical tracker.</p></section>
+<section class="panel"><h2>Single Source Of Truth</h2><p>The only active research source is <a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. The XLSX, generated site data, tables, company profiles, category pages, source pages, and report notices are derived from it. The generator never writes back to the CSV.</p><p>Historical cited datasets are kept under <code>archive/data/</code>. Production code does not read them.</p></section>
 <section class="panel"><h2>Strategic Classification Rules</h2><ul class="clean-list"><li><strong>Direct competitor:</strong> competes for a core BizMatch discovery or matching workflow.</li><li><strong>Substitute / network threat:</strong> solves an adjacent job and has unusually strong network, brand, or ecosystem pull.</li><li><strong>Substitute:</strong> solves an adjacent job users could choose instead of BizMatch.</li><li><strong>Feature benchmark:</strong> helps evaluate a supporting capability but is not the full product category.</li><li><strong>Infrastructure / potential partner:</strong> can support signing, disclosure, security, or data-room needs without being the core network.</li></ul></section>
-<section class="panel"><h2>Segmented Scoring Formulas</h2><div class="category-grid">{"".join(formula_blocks)}</div></section>
-<section class="panel"><h2>Scoring Rubric</h2><p class="muted">Anchors make scores reproducible. Intermediate values 2 and 4 are used when evidence sits between the defined anchors.</p><div class="table-wrap"><table><thead><tr><th>Dimension</th><th>1 means</th><th>3 means</th><th>5 means</th></tr></thead><tbody>{rubric_rows}</tbody></table></div></section>
+<section class="panel warning-panel"><h2>Relationship score status</h2><p>Numeric scoring is paused. The weights below are preserved analytical choices that require approval; the required explicit component fields and per-input evidence metadata are absent from the current 65-column schema. Missing inputs return null / Insufficient Evidence, never a default number.</p></section>
+<section class="panel"><h2>Preserved Segmented Weights</h2><div class="category-grid">{"".join(formula_blocks)}</div></section>
+<section class="panel"><h2>Legacy Rubric — Deprecated Audit Context</h2><p class="muted">These anchors describe the historical model only. Legacy columns remain in the canonical CSV for audit but do not feed the site, rankings, or conclusions.</p><div class="table-wrap"><table><thead><tr><th>Dimension</th><th>1 meant</th><th>3 meant</th><th>5 meant</th></tr></thead><tbody>{rubric_rows}</tbody></table></div></section>
 <section class="panel"><h2>Research Limitations</h2><ul class="clean-list">{"".join(f"<li>{escape(x)}</li>" for x in limitations)}</ul></section>
 <section class="panel"><h2>Research Backlog</h2><ol class="clean-list numbered">{"".join(f"<li>{escape(x)}</li>" for x in backlog)}</ol></section>
 <section class="panel"><h2>Capability Verification Model</h2><p>Capabilities are displayed as Confirmed, Partial, Not found, or Not applicable. Confirmed requires direct support in the canonical tracker's cited notes. Partial is used for limited analogs or marketing-level evidence. Not found is transparent uncertainty, not a negative factual claim.</p></section>"""
@@ -649,22 +677,22 @@ def methodology_page(rows):
 
 def archive_page():
     body = """
-<section class="panel"><h2>Archived Material</h2><p>The old auto-generated cited report is no longer part of the active research navigation because it contains known extraction errors that contradict the canonical tracker.</p><div class="archive-list"><a href="../../reports/bizmatch-competitive-research-cited-report.html">Archived old cited report HTML</a><a href="../../reports/bizmatch-competitive-research-cited-report.md">Archived old cited report Markdown</a><a href="../../reports/competitive-research-tracker-preview.html">Archived tracker preview</a></div></section>
+<section class="panel"><h2>Archived Material</h2><p>The old cited datasets and generated reports are audit material only. Production code does not read them.</p><div class="archive-list"><a href="../../archive/data/bizmatch-competitive-research-cited.csv">Archived cited CSV</a><a href="../../archive/data/bizmatch-competitive-research-cited.xlsx">Archived cited XLSX</a><a href="../../reports/bizmatch-competitive-research-cited-report.html">Archived old cited report HTML</a><a href="../../reports/bizmatch-competitive-research-cited-report.md">Archived old cited report Markdown</a><a href="../../reports/competitive-research-tracker-preview.html">Archived tracker preview</a></div></section>
 <section class="panel warning-panel"><h2>Known Archived Errors</h2><ul class="clean-list"><li>Cherub's $45K customer testimonial was misread as company funding.</li><li>CoffeeSpace's customer qualification threshold of $10M raised was misread as CoffeeSpace funding.</li><li>Swipe Invest's $45B European market statistic was misread as company funding.</li><li>Digify's platform/customer document-security figures were misread as funding.</li><li>Cofounder.org's '3 Matches' UI heading was misread as traction.</li><li>SWIP's target first cohort of 100 founders was misread as existing users.</li><li>SecureDocs and Carta pricing was mixed into funding or traction fields.</li></ul></section>
 """
     return page("Archive", "Archive", body, "Old generated reports kept out of the active research path.")
 
 def company_page(row):
     caps = "".join(f"""<article class="cap-card"><h3>{escape(c['label'])}</h3><p><span class="badge status-{slug(c['status'])}">{escape(c['status'])}</span> <span class="badge">{escape(c['delivery_type'])}</span> {confidence_badge(c['confidence'])}</p><p>{escape(c['note'])}</p><p class="muted">Checked: {escape(c['checked_at'] or 'not recorded')} {source_anchor(c['evidence_url']) if c['evidence_url'] else ''}</p></article>""" for c in row["capabilities"].values())
-    comps = "".join(f"<dt>{escape(k)}</dt><dd>{v:.1f}</dd>" for k, v in row["score_components"].items())
+    missing = ", ".join(row["score_missing_inputs"])
     body = f"""
 <div class="profile-layout"><div>
-<section class="profile-card"><h2>{escape(row['company'])}</h2><p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence',''))}</p><dl class="field-grid"><dt>Primary category</dt><dd>{escape(row['primary_category'])}</dd><dt>Secondary capabilities</dt><dd>{escape(row['secondary_capabilities'])}</dd><dt>BizMatch jobs competed for</dt><dd>{escape(row['bizmatch_jobs_competed_for'])}</dd><dt>Status</dt><dd>{escape(row['current_status'])}</dd><dt>Target users</dt><dd>{escape(row['target_users'])}</dd><dt>Funding</dt><dd>{escape(row['total_funding'])}</dd><dt>Traction</dt><dd>{escape(row['users_traction'])}</dd><dt>Confidence note</dt><dd>{escape(row.get('confidence_note',''))}</dd></dl></section>
+<section class="profile-card"><h2>{escape(row['company'])}</h2><p>{relationship_badge(row['competitive_relationship'])} {confidence_badge(row.get('overall_confidence',''))}</p><dl class="field-grid"><dt>Primary category</dt><dd>{escape(row['primary_category'])}</dd><dt>Secondary capabilities</dt><dd>{escape(row['secondary_capabilities'])}</dd><dt>BizMatch jobs competed for</dt><dd>{escape(row['bizmatch_jobs_competed_for'])}</dd><dt>Status</dt><dd>{escape(row['current_status'])}</dd><dt>HQ / country</dt><dd>{escape(row['hq_country'])}</dd><dt>Target users</dt><dd>{escape(row['target_users'])}</dd><dt>Funding</dt><dd>{escape(row['total_funding'])}</dd><dt>Funding rounds</dt><dd>{escape(row['funding_rounds'])}</dd><dt>Traction</dt><dd>{escape(row['users_traction'])}</dd><dt>Confidence note</dt><dd>{escape(row.get('confidence_note',''))}</dd></dl></section>
 <section class="profile-card"><h2>Strategic Positioning</h2><dl class="field-grid"><dt>What it is</dt><dd>{escape(row.get('plain_language_description',''))}</dd><dt>Primary job solved</dt><dd>{escape(row.get('primary_job_solved',''))}</dd><dt>Product model</dt><dd>{escape(row.get('product_model',''))}</dd><dt>BizMatch lesson</dt><dd>{escape(row.get('bizmatch_lesson',''))}</dd><dt>Do not copy</dt><dd>{escape(row.get('do_not_copy',''))}</dd><dt>Important clarification</dt><dd>{escape(row.get('important_clarification',''))}</dd></dl></section>
 <section class="profile-card"><h2>Capability Evidence</h2><div class="cap-grid">{caps}</div></section>
-<section class="profile-card"><h2>Evidence Notes</h2><dl class="field-grid"><dt>Unsupported claims</dt><dd>{escape(row.get('unsupported_claims',''))}</dd><dt>Contradictions corrected</dt><dd>{escape(row.get('contradictions',''))}</dd><dt>Last checked</dt><dd>{escape(row.get('last_checked',''))}</dd></dl></section>
+<section class="profile-card"><h2>Evidence Notes</h2><dl class="field-grid"><dt>Research notes</dt><dd>{escape(row.get('notes',''))}</dd><dt>Unsupported claims</dt><dd>{escape(row.get('unsupported_claims',''))}</dd><dt>Contradictions corrected</dt><dd>{escape(row.get('contradictions',''))}</dd><dt>Last checked</dt><dd>{escape(row.get('last_checked',''))}</dd></dl></section>
 <section class="profile-card"><h2>Sources</h2><div class="source-grid">{source_cards(row, 'Company profile, traction, pricing, funding, and capability evidence')}</div></section>
-</div><aside class="sidebox"><h2>Segment Score</h2><p><span class="score-pill large" title="{escape(row['score_formula'])}">{row['relationship_score']}</span></p><p class="muted">{escape(row['score_formula'])}</p><dl class="score-list">{comps}</dl></aside></div>"""
+</div><aside class="sidebox"><h2>Relationship Score</h2><p><span class="score-pill large">N/A</span></p><p><strong>Insufficient Evidence</strong></p><p class="muted">Required inputs are absent; no default was applied and this company is not ranked.</p><details><summary>Missing inputs</summary><p>{escape(missing)}</p><p>{escape(row['score_formula'])}</p></details></aside></div>"""
     return page(row["company"], "Full Research Table", body, row["bizmatch_jobs_competed_for"], prefix="../", data_prefix="../../../")
 
 def data_js(rows):
@@ -689,48 +717,156 @@ def data_js(rows):
             "overall_confidence": r["overall_confidence"],
             "confidence_note": r["confidence_note"],
             "relationship_score": r["relationship_score"],
+            "score_status": r["score_status"],
             "score_formula": r["score_formula"],
             "score_components": r["score_components"],
+            "score_missing_inputs": r["score_missing_inputs"],
             "capabilities": r["capabilities"],
-            **{k: score(r, k) for k in SCORE_FIELDS},
         })
-    return "window.BIZMATCH_RESEARCH = " + json.dumps({"source": "data/competitive-research-tracker.csv", "updated_at": TODAY, "companies": public}, ensure_ascii=False, indent=2) + ";\nwindow.RANKER_DATA = window.BIZMATCH_RESEARCH.companies;\n"
+    return "window.BIZMATCH_RESEARCH = " + json.dumps({"source": "data/competitive-research-tracker.csv", "reconciled_at": RECONCILIATION_DATE, "companies": public}, ensure_ascii=False, indent=2) + ";\n"
 
 def compatibility_ranker_js(rows):
-    items = []
-    for r in rows:
-        features = {}
-        for key, _label in FEATURES:
-            features[key] = r["capabilities"][key]["status"] in ("Confirmed", "Partial")
-        items.append({
-            "company": r["company"],
-            "url": r["url"],
-            "category": r["competitive_relationship"],
-            "profile": f"companies/{slug(r['company'])}.html",
-            "product_overlap_score": score(r, "product_overlap_score"),
-            "feature_maturity_score": score(r, "feature_maturity_score"),
-            "market_traction_score": score(r, "market_traction_score"),
-            "funding_strength_score": score(r, "funding_strength_score"),
-            "ai_depth_score": score(r, "ai_depth_score"),
-            "nda_security_strength_score": score(r, "nda_security_strength_score"),
-            "network_moat_score": score(r, "network_moat_score"),
-            "direct_threat_score": r["relationship_score"],
-            "features": features,
-        })
-    return "window.RANKER_DATA = " + json.dumps(items, ensure_ascii=False) + ";"
+    del rows
+    return (
+        'window.RANKER_DATA = [];\n'
+        'window.RANKER_DATA_STATUS = "Deprecated: numeric ranking disabled because explicit sourced inputs are missing.";\n'
+    )
 
 def root_entry():
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}</style></head><body><main><h1>BizMatch Competitor Research</h1><p>Strategic competitor research generated from the canonical tracker.</p><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Strategic Conclusions</a><p>Main decision page: landscape, priority competitors, implications, product priorities, and research limits.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Narrow benchmark list for product decisions.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, segmented scores, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Single source of truth, limitations, and follow-up research backlog.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Canonical tracker XLSX</a></li></ul><p>Archived generated drafts are kept under <a href="sites/full-report-site/archive.html">Archive</a> and are not active research facts. Last update: {TODAY}.</p></main></body></html>"""
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Competitor Research</h1><div class="warn"><strong>Phase 0:</strong> numeric relationship and threat rankings are paused because the explicit sourced inputs are missing. Historical strategic text is retained as hypothesis, not revalidated conclusion.</div><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Strategic Conclusions</a><p>Historical hypotheses with current evidence limitations.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Single source of truth, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated canonical tracker XLSX</a></li></ul><p>Archived generated drafts and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
 
 def archive_notice(title):
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)} - Archived</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:880px;margin:auto;background:#fff;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;font-weight:600;text-decoration:none}}li{{margin:8px 0}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>{escape(title)} - Archived</h1><div class="warn"><p>This old auto-generated report was removed from the active research path because it contained known extraction errors and contradicted the canonical tracker.</p></div><p>Use <a href="../sites/full-report-site/index.html">Strategic Conclusions</a>, <a href="../sites/full-report-site/research-table.html">Full Research Table</a>, and <a href="../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> for current facts.</p><h2>Known corrected errors</h2><ul><li>Cherub: a $45K customer testimonial was not company funding.</li><li>CoffeeSpace: a $10M customer qualification threshold was not CoffeeSpace funding.</li><li>Swipe Invest: a $45B macro market statistic was not company funding.</li><li>Digify: document-security/customer figures were not company funding.</li><li>Cofounder.org: “3 Matches” was a UI heading, not traction.</li><li>SWIP: “100 founders” was a target cohort, not verified users.</li><li>SecureDocs and Carta pricing should not be shown as funding or traction.</li></ul><p>Archived on {TODAY}.</p></main></body></html>"""
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)} - Archived</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:880px;margin:auto;background:#fff;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;font-weight:600;text-decoration:none}}li{{margin:8px 0}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>{escape(title)} - Archived</h1><div class="warn"><p>This old generated report is audit material only. Production code reads only the canonical tracker.</p></div><p>Use <a href="../sites/full-report-site/research-table.html">Full Research Table</a> and <a href="../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> for current facts.</p><p>Archived before or during the {RECONCILIATION_DATE} reconciliation.</p></main></body></html>"""
 
 def alias_page(target, label):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={escape(target)}"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(label)}</title><link rel="icon" href="data:,"><link href="../style.css" rel="stylesheet"></head><body><main><section class="panel"><h1>{escape(label)}</h1><p>This legacy profile URL now points to the canonical generated profile.</p><p><a href="{escape(target)}">Open canonical profile</a></p></section></main></body></html>"""
 
+def citation_nav():
+    pages = (
+        ("index.html", "Index"),
+        ("company-profiles.html", "Profiles"),
+        ("product-flows.html", "Product"),
+        ("pricing-business-model.html", "Pricing"),
+        ("funding.html", "Funding"),
+        ("traction-market-signal.html", "Traction"),
+        ("ai-capabilities.html", "AI"),
+        ("security-data-room.html", "Security"),
+        ("risks-gaps.html", "Risks"),
+        ("all-sources.html", "All sources"),
+        ("threat-scoring.html", "Scoring status"),
+    )
+    return '<nav class="nav">' + "".join(
+        f'<a href="{href}">{escape(label)}</a>' for href, label in pages
+    ) + "</nav>"
+
+def citation_shell(title, body):
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{escape(title)}</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css"></head><body><header><h1>{escape(title)}</h1><p>Generated from the canonical CSV. No archived cited dataset is read.</p>{citation_nav()}</header><main>{body}<p class="footer">Canonical source: ../../data/competitive-research-tracker.csv · Technical reconciliation: {RECONCILIATION_DATE} · Row-level research dates are preserved.</p></main></body></html>"""
+
+def citation_sources(row):
+    links = urls(row.get("primary_sources", "")) + urls(row.get("secondary_sources", ""))
+    if not links:
+        return '<span class="empty">No source URL recorded</span>'
+    return " ".join(
+        f'<a href="{escape(link)}" target="_blank" rel="noopener">{escape(urlparse(link).netloc)}</a>'
+        for link in links
+    )
+
+def citation_cards(rows, fields):
+    cards = []
+    for row in rows:
+        values = []
+        for field, label in fields:
+            value = (row.get(field) or "").strip()
+            rendered = escape(value) if value else '<span class="empty">Insufficient Evidence</span>'
+            values.append(f"<dt>{escape(label)}</dt><dd>{rendered}</dd>")
+        cards.append(
+            f'<article class="card"><h2 class="company"><a href="{escape(row["url"])}" target="_blank" rel="noopener">{escape(row["company"])}</a></h2>'
+            f'<p class="meta">Last checked: {escape(row.get("last_checked") or "not recorded")} · {escape(row.get("source_confidence") or "confidence not recorded")}</p>'
+            f'<dl class="field-list">{"".join(values)}</dl><div class="sources">{citation_sources(row)}</div></article>'
+        )
+    return '<div class="grid">' + "".join(cards) + "</div>"
+
+def write_citation_site(rows):
+    page_fields = {
+        "company-profiles.html": ("Company Profiles", (
+            ("current_status", "Current status"),
+            ("founded_launch_year", "Founded / launch year"),
+            ("hq_country", "HQ / country"),
+            ("operating_area", "Operating area"),
+            ("target_users", "Target users"),
+            ("product_category", "Product category"),
+            ("acquisition_rebrand_history", "Acquisition / rebrand history"),
+        )),
+        "product-flows.html": ("Product & Application Flows", tuple(FEATURES)),
+        "pricing-business-model.html": ("Pricing & Business Model", (
+            ("pricing_model", "Pricing model"),
+            ("business_model", "Business model"),
+        )),
+        "funding.html": ("Funding, Investors & Capital Facilitated", (
+            ("total_funding", "Total funding"),
+            ("funding_rounds", "Funding rounds"),
+            ("investors", "Investors"),
+            ("funding_source_type", "Funding source type"),
+            ("last_funding_date", "Last funding date"),
+            ("deals_funding_facilitated", "Capital facilitated"),
+        )),
+        "traction-market-signal.html": ("Traction, Partnerships & Activity", (
+            ("users_traction", "Users / traction"),
+            ("partnerships", "Partnerships"),
+            ("media_coverage", "Media coverage"),
+            ("product_update_activity", "Product update activity"),
+        )),
+        "ai-capabilities.html": ("AI Capabilities", (
+            ("ai_matching_scoring", "AI matching / scoring"),
+            ("ai_deck_scoring", "AI deck scoring"),
+            ("meeting_prep_ai_briefing", "Meeting-prep AI briefing"),
+        )),
+        "security-data-room.html": ("Security, NDA, Data Room & E-signature", (
+            ("nda_gated_unlock", "NDA / access gate"),
+            ("data_room", "Data room"),
+            ("e_signature", "E-signature"),
+            ("messaging_collaboration", "Messaging / collaboration"),
+        )),
+        "risks-gaps.html": ("Unsupported Claims, Contradictions & Gaps", (
+            ("unsupported_claims", "Unsupported claims"),
+            ("contradictions", "Contradictions"),
+            ("notes", "Notes"),
+        )),
+        "all-sources.html": ("All Sources by Company", (
+            ("primary_sources", "Primary sources"),
+            ("secondary_sources", "Secondary sources"),
+            ("last_checked", "Last checked"),
+            ("source_confidence", "Source confidence"),
+        )),
+    }
+    intro = (
+        '<section class="card"><h2>Canonical evidence pages</h2>'
+        '<p>Every page in this section is regenerated from <code>data/competitive-research-tracker.csv</code>. '
+        'Historical cited files are isolated under <code>archive/data/</code>.</p>'
+        '<p>Numeric relationship rankings are paused. Missing evidence is displayed as Insufficient Evidence, never as zero or an average.</p></section>'
+    )
+    (CITATION_SITE / "index.html").write_text(
+        citation_shell("BizMatch Citation Site", intro),
+        encoding="utf-8",
+    )
+    for filename, (title, fields) in page_fields.items():
+        (CITATION_SITE / filename).write_text(
+            citation_shell(title, citation_cards(rows, fields)),
+            encoding="utf-8",
+        )
+    scoring = (
+        '<section class="card"><h2>Relationship score: Insufficient Evidence</h2>'
+        '<p>The current schema lacks explicit sourced inputs for the preserved segmented formulas, so the score is null for all companies and no cross-company ranking is generated.</p></section>'
+        '<section class="card"><h2>Legacy scores: Deprecated</h2>'
+        f'<p>The historical columns {escape(", ".join(LEGACY_SCORE_FIELDS))} remain in the canonical CSV only for audit. Their values are not rendered here and do not feed active pages, rankings, or conclusions.</p></section>'
+    )
+    (CITATION_SITE / "threat-scoring.html").write_text(
+        citation_shell("Scoring Status & Audit Boundary", scoring),
+        encoding="utf-8",
+    )
+
 def main():
     rows = enrich(list(csv.DictReader(CSV_PATH.open(encoding="utf-8"))))
-    write_csv(rows)
     (SITE / "canonical-data.js").write_text(data_js(rows), encoding="utf-8")
     (SITE / "ranker-data.js").write_text(compatibility_ranker_js(rows), encoding="utf-8")
     (SITE / "index.html").write_text(strategic_page(rows), encoding="utf-8")
@@ -743,6 +879,7 @@ def main():
         (SITE / "companies" / f"{slug(r['company'])}.html").write_text(company_page(r), encoding="utf-8")
     (SITE / "companies" / "cofounderorg.html").write_text(alias_page("cofounder-org.html", "Cofounder.org"), encoding="utf-8")
     (SITE / "companies" / "visiblevc.html").write_text(alias_page("visible-vc.html", "Visible.vc"), encoding="utf-8")
+    write_citation_site(rows)
     (ROOT / "index.html").write_text(root_entry(), encoding="utf-8")
     (ROOT / "START_HERE.html").write_text(root_entry(), encoding="utf-8")
     (ROOT / "README.html").write_text(root_entry(), encoding="utf-8")
@@ -752,7 +889,7 @@ def main():
         "# Old Cited Report - Archived\n\n"
         "This old auto-generated report was removed from the active research path because it contained extraction errors. "
         "Use `data/competitive-research-tracker.csv` and `sites/full-report-site/index.html` for current facts.\n\n"
-        f"Archived on {TODAY}.\n",
+        f"Phase 0 reconciliation completed on {RECONCILIATION_DATE}.\n",
         encoding="utf-8",
     )
     for ranker in ("ranker.html", "ranker-chatgpt.html", "ranker-claude.html", "ranker-perplexity.html", "general-ranker.html"):
@@ -760,7 +897,7 @@ def main():
             page(
                 "Archived Unified Ranker",
                 "Archive",
-                '<section class="panel warning-panel"><h2>Ranker Archived</h2><p>The old unified rankers mixed direct competitors, substitutes, feature tools, and infrastructure vendors into one threat score. Use <a href="category-analysis.html">Category Analysis</a> for segmented rankings and formulas.</p></section>',
+                '<section class="panel warning-panel"><h2>Ranker Archived</h2><p>The old rankers used deprecated scores, arbitrary defaults, and non-comparable relationship types. Numeric ranking is disabled. Use <a href="category-analysis.html">Category Analysis</a> for relationship groups and evidence status.</p></section>',
                 "Old one-size-fits-all threat scoring removed from active research.",
             ),
             encoding="utf-8",

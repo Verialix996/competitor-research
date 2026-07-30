@@ -1,8 +1,14 @@
 # BizMatch Competitive Research Kanban
 
+> **Phase 0 status (2026-07-30):** Historical board. Current canonical source is
+> `data/competitive-research-tracker.csv`. Legacy scores are deprecated and the
+> active relationship score is `Insufficient Evidence`. Previous “complete”
+> sync statements below are preserved as history, not current verification.
+> See `DATA_INTEGRITY.md` and `RECONCILIATION_REPORT.md`.
+
 Updated: 2026-07-19
 
-Tracker: `/mnt/ssd/.hermes/atlas/projects/bizmatch-competitive-research/competitive-research-tracker.csv`
+Tracker: `data/competitive-research-tracker.csv`
 Final previewable output: `/mnt/ssd/.hermes/document_cache/bizmatch-competitive-research/final-previewable`
 
 ## Backlog / To Research
@@ -35,10 +41,10 @@ Final previewable output: `/mnt/ssd/.hermes/document_cache/bizmatch-competitive-
 - [x] Crunchbase/LinkedIn/PitchBook funding gaps → **Phase C** desk pass done (`phase-cd-findings.md`); rest = "not public, final"
 - [x] Contradiction / unsupported-claim flags triaged → `phase-b-triage.md`
 
-## Finalization — ✅ COMPLETE (2026-07-25)
+## Historical finalization claim — superseded by Phase 0 (2026-07-30)
 
-Phases B, C, D, E done; Phase A deferred. Findings applied to CSV + XLSX + cards + table.
-See `research-plan.md` (full A–E plan + Phase E change log) and `phase-cd-findings.md`.
+Phase 0 rebuilt and validated the CSV/XLSX/site flow. See
+`RECONCILIATION_REPORT.md`; unresolved facts remain explicitly marked.
 
 ## Completed / Ready for Report
 

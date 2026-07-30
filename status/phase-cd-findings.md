@@ -1,5 +1,11 @@
 # Phase C/D — Desk-Research Findings (public sources)
 
+> **Historical evidence memo:** This document records the 2026-07-25 pass and is
+> not canonical. Phase 0 reopened only the already-stored disputed sources.
+> Peachscore’s `$1.7M/4 rounds` could not be verified and is now
+> `Insufficient Evidence`; FounderCloud entity naming and Visible.vc funding
+> remain unresolved. Current decisions are in `RECONCILIATION_REPORT.md`.
+
 Updated: 2026-07-25
 
 Results of the public-source verification pass for the 8 material items from
@@ -7,7 +13,8 @@ Results of the public-source verification pass for the 8 material items from
 apply during Phase E reconcile** — the canonical CSV and cards are generated as one pass,
 so nothing here is written into them yet (avoids partial-edit drift).
 
-Legend: ✅ resolved · 🟡 improved but still ranged · ⚠ new item needing review
+Legend: ✅ resolved in the historical pass · 🟡 improved but still ranged ·
+⚠ new item needing review · ↩ withdrawn by Phase 0 reconciliation
 
 ---
 
@@ -15,11 +22,11 @@ Legend: ✅ resolved · 🟡 improved but still ranged · ⚠ new item needing r
 
 | Company | Field | Before | Finding | Src |
 |---|---|---|---|---|
-| **Peachscore** | total_funding | not found | ✅ **$1.7M across 4 rounds** (Crunchbase org filed under legal name *Createnu Ventures*) | Crunchbase |
+| **Peachscore** | total_funding | not found | ↩ **Historical claim withdrawn:** the pass recorded `$1.7M across 4 rounds`, but the stored Crunchbase page under *Createnu Ventures* was inaccessible during Phase 0 and no accessible stored source supported the amount or round count. Current result: `Insufficient Evidence`. | Crunchbase (inaccessible during reconciliation) |
 | **AngelList** | AI matching / `ai_depth`=3 | unverified (Phase B flag) | ✅ **Confirmed** — AI deal-scoring + matching on sector/check-size/co-investor fit. Score holds; no rescore. | multiple 2026 reviews |
 | **Visible.vc** | founded_launch_year | not verified | ✅ **2014** | Tracxn / CB Insights |
 | **Visible.vc** | hq_country | not verified | ✅ **Chicago, IL, US** | CB Insights |
-| **Visible.vc** | total_funding | differs across sources | 🟡 **~$2.2M–$5.3M** (PitchBook $5.3M; others lower) — cite as range | PitchBook / Crunchbase |
+| **Visible.vc** | total_funding | differs across sources | ↩ **Historical range withdrawn:** the cited values conflict and the `$5.3M` PitchBook datapoint was not linked in the stored source fields. Current result: `Unresolved`; preserve the conflicting secondary-source values without selecting a total. | CB Insights / FilingFlow / Owler; unlinked PitchBook claim |
 | **FounderCloud** | hq_country | Accrington vs London conflict | ✅ Explained: **registered office Accrington** (STARTHAWK LIMITED, Companies House #12400556); **Crunchbase lists London** | Companies House / Crunchbase |
 
 ## New items needing review
@@ -40,6 +47,11 @@ Prior pass already searched these with real effort; this pass confirms no public
 
 ## Net effect on the phases
 
-- **Phase C**: Peachscore filled (+$1.7M). Comatch disambiguated. Direct-competitor funding confirmed "not public — final." The remaining 22-row gap is now either resolved, correctly-labeled-as-unavailable, or dependent on paid databases — **no open desk work remains** unless the user wants paid-source drill-down.
+- **Phase C (historical result):** the pass claimed that Peachscore was filled,
+  but Phase 0 withdrew that claim as `Insufficient Evidence`. Comatch remains
+  disambiguated. No “not public — final” label should be treated as independent
+  verification.
 - **Phase D**: AngelList ✅, Visible.vc ✅ (founded/HQ), FounderCloud HQ + liveness ✅. **PandaDoc / Ansarada NDA-feature verification — SKIPPED by decision (2026-07-25).** Their current NDA/e-sign flags stay "not found / partial" as last verified; not pursued further.
-- **Score impact**: none. The only score-linked flag (AngelList `ai_depth`) verified *in favor* of the existing value. Composite/threat rankings unchanged.
+- **Score impact (superseded):** the historical memo said composite/threat
+  rankings were unchanged. Phase 0 deprecated those rankings; they are not
+  active decision inputs.

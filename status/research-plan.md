@@ -1,4 +1,12 @@
-# BizMatch Competitive Research — Finalization Plan
+# BizMatch Competitive Research — Historical Finalization Plan
+
+> **Phase 0 status (2026-07-30):** This file preserves the pre-reconciliation
+> plan and claims for audit. It is not the current source-of-truth description.
+> The only active source is `data/competitive-research-tracker.csv`; the cited
+> datasets moved to `archive/data/`. The former scoring-complete and four-surface
+> sync claims are deprecated because they relied on legacy scores and were not
+> protected by reproducible consistency tests. See `RECONCILIATION_REPORT.md`,
+> `DATA_INTEGRITY.md`, and `SCORING_METHODOLOGY.md`.
 
 Updated: 2026-07-25
 
@@ -6,15 +14,18 @@ Companion to `kanban.md`. This document captures the exact state of the research
 corpus and the work required to consider it **final**. It is resumable: each phase
 lists concrete company targets so any session (or Hermes sub-agent) can pick up mid-stream.
 
-Tracker of record: `data/bizmatch-competitive-research-cited.csv` (36 companies, 8 scored dimensions).
+Current tracker of record: `data/competitive-research-tracker.csv` (36 companies,
+65 columns). Historical tracker referenced below:
+`archive/data/bizmatch-competitive-research-cited.csv`.
 
 ---
 
 ## 1. Current state — what is done
 
 - **36 companies** fully profiled across 5 competitor groups, with cited primary/secondary sources.
-- **Scoring complete**: all 36 rated 1–5 on product overlap, feature maturity, market traction,
-  funding strength, AI depth, NDA/security, network moat, plus the composite direct-threat score.
+- **Historical scoring exists but is deprecated**: the old 1–5 inputs and
+  composite score are retained only for audit. Active relationship scores are
+  `null` / `Insufficient Evidence`.
 - **Registration-flow screenshots captured for all 36** (103 images in
   `sites/full-report-site/assets/registration-flows/`) — but visitor-side only (see Gap A).
 - **Published surfaces**: research table (`sites/full-report-site/index.html`), 36 company
@@ -57,15 +68,20 @@ AI-matching claim). Remaining work is captured in the phase table below.
 |---|---|---|---|---|
 | **A** | Post-signup onboarding audit | ⏸ **DEFERRED** — parked scaffold (`signup-audit-kanban.md`); not part of finalizing now | Human / Hermes | Deferred |
 | **B** | Triage contradictions + unsupported claims | ✅ **DONE** — `phase-b-triage.md` (20 resolved, 12 cosmetic, 8 routed) | — | — |
-| **C** | Second-pass funding | ✅ **Desk work done** (`phase-cd-findings.md`): Peachscore +$1.7M, Comatch disambiguated, direct-comp funding = "not public, final". Paid-DB drill-down optional. | — | Low |
+| **C** | Second-pass funding | ⚠ **Historical pass superseded** (`phase-cd-findings.md`): its Peachscore amount/round-count claim was withdrawn as `Insufficient Evidence`; Comatch remains disambiguated. | — | Superseded |
 | **D** | Re-verify low-confidence + material facts | ✅ **Done** (`phase-cd-findings.md`): AngelList ✅, Visible.vc founded/HQ ✅, FounderCloud HQ + liveness ✅. PandaDoc / Ansarada NDA-feature checks **skipped by decision**. | — | — |
-| **E** | Reconcile & close | ✅ **DONE (2026-07-25)** — findings applied to CSV + XLSX + 6 cards + research table (see below) | Code session | Final |
+| **E** | Historical reconcile claim | ⚠ Superseded by reproducible Phase 0 reconciliation on 2026-07-30; see `RECONCILIATION_REPORT.md` | Code session | Superseded |
 
-### Phase E — what was applied (2026-07-25, directly in this repo)
+### Historical Phase E claim — not current validation evidence
 Findings from `phase-cd-findings.md` written to **CSV + XLSX + 6 company cards + research table**,
-kept byte-consistent across all four surfaces (verified):
-- **Peachscore** — `total_funding` $1.7M/4 rounds + `funding_rounds` (Crunchbase as "Createnu Ventures")
-- **Visible.vc** — `hq_country` → Chicago, IL; `total_funding` + PitchBook $5.3M datapoint
+claimed consistency across four surfaces without the current automated
+CSV/XLSX/site consistency suite:
+- **Peachscore** — the historical `$1.7M/4 rounds` claim is now
+  `Insufficient Evidence`; the stored Crunchbase page was inaccessible during
+  Phase 0 reconciliation.
+- **Visible.vc** — `hq_country` → Chicago, IL; funding remains `Unresolved`
+  because stored secondary-source figures conflict and the historical PitchBook
+  datapoint was not linked in the source fields.
 - **Comatch** — `total_funding` disambiguation note (not the consulting-firm Comatch)
 - **FounderCloud** — `hq_country` entity clarification (Starthawk LTD); `notes` liveness re-confirmed
 - **Gust, OpenVC** — `users_traction` prefixed "Company-reported:"
@@ -75,9 +91,10 @@ attribute their stats in-text ("homepage claim", "site claim", "Company states")
 that led with bare unattributed platform stats (Gust, OpenVC) got the "Company-reported:" prefix.
 Blanket-prefixing the other 10 would have created redundant double-hedges.
 
-> ⚠ **Sync caveat:** these edits live in this repo only. If the external Hermes pipeline
-> (`/mnt/ssd/.hermes/...`) ever re-exports, it will overwrite them. This repo is now the
-> working copy of record for these corrections.
+> **Historical pipeline caveat:** the 2026-07-25 edits were repo-local and could
+> have been overwritten by the former external Hermes export. Phase 0 replaces
+> this claim with a tested local canonical build rooted in
+> `data/competitive-research-tracker.csv`.
 
 ### Remaining optional decision
 - **Paid-DB funding drill-down** — remaining unresolved funding sits behind Crunchbase/PitchBook
@@ -89,7 +106,11 @@ Blanket-prefixing the other 10 would have created redundant double-hedges.
 
 - [⏸] Post-signup onboarding audit — **deferred**, out of scope for this finalization (Gap A).
 - [x] All contradiction / unsupported-claim flags triaged (`phase-b-triage.md`); material ones resolved or skipped.
-- [x] Funding cited or marked "not public — final" — desk pass done (`phase-cd-findings.md`); Peachscore filled, rest labeled.
+- [ ] Funding fully resolved — Phase 0 withdrew the Peachscore amount and round
+  count and left Comatch, Visible.vc, and Peachscore explicitly unresolved or
+  `Insufficient Evidence`.
 - [x] Low-confidence facts re-checked: Visible.vc founded/HQ verified, FounderCloud liveness confirmed live. SwipeDeck/SWIP/Swipe Invest/Cofounder.org/Inodash genuinely thin — cap wording in Phase E.
-- [x] **Phase E** — findings applied to CSV + XLSX + 6 cards + research table, verified consistent (2026-07-25).
+- [x] **Phase 0 replacement for Phase E** — canonical CSV, regenerated XLSX,
+  six affected cards, and research table passed the reproducible integrity suite
+  on 2026-07-30. This is technical consistency, not new factual verification.
 - [x] No real personal data, company identity, or live credentials/tokens introduced (all edits are public-source facts).

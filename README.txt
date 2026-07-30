@@ -1,8 +1,30 @@
-Open README.html or sites/full-report-site/index.html.
+BizMatch Competitive Research — Phase 0
 
-Folders:
-- data/: final CSV/XLSX trackers
-- reports/: report HTML/MD and preview
-- sites/: full report site and citation site
-- archives/: zipped site packages
-- status/: kanban/status
+Canonical source of truth:
+  data/competitive-research-tracker.csv
+
+Canonical build flow:
+  CSV -> validation -> XLSX -> website/reports/cards -> validation
+
+Run:
+  python3 tools/build_all.py
+
+Run the deterministic two-build check:
+  python3 tools/validate_data.py --check-build
+
+Important boundaries:
+- data/competitive-research-tracker.xlsx is generated; do not edit it manually.
+- archive/data/bizmatch-competitive-research-cited.* is historical audit material.
+- archive/legacy-scoring/ contains deprecated ranker code.
+- Legacy score columns remain in the CSV only for audit and do not feed the site.
+- relationship_score is null / Insufficient Evidence until explicit sourced inputs exist.
+- Historical strategic conclusions are retained as hypotheses; Phase 0 did not re-run
+  White Space, MVP, Mystery Shopping, or Build/Buy research.
+
+Documentation:
+- DATA_INTEGRITY.md
+- RECONCILIATION_REPORT.md
+- SCORING_METHODOLOGY.md
+- EXCLUSION_LOG.md
+
+Open index.html after a successful build.

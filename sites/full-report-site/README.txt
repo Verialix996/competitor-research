@@ -1,1 +1,10 @@
-Open index.html in a browser. Company names in the table link to detailed company profile pages. Citation category pages are linked from the header.
+Generated site. Do not hand-edit generated HTML or data files.
+
+Source:
+  ../../data/competitive-research-tracker.csv
+
+Build:
+  python3 tools/build_all.py
+
+Numeric rankings are disabled until explicit sourced relationship-score inputs exist.
+Legacy ranker code is retained only under ../../archive/legacy-scoring/.

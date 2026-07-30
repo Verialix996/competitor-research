@@ -1,6 +1,6 @@
 window.BIZMATCH_RESEARCH = {
   "source": "data/competitive-research-tracker.csv",
-  "updated_at": "2026-07-29",
+  "reconciled_at": "2026-07-30",
   "companies": [
     {
       "company": "Cherub",
@@ -20,16 +20,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.65,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 4.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 4,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -157,13 +220,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 2.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Comatch",
@@ -183,16 +240,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 2.95,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 1.5,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 2.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -320,13 +440,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "CoffeeSpace",
@@ -346,16 +460,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.95,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 4.0,
-        "Traction/network effect": 4.5,
-        "Geographic/niche fit": 4,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -483,13 +660,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 5.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 4.0
+      }
     },
     {
       "company": "SwipeDeck",
@@ -509,16 +680,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Low",
       "overall_confidence": "Low",
       "confidence_note": "Low",
-      "relationship_score": 2.25,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 3.0,
-        "Product-process overlap": 2.0,
-        "Traction/network effect": 1.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 2.5,
-        "Technology/AI depth": 2.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -646,13 +880,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Low"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 1.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "Swipe Invest",
@@ -672,16 +900,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Low-Medium",
       "overall_confidence": "Low",
       "confidence_note": "Low-Medium",
-      "relationship_score": 2.5,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 2.0,
-        "Traction/network effect": 1.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 2.5,
-        "Technology/AI depth": 1.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -809,13 +1100,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "Partial/pre-launch - current site functions as a marketing/waitlist page ('Join the first circle... contact us / become a partner'); no evidence of a live, usable web application yet",
           "confidence": "Low"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 1.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "SWIP",
@@ -835,16 +1120,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Low",
       "overall_confidence": "Low",
       "confidence_note": "Low",
-      "relationship_score": 2.05,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 3.0,
-        "Product-process overlap": 1.0,
-        "Traction/network effect": 1.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 2.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -972,13 +1320,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes - live web-based survey/waitlist flow and AI Match Simulator demo at swipventures.com",
           "confidence": "Low"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 1.0,
-      "market_traction_score": 1.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "YC Co-Founder Matching",
@@ -998,16 +1340,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.75,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 5.0,
-        "Geographic/niche fit": 4,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 2.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -1135,13 +1540,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 5.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 5.0
+      }
     },
     {
       "company": "CoFoundersLab",
@@ -1161,16 +1560,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 3.4,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 4.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 1.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -1298,13 +1760,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 4.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 4.0
+      }
     },
     {
       "company": "Foundersbase",
@@ -1324,16 +1780,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 3.35,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 4,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 2.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -1461,13 +1980,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Cofounder.org",
@@ -1478,7 +1991,7 @@ window.BIZMATCH_RESEARCH = {
       "primary_category": "Cofounder matching",
       "secondary_capabilities": "curated matching, founder profiles",
       "bizmatch_jobs_competed_for": "Founder/cofounder discovery",
-      "plain_language_description": "Smallest and least-documented company in this batch: no Crunchbase entry, no press coverage, no disclosed founding date, team, or funding found despite real search effort. Product is live and functional (LinkedIn signup, weekly email matches, founder-request posting) but reads as an early/bootstrapped project rather than a funded, scaled competitor. Lowest direct-threat score of the batch given near-total absence of traction/security/AI evidence.",
+      "plain_language_description": "Smallest and least-documented company in this batch: no Crunchbase entry, no press coverage, no disclosed founding date, team, or funding found despite real search effort. Product is live and functional (LinkedIn signup, weekly email matches, founder-request posting) but reads as an early/bootstrapped project rather than a funded, scaled competitor. Any comparative threat conclusion based on the legacy score is deprecated.",
       "primary_job_solved": "Founder/cofounder discovery",
       "product_model": "cofounder matching; founder-investor / capital; NDA/e-sign; AI",
       "bizmatch_lesson": "",
@@ -1487,16 +2000,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Low",
       "overall_confidence": "Low",
       "confidence_note": "Low",
-      "relationship_score": 2.25,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 3.0,
-        "Product-process overlap": 2.0,
-        "Traction/network effect": 1.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 1.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -1624,13 +2200,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Low"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 1.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "Tertle",
@@ -1650,16 +2220,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 2.6,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 2.0,
-        "Traction/network effect": 1.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 2.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -1787,13 +2420,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 1.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "FounderCloud",
@@ -1813,16 +2440,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 2.45,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 3.0,
-        "Product-process overlap": 2.0,
-        "Traction/network effect": 2.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 1.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -1950,13 +2640,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "AngelList",
@@ -1976,16 +2660,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.05,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 2.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 2.5,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -2113,13 +2860,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "Gust",
@@ -2139,16 +2880,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High for product/traction; Medium for funding due to unavailable public funding data",
       "overall_confidence": "High",
       "confidence_note": "High for product/traction; Medium for funding due to unavailable public funding data",
-      "relationship_score": 3.25,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 2.5,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -2276,13 +3080,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Crunchbase",
@@ -2302,16 +3100,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High for product; Medium for corporate funding due to secondary-source reliance",
       "overall_confidence": "High",
       "confidence_note": "High for product; Medium for corporate funding due to secondary-source reliance",
-      "relationship_score": 3.25,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 2.5,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -2439,13 +3300,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Republic",
@@ -2465,16 +3320,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.6,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 5.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -2602,13 +3520,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 5.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "StartEngine",
@@ -2628,16 +3540,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High for operations/traction; Medium for corporate funding due to secondary-source reliance",
       "overall_confidence": "High",
       "confidence_note": "High for operations/traction; Medium for corporate funding due to secondary-source reliance",
-      "relationship_score": 3.05,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 2.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 2.5,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -2765,13 +3740,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "OpenVC",
@@ -2791,16 +3760,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.4,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 4,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -2928,13 +3960,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Visible.vc",
@@ -2954,16 +3980,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 3.1,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 4.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 2.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -3091,13 +4180,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 3.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "Signal (NFX)",
@@ -3117,16 +4200,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.0,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 3.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -3254,13 +4400,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Foundersuite",
@@ -3280,16 +4420,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High for product/pricing/traction; Medium for funding unavailable",
       "overall_confidence": "High",
       "confidence_note": "High for product/pricing/traction; Medium for funding unavailable",
-      "relationship_score": 3.6,
-      "score_formula": "30% use-case overlap + 25% workflow overlap + 20% traction/network + 10% geography/niche + 10% pricing + 5% AI. Funding is context only.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% User/use-case overlap + 25% Product-process overlap + 20% Traction/network effect + 10% Geographic/niche fit + 10% Business/pricing model + 5% Technology/AI depth",
       "score_components": {
-        "User/use-case overlap": 5.0,
-        "Product-process overlap": 3.0,
-        "Traction/network effect": 3.0,
-        "Geographic/niche fit": 3,
-        "Business/pricing model": 3,
-        "Technology/AI depth": 3.0
+        "User/use-case overlap": {
+          "field": "relationship_use_case_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Product-process overlap": {
+          "field": "relationship_workflow_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Traction/network effect": {
+          "field": "relationship_traction_network_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Geographic/niche fit": {
+          "field": "relationship_geographic_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Business/pricing model": {
+          "field": "relationship_pricing_overlap_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        },
+        "Technology/AI depth": {
+          "field": "relationship_ai_depth_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.05,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_ai_depth_score",
+        "relationship_geographic_fit_score",
+        "relationship_pricing_overlap_score",
+        "relationship_traction_network_score",
+        "relationship_use_case_overlap_score",
+        "relationship_workflow_overlap_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -3417,13 +4620,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 5.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "DocSend",
@@ -3443,16 +4640,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium (direct site fetch blocked; relied on search-engine cached snippets, third-party review sites, and prior-pass partial evidence rather than full first-party page fetch)",
       "overall_confidence": "Medium",
       "confidence_note": "Medium (direct site fetch blocked; relied on search-engine cached snippets, third-party review sites, and prior-pass partial evidence rather than full first-party page fetch)",
-      "relationship_score": 4.3,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 4.0,
-        "API/integration": 4,
-        "Pricing": 4,
-        "MVP fit": 5,
-        "Build-versus-buy": 5,
-        "NDA/controlled disclosure fit": 4.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -3580,13 +4840,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 4.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Digify",
@@ -3597,7 +4851,7 @@ window.BIZMATCH_RESEARCH = {
       "primary_category": "Secure data room",
       "secondary_capabilities": "watermark, permissions, audit trail, document security",
       "bizmatch_jobs_competed_for": "Controlled project disclosure and secure document access",
-      "plain_language_description": "Digify is a document security/VDR company, not a matchmaking platform - product_overlap_score reduced from prior pass's 5 to 2 to reflect the category mismatch (BizMatch is swipe/match-based, Digify is document-gating). Its core relevance to BizMatch is as an NDA-gating/data-room pattern reference for the 'Investor Relations' and 'Founder-Investor' interaction path, not as a direct competitor for matching/discovery.",
+      "plain_language_description": "Digify is a document security/VDR company, not a matchmaking platform. Its core relevance to BizMatch is as an NDA-gating/data-room pattern reference for the 'Investor Relations' and 'Founder-Investor' interaction path, not as a direct competitor for matching/discovery.",
       "primary_job_solved": "Controlled project disclosure and secure document access",
       "product_model": "Data room / secure document sharing; NDA/e-sign gating; document DRM and analytics (not a swipe/matching or founder-investor matchmaking product)",
       "bizmatch_lesson": "",
@@ -3606,16 +4860,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium-High",
       "overall_confidence": "Medium",
       "confidence_note": "Medium-High",
-      "relationship_score": 4.65,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 5.0,
-        "API/integration": 4,
-        "Pricing": 4,
-        "MVP fit": 5,
-        "Build-versus-buy": 5,
-        "NDA/controlled disclosure fit": 5.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -3743,13 +5060,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 2.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 5.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "SecureDocs",
@@ -3769,16 +5080,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.7,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 5.0,
-        "API/integration": 3,
-        "Pricing": 3,
-        "MVP fit": 3,
-        "Build-versus-buy": 3,
-        "NDA/controlled disclosure fit": 5.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -3906,13 +5280,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 2.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 5.0,
-      "network_moat_score": 1.0
+      }
     },
     {
       "company": "Ansarada",
@@ -3932,16 +5300,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium-High",
       "overall_confidence": "Medium",
       "confidence_note": "Medium-High",
-      "relationship_score": 3.5,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 4.0,
-        "API/integration": 3,
-        "Pricing": 4,
-        "MVP fit": 3,
-        "Build-versus-buy": 3,
-        "NDA/controlled disclosure fit": 4.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -4069,13 +5500,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 2.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "Carta Data Rooms",
@@ -4086,7 +5511,7 @@ window.BIZMATCH_RESEARCH = {
       "primary_category": "Startup data room",
       "secondary_capabilities": "startup data room, cap table adjacent, investor diligence",
       "bizmatch_jobs_competed_for": "Data room benchmark and possible startup-stack adjacency",
-      "plain_language_description": "Carta is the most directly comparable case in this batch to BizMatch's founder-investor NDA-gated flow, since it's explicitly positioned for startup fundraising data rooms (not just enterprise M&A). Its funding_strength_score (5) reflects the WELL-FUNDED PARENT COMPANY, not the Data Room product line specifically, which is a minor feature/revenue line within Carta's broader business.",
+      "plain_language_description": "Carta's Data Room is positioned for startup fundraising data rooms rather than only enterprise M&A. Recorded corporate funding refers to the parent company, not the Data Room product line, and is not used as an active relationship-score input.",
       "primary_job_solved": "Data room benchmark and possible startup-stack adjacency",
       "product_model": "Equity/cap-table management platform with an integrated data room / secure document sharing add-on; NDA/e-sign gating; not a founder-investor matchmaking product",
       "bizmatch_lesson": "",
@@ -4095,16 +5520,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.35,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 4.0,
-        "API/integration": 3,
-        "Pricing": 3,
-        "MVP fit": 3,
-        "Build-versus-buy": 3,
-        "NDA/controlled disclosure fit": 4.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -4232,13 +5720,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 4.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 4.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "Dropbox Sign",
@@ -4249,7 +5731,7 @@ window.BIZMATCH_RESEARCH = {
       "primary_category": "E-signature",
       "secondary_capabilities": "legally binding signatures, templates, API",
       "bizmatch_jobs_competed_for": "NDA signing infrastructure",
-      "plain_language_description": "Dropbox Sign is the weakest direct competitive analog to BizMatch in this batch (product_overlap_score 1) - it is a pure e-signature tool with NO data room, NO NDA-gating mechanism, and NO document-tracking/analytics layer. It is most useful to BizMatch only as a reference for the 'e-signature' leaf feature within a broader NDA-gated flow, not as a data-room/discovery competitor. Notably, Dropbox owns BOTH Dropbox Sign (e-sign only) and DocSend (data room + NDA gating) as separate product lines - together they cover the full NDA-to-signature flow, but each individually covers only part of it.",
+      "plain_language_description": "Dropbox Sign is a pure e-signature tool; the recorded research found no data room, NDA-gating mechanism, or document-tracking/analytics layer. It is most useful to BizMatch only as a reference for the 'e-signature' leaf feature within a broader NDA-gated flow, not as a data-room/discovery competitor. Notably, Dropbox owns BOTH Dropbox Sign (e-sign only) and DocSend (data room + NDA gating) as separate product lines - together they cover the full NDA-to-signature flow, but each individually covers only part of it.",
       "primary_job_solved": "NDA signing infrastructure",
       "product_model": "E-signature / online contract signing; document management; API for embedding e-signatures - NOT a data room or NDA-gating-focused product like the others in this batch (no dedicated data room product)",
       "bizmatch_lesson": "",
@@ -4258,16 +5740,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.6,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 2.0,
-        "API/integration": 4,
-        "Pricing": 4,
-        "MVP fit": 5,
-        "Build-versus-buy": 5,
-        "NDA/controlled disclosure fit": 2.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -4395,13 +5940,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 1.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 1.0,
-      "nda_security_strength_score": 2.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "PandaDoc",
@@ -4421,16 +5960,79 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.3,
-      "score_formula": "25% security + 20% API/integration + 15% pricing + 15% MVP fit + 15% build-vs-buy + 10% NDA/disclosure fit.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "25% Security + 20% API/integration + 15% Pricing + 15% MVP fit + 15% Build-versus-buy + 10% NDA/controlled disclosure fit",
       "score_components": {
-        "Security": 2.0,
-        "API/integration": 4,
-        "Pricing": 4,
-        "MVP fit": 5,
-        "Build-versus-buy": 3,
-        "NDA/controlled disclosure fit": 2.0
+        "Security": {
+          "field": "relationship_security_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "API/integration": {
+          "field": "relationship_api_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.2,
+          "score": null
+        },
+        "Pricing": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "MVP fit": {
+          "field": "relationship_mvp_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Build-versus-buy": {
+          "field": "relationship_build_buy_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "NDA/controlled disclosure fit": {
+          "field": "relationship_nda_fit_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.1,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_api_score",
+        "relationship_build_buy_score",
+        "relationship_mvp_fit_score",
+        "relationship_nda_fit_score",
+        "relationship_price_score",
+        "relationship_security_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -4558,13 +6160,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 2.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 4.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 2.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "Evalyze",
@@ -4584,15 +6180,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 3.3,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 3.0,
-        "Maturity": 3.0,
-        "Price": 4,
-        "UX": 3.0,
-        "Ease to integrate/imitate": 4
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -4720,13 +6369,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "Peachscore",
@@ -4746,15 +6389,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 2.85,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 3.0,
-        "Maturity": 3.0,
-        "Price": 3,
-        "UX": 3.0,
-        "Ease to integrate/imitate": 2
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -4882,13 +6578,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 2.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 4.0
+      }
     },
     {
       "company": "PitchGrade",
@@ -4908,15 +6598,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 3.3,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 3.0,
-        "Maturity": 3.0,
-        "Price": 4,
-        "UX": 3.0,
-        "Ease to integrate/imitate": 4
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -5044,13 +6787,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 3.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "PitchBob",
@@ -5070,15 +6807,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 3.85,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 4.0,
-        "Maturity": 4.0,
-        "Price": 3,
-        "UX": 4.0,
-        "Ease to integrate/imitate": 4
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -5206,13 +6996,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 4.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 3.0,
-      "ai_depth_score": 3.0,
-      "nda_security_strength_score": 2.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "SeedBlink",
@@ -5232,15 +7016,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 4.4,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 5.0,
-        "Maturity": 5.0,
-        "Price": 4,
-        "UX": 5.0,
-        "Ease to integrate/imitate": 2
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -5368,13 +7205,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 5.0,
-      "market_traction_score": 4.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 2.0,
-      "network_moat_score": 5.0
+      }
     },
     {
       "company": "Slidebean",
@@ -5394,15 +7225,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "High",
       "overall_confidence": "High",
       "confidence_note": "High",
-      "relationship_score": 4.0,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 4.0,
-        "Maturity": 4.0,
-        "Price": 4,
-        "UX": 4.0,
-        "Ease to integrate/imitate": 4
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -5530,13 +7414,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "High"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 4.0,
-      "market_traction_score": 4.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 3.0
+      }
     },
     {
       "company": "PitchLeague",
@@ -5547,7 +7425,7 @@ window.BIZMATCH_RESEARCH = {
       "primary_category": "AI pitch leaderboard",
       "secondary_capabilities": "deck scoring, benchmarking, investor visibility",
       "bizmatch_jobs_competed_for": "Pitch-deck review and public benchmarking",
-      "plain_language_description": "PitchLeague is a free, gamified deck-scoring tool built by athlete-investing platform Sequel primarily as a deal-sourcing and research/data asset, not a standalone monetized product - it has no investor-matching, NDA, or messaging features and the lowest direct_threat_score in the batch. Its differentiator is the large proprietary research dataset (17,546 decks) rather than platform depth.",
+      "plain_language_description": "PitchLeague is a free, gamified deck-scoring tool built by athlete-investing platform Sequel primarily as a deal-sourcing and research/data asset, not a standalone monetized product - the recorded research found no investor-matching, NDA, or messaging features. Its differentiator is the large proprietary research dataset (17,546 decks) rather than platform depth. The former direct-threat comparison is deprecated.",
       "primary_job_solved": "Pitch-deck review and public benchmarking",
       "product_model": "AI pitch/deck review (free, gamified leaderboard); founder-investor / capital (parent company Sequel is itself an active startup investor)",
       "bizmatch_lesson": "",
@@ -5556,15 +7434,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Medium",
       "overall_confidence": "Medium",
       "confidence_note": "Medium",
-      "relationship_score": 2.6,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 2.0,
-        "Maturity": 2.0,
-        "Price": 4,
-        "UX": 2.0,
-        "Ease to integrate/imitate": 4
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -5692,13 +7623,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Medium"
         }
-      },
-      "product_overlap_score": 3.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 2.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 2.0
+      }
     },
     {
       "company": "Inodash",
@@ -5709,7 +7634,7 @@ window.BIZMATCH_RESEARCH = {
       "primary_category": "AI validation and deck review",
       "secondary_capabilities": "deck review, idea validation, collaboration",
       "bizmatch_jobs_competed_for": "Pitch-deck review and idea-validation support",
-      "plain_language_description": "Weakest company in the batch on funding, traction, and press verifiability - genuinely could not confirm much beyond the product feature set itself despite real search effort (no Crunchbase page, no founding year, no user counts, no media coverage found). It is a standalone deck-scoring/idea-validation micro-tool with zero investor-connection or matchmaking flow, making it a low direct threat to BizMatch's core model.",
+      "plain_language_description": "Weakest company in the batch on funding, traction, and press verifiability - genuinely could not confirm much beyond the product feature set itself despite real search effort (no Crunchbase page, no founding year, no user counts, no media coverage found). It is a standalone deck-scoring/idea-validation micro-tool with no investor-connection or matchmaking flow in the recorded evidence; any direct-threat conclusion based on the legacy score is deprecated.",
       "primary_job_solved": "Pitch-deck review and idea-validation support",
       "product_model": "AI pitch/deck review; startup idea validation & product-market-fit toolkit (Problem Mindmap, Persona, Customer Journey Map, Survey, Idea Generation, Business Model Canvas)",
       "bizmatch_lesson": "",
@@ -5718,15 +7643,68 @@ window.BIZMATCH_RESEARCH = {
       "source_confidence": "Low",
       "overall_confidence": "Low",
       "confidence_note": "Low",
-      "relationship_score": 2.6,
-      "score_formula": "30% capability quality + 25% maturity + 15% price + 15% UX + 15% ease to integrate or imitate.",
+      "relationship_score": null,
+      "score_status": "Insufficient Evidence",
+      "score_formula": "30% Capability quality + 25% Maturity + 15% Price + 15% UX + 15% Ease to integrate/imitate",
       "score_components": {
-        "Capability quality": 2.0,
-        "Maturity": 2.0,
-        "Price": 4,
-        "UX": 2.0,
-        "Ease to integrate/imitate": 4
+        "Capability quality": {
+          "field": "relationship_capability_quality_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.3,
+          "score": null
+        },
+        "Maturity": {
+          "field": "relationship_maturity_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.25,
+          "score": null
+        },
+        "Price": {
+          "field": "relationship_price_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "UX": {
+          "field": "relationship_ux_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        },
+        "Ease to integrate/imitate": {
+          "field": "relationship_ease_score",
+          "raw": null,
+          "source": null,
+          "evidence_type": null,
+          "checked_at": null,
+          "confidence": null,
+          "weight": 0.15,
+          "score": null
+        }
       },
+      "score_missing_inputs": [
+        "relationship_capability_quality_score",
+        "relationship_ease_score",
+        "relationship_maturity_score",
+        "relationship_price_score",
+        "relationship_ux_score"
+      ],
       "capabilities": {
         "swipe_card_interface": {
           "label": "Swipe/card interface",
@@ -5854,14 +7832,7 @@ window.BIZMATCH_RESEARCH = {
           "note": "yes",
           "confidence": "Low"
         }
-      },
-      "product_overlap_score": 2.0,
-      "feature_maturity_score": 2.0,
-      "market_traction_score": 1.0,
-      "ai_depth_score": 2.0,
-      "nda_security_strength_score": 1.0,
-      "network_moat_score": 1.0
+      }
     }
   ]
 };
-window.RANKER_DATA = window.BIZMATCH_RESEARCH.companies;

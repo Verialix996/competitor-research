@@ -1,1 +1,6 @@
-Open index.html in a browser. Category pages cite row-level primary and secondary URLs from the final tracker.
+Generated citation pages. Do not hand-edit.
+
+All pages are generated from:
+  ../../data/competitive-research-tracker.csv
+
+Archived cited datasets under ../../archive/data/ are not read by the generator.

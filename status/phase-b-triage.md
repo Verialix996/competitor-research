@@ -1,9 +1,13 @@
 # Phase B — Contradiction & Unsupported-Claim Triage
 
+> **Historical triage:** Current canonical decisions and score status are in
+> `RECONCILIATION_REPORT.md` and `SCORING_METHODOLOGY.md`. Legacy scores
+> referenced below are deprecated and do not feed active outputs.
+
 Updated: 2026-07-25
 
 Triage of every contradiction (32) and unsupported-claim (30) flag in
-`data/bizmatch-competitive-research-cited.csv`, sorted into three buckets so
+`archive/data/bizmatch-competitive-research-cited.csv`, sorted into three buckets so
 finalization effort goes only where it changes the corpus.
 
 ## Summary
