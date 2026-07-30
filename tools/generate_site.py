@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
 SITE = ROOT / "sites" / "full-report-site"
+COMPANY_SITE = SITE / "companies"
 CITATION_SITE = ROOT / "sites" / "citation-site"
 REPORTS = ROOT / "reports"
 RECONCILIATION_DATE = "2026-07-30"
@@ -410,7 +411,7 @@ def enrich(rows):
 
 def nav(active, prefix=""):
     items = [
-        ("index.html", "Strategic Conclusions"),
+        ("index.html", "Evidence Status"),
         ("priority-competitors.html", "Priority Competitors"),
         ("research-table.html", "Full Research Table"),
         ("category-analysis.html", "Category Analysis"),
@@ -504,7 +505,7 @@ def roadmap_table():
     )
     return f'<div class="table-wrap"><table><thead><tr><th>Priority</th><th>Strategic hypothesis</th><th>Feature or experiment</th><th>Primary metric</th><th>Supporting metric</th><th>Failure signal</th><th>Recommended phase</th></tr></thead><tbody>{rows}</tbody></table></div>'
 
-def strategic_page(rows):
+def historical_strategic_page(rows):
     groups = {rel: [r for r in rows if r["competitive_relationship"] == rel] for rel in RELATION_ORDER}
     priority_cards = "".join(priority_card(next(r for r in rows if r["company"] == name), compact=True) for name in PRIORITY_ORDER)
     implications = [
@@ -523,7 +524,7 @@ def strategic_page(rows):
     open_decisions = ["Exact founder segment.", "Technical vs. non-technical founder balance.", "Whether investors enter in the first or second launch phase.", "Industry scope.", "Geographic scope beyond Israel.", "Verification requirements.", "First acquisition partners."]
     cold_start = ["Recruit a curated founder/co-founder cohort.", "Verify and improve profiles manually.", "Guarantee a minimum number of relevant recommendations.", "Measure match quality and response rate.", "Add invited mentors and angels.", "Introduce project disclosure and NDA flows.", "Expand only after local match liquidity reaches an acceptable level."]
     body = f"""
-<section class="panel warning-panel"><h2>Phase 0 evidence notice</h2><p>The strategic narrative below is retained as a historical hypothesis. Phase 0 did not re-run White Space, MVP, Build/Buy, or strategy research. Previous numeric threat scores are deprecated; no conclusion on this page should be read as score-backed until explicit scoring inputs are researched and approved.</p></section>
+<section class="panel warning-panel"><h2>ARCHIVED — not current investor conclusions</h2><p>This page is preserved only as an audit copy of the pre-Phase-0 strategic narrative. Phase 0 did not re-run White Space, MVP, Build/Buy, launch-sequence, or strategy research. Previous numeric threat scores are deprecated. Nothing below is an approved or score-backed recommendation.</p></section>
 <section class="hero-panel">
   <p class="eyebrow">Executive summary</p>
   <h2>Historical hypothesis: no single researched competitor appeared to own the full BizMatch journey.</h2>
@@ -543,7 +544,41 @@ def strategic_page(rows):
 <section class="panel warning-panel"><h2>Open Decisions</h2><ul class="clean-list">{"".join(f"<li>{escape(x)}</li>" for x in open_decisions)}</ul></section>
 <section class="panel"><h2>Research Limitations</h2><p>Not found is not proof that a feature does not exist. Several traction and funding claims are company-reported or secondary-source claims. See <a href="sources-methodology.html">Sources & Methodology</a> for the scoring rubric, source-of-truth rules, and research backlog.</p></section>
 """
-    return page("Strategic Conclusions", "Strategic Conclusions", body, "What we learned, where BizMatch may have an opening, and what remains unproven.")
+    return page(
+        "Historical Strategic Hypotheses — Archived",
+        "Archive",
+        body,
+        "Audit material only; not an investor-facing conclusion or approved launch plan.",
+    )
+
+
+def evidence_status_page(rows):
+    body = f"""
+<section class="panel warning-panel"><h2>No current strategic recommendation is published</h2>
+<p>Phase 0 established data integrity; it did not validate White Space, an Israeli beachhead, MVP scope, Build/Buy choices, or a launch sequence. Those topics require separate approved research before they can be presented as conclusions.</p></section>
+<section class="hero-panel">
+  <p class="eyebrow">Phase 0 evidence status</p>
+  <h2>{len(rows)} canonical company records are available for evidence review.</h2>
+  <p>The active dataset, company profiles, source pages, and XLSX are generated from one canonical CSV. Numeric relationship and threat rankings remain paused because the required sourced inputs are incomplete.</p>
+</section>
+<section class="panel"><h2>Safe current uses</h2><ul class="clean-list">
+  <li>Review recorded competitor facts and their source confidence.</li>
+  <li>Inspect capability evidence and explicit research gaps.</li>
+  <li>Audit reconciled conflicts and unresolved findings.</li>
+</ul><div class="archive-list"><a href="research-table.html">Open the canonical research table</a><a href="category-analysis.html">Review evidence groups without ranking</a><a href="sources-methodology.html">Read sources and methodology</a></div></section>
+<section class="panel"><h2>Not approved for investor presentation</h2><ul class="clean-list">
+  <li>White Space claims or claims that BizMatch owns an unserved journey.</li>
+  <li>Recommended market beachhead, launch sequence, or first-user acquisition plan.</li>
+  <li>MVP priorities, Build/Buy recommendations, or defensibility claims.</li>
+  <li>Numeric threat or relationship rankings.</li>
+</ul><p>Historical strategic material is retained only in the Archive for audit and is intentionally excluded from this active page.</p></section>
+"""
+    return page(
+        "Evidence Status",
+        "Evidence Status",
+        body,
+        "Canonical research evidence and the conclusions that remain unvalidated.",
+    )
 
 def priority_card(row, compact=False):
     if compact:
@@ -677,7 +712,7 @@ def methodology_page(rows):
 
 def archive_page():
     body = """
-<section class="panel"><h2>Archived Material</h2><p>The old cited datasets and generated reports are audit material only. Production code does not read them.</p><div class="archive-list"><a href="../../archive/data/bizmatch-competitive-research-cited.csv">Archived cited CSV</a><a href="../../archive/data/bizmatch-competitive-research-cited.xlsx">Archived cited XLSX</a><a href="../../reports/bizmatch-competitive-research-cited-report.html">Archived old cited report HTML</a><a href="../../reports/bizmatch-competitive-research-cited-report.md">Archived old cited report Markdown</a><a href="../../reports/competitive-research-tracker-preview.html">Archived tracker preview</a></div></section>
+<section class="panel"><h2>Archived Material</h2><p>The old cited datasets, generated reports, and strategic hypotheses are audit material only. Production code does not read them as canonical facts or active conclusions.</p><div class="archive-list"><a href="strategic-conclusions-historical.html">Historical strategic hypotheses — not current investor conclusions</a><a href="../../archive/data/bizmatch-competitive-research-cited.csv">Archived cited CSV</a><a href="../../archive/data/bizmatch-competitive-research-cited.xlsx">Archived cited XLSX</a><a href="../../reports/bizmatch-competitive-research-cited-report.html">Archived old cited report HTML</a><a href="../../reports/bizmatch-competitive-research-cited-report.md">Archived old cited report Markdown</a><a href="../../reports/competitive-research-tracker-preview.html">Archived tracker preview</a></div></section>
 <section class="panel warning-panel"><h2>Known Archived Errors</h2><ul class="clean-list"><li>Cherub's $45K customer testimonial was misread as company funding.</li><li>CoffeeSpace's customer qualification threshold of $10M raised was misread as CoffeeSpace funding.</li><li>Swipe Invest's $45B European market statistic was misread as company funding.</li><li>Digify's platform/customer document-security figures were misread as funding.</li><li>Cofounder.org's '3 Matches' UI heading was misread as traction.</li><li>SWIP's target first cohort of 100 founders was misread as existing users.</li><li>SecureDocs and Carta pricing was mixed into funding or traction fields.</li></ul></section>
 """
     return page("Archive", "Archive", body, "Old generated reports kept out of the active research path.")
@@ -733,13 +768,10 @@ def compatibility_ranker_js(rows):
     )
 
 def root_entry():
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Competitor Research</h1><div class="warn"><strong>Phase 0:</strong> numeric relationship and threat rankings are paused because the explicit sourced inputs are missing. Historical strategic text is retained as hypothesis, not revalidated conclusion.</div><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Strategic Conclusions</a><p>Historical hypotheses with current evidence limitations.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Single source of truth, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated canonical tracker XLSX</a></li></ul><p>Archived generated drafts and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Competitor Research</h1><div class="warn"><strong>Phase 0:</strong> numeric relationship and threat rankings are paused because explicit sourced inputs are missing. White Space, MVP, Build/Buy, and launch recommendations are not published as current conclusions.</div><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Evidence Status</a><p>Canonical evidence, research limits, and conclusions that remain unvalidated.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Single source of truth, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated canonical tracker XLSX</a></li></ul><p>Archived generated drafts, historical strategic hypotheses, and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
 
 def archive_notice(title):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)} - Archived</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:880px;margin:auto;background:#fff;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;font-weight:600;text-decoration:none}}li{{margin:8px 0}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>{escape(title)} - Archived</h1><div class="warn"><p>This old generated report is audit material only. Production code reads only the canonical tracker.</p></div><p>Use <a href="../sites/full-report-site/research-table.html">Full Research Table</a> and <a href="../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> for current facts.</p><p>Archived before or during the {RECONCILIATION_DATE} reconciliation.</p></main></body></html>"""
-
-def alias_page(target, label):
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={escape(target)}"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(label)}</title><link rel="icon" href="data:,"><link href="../style.css" rel="stylesheet"></head><body><main><section class="panel"><h1>{escape(label)}</h1><p>This legacy profile URL now points to the canonical generated profile.</p><p><a href="{escape(target)}">Open canonical profile</a></p></section></main></body></html>"""
 
 def citation_nav():
     pages = (
@@ -867,18 +899,28 @@ def write_citation_site(rows):
 
 def main():
     rows = enrich(list(csv.DictReader(CSV_PATH.open(encoding="utf-8"))))
+    expected_profiles = {f"{slug(row['company'])}.html" for row in rows}
+    COMPANY_SITE.mkdir(parents=True, exist_ok=True)
+    for profile in COMPANY_SITE.glob("*.html"):
+        if profile.name not in expected_profiles:
+            profile.unlink()
     (SITE / "canonical-data.js").write_text(data_js(rows), encoding="utf-8")
     (SITE / "ranker-data.js").write_text(compatibility_ranker_js(rows), encoding="utf-8")
-    (SITE / "index.html").write_text(strategic_page(rows), encoding="utf-8")
+    (SITE / "index.html").write_text(evidence_status_page(rows), encoding="utf-8")
+    (SITE / "strategic-conclusions-historical.html").write_text(
+        historical_strategic_page(rows),
+        encoding="utf-8",
+    )
     (SITE / "priority-competitors.html").write_text(priority_page(rows), encoding="utf-8")
     (SITE / "research-table.html").write_text(research_table(rows), encoding="utf-8")
     (SITE / "category-analysis.html").write_text(category_page(rows), encoding="utf-8")
     (SITE / "sources-methodology.html").write_text(methodology_page(rows), encoding="utf-8")
     (SITE / "archive.html").write_text(archive_page(), encoding="utf-8")
     for r in rows:
-        (SITE / "companies" / f"{slug(r['company'])}.html").write_text(company_page(r), encoding="utf-8")
-    (SITE / "companies" / "cofounderorg.html").write_text(alias_page("cofounder-org.html", "Cofounder.org"), encoding="utf-8")
-    (SITE / "companies" / "visiblevc.html").write_text(alias_page("visible-vc.html", "Visible.vc"), encoding="utf-8")
+        (COMPANY_SITE / f"{slug(r['company'])}.html").write_text(
+            company_page(r),
+            encoding="utf-8",
+        )
     write_citation_site(rows)
     (ROOT / "index.html").write_text(root_entry(), encoding="utf-8")
     (ROOT / "START_HERE.html").write_text(root_entry(), encoding="utf-8")

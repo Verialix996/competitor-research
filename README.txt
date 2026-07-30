@@ -18,8 +18,11 @@ Important boundaries:
 - archive/legacy-scoring/ contains deprecated ranker code.
 - Legacy score columns remain in the CSV only for audit and do not feed the site.
 - relationship_score is null / Insufficient Evidence until explicit sourced inputs exist.
-- Historical strategic conclusions are retained as hypotheses; Phase 0 did not re-run
-  White Space, MVP, Mystery Shopping, or Build/Buy research.
+- The active landing page publishes evidence status, not strategic recommendations.
+- Historical strategic hypotheses are isolated under the site Archive; Phase 0 did not
+  re-run White Space, MVP, Mystery Shopping, launch-sequence, or Build/Buy research.
+- The generator removes stale/non-canonical company-profile HTML files.
+- XLSX generation normalizes both ZIP entry timestamps and Office core metadata.
 
 Documentation:
 - DATA_INTEGRITY.md

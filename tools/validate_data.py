@@ -9,6 +9,8 @@ import html
 import re
 import subprocess
 import sys
+import time
+import zipfile
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -170,6 +172,13 @@ def check_xlsx(validation, headers, rows, required):
         "XLSX contains 65 columns",
     )
     validation.check(xlsx_rows == csv_rows, "CSV and XLSX match after normalization")
+    with zipfile.ZipFile(XLSX_PATH) as package:
+        core_properties = package.read("docProps/core.xml")
+    fixed_timestamp = b"2026-07-30T00:00:00Z"
+    validation.check(
+        core_properties.count(fixed_timestamp) == 2,
+        "XLSX created and modified metadata use fixed timestamps",
+    )
 
 
 def function_source(path, function_name):
@@ -288,6 +297,43 @@ def check_profiles(validation, by_company, required):
     validation.check(not missing, "six reconciled company pages reflect canonical values")
 
 
+def check_profile_manifest(validation, rows, message):
+    expected = {f"{slug(row['company'])}.html" for row in rows}
+    company_dir = ROOT / "sites" / "full-report-site" / "companies"
+    actual = {path.name for path in company_dir.glob("*.html")}
+    validation.check(
+        actual == expected,
+        message,
+    )
+
+
+def check_investor_facing_strategy(validation, required):
+    active = ROOT / "sites" / "full-report-site" / "index.html"
+    historical = (
+        ROOT
+        / "sites"
+        / "full-report-site"
+        / "strategic-conclusions-historical.html"
+    )
+    if not active.exists() or not historical.exists():
+        validation.check(not required, "strategic recommendations are isolated from the active page")
+        return
+    active_text = active.read_text(encoding="utf-8")
+    historical_text = historical.read_text(encoding="utf-8")
+    investor_risk_phrases = (
+        "Recommended Israeli Beachhead",
+        "Proposed launch sequence",
+        "Where BizMatch Can Win",
+        "First 100 qualified users",
+    )
+    validation.check(
+        not any(phrase in active_text for phrase in investor_risk_phrases)
+        and "No current strategic recommendation is published" in active_text
+        and "ARCHIVED — not current investor conclusions" in historical_text,
+        "strategic recommendations are isolated from the active page",
+    )
+
+
 def artifact_paths():
     paths = [ROOT / "index.html", ROOT / "START_HERE.html", ROOT / "README.html", XLSX_PATH]
     for base in (
@@ -316,13 +362,22 @@ def run_build_twice(validation):
         [sys.executable, str(ROOT / "tools" / "build_xlsx.py")],
         [sys.executable, str(GENERATOR)],
     )
+    before = hashes()
     for command in commands:
         subprocess.run(command, cwd=ROOT, check=True)
     first = hashes()
+    time.sleep(2.1)
     for command in commands:
         subprocess.run(command, cwd=ROOT, check=True)
     second = hashes()
-    validation.check(first == second, "two consecutive builds are deterministic")
+    validation.check(
+        first == second,
+        "time-separated builds are byte-for-byte deterministic",
+    )
+    validation.check(
+        before == second,
+        "checked-in generated artifacts match the deterministic build",
+    )
 
 
 def main():
@@ -335,8 +390,20 @@ def main():
     headers, rows = read_canonical()
     by_company = check_canonical(validation, headers, rows)
     check_scoring(validation, rows, artifacts_required=not args.pre_build)
+    if not args.pre_build:
+        check_profile_manifest(
+            validation,
+            rows,
+            "company profile directory contains exactly the canonical profiles",
+        )
+        check_investor_facing_strategy(validation, required=True)
     if args.check_build:
         run_build_twice(validation)
+        check_profile_manifest(
+            validation,
+            rows,
+            "site build emits no extra company-profile files",
+        )
     if not args.pre_build:
         check_xlsx(validation, headers, rows, required=True)
         check_profiles(validation, by_company, required=True)

@@ -22,14 +22,20 @@ data/competitive-research-tracker.csv
 ```
 
 `tools/generate_site.py` is read-only with respect to the canonical CSV. Derived
-files must not be hand-edited to synchronize facts.
+files must not be hand-edited to synchronize facts. Before writing company
+profiles, the generator removes every `.html` file in the generated company
+directory whose filename is not one of the canonical company slugs.
 
 ## Validation rules
 
 - Exactly 36 data rows and 65 unique headers.
 - `company` is the canonical identifier: it must be non-empty and unique.
 - Generated slugs must also be unique.
+- The generated company-profile directory must contain exactly one HTML file
+  for each canonical slug and no aliases, stale pages, or extra files.
 - CSV and XLSX headers, company order, and normalized values must match.
+- XLSX package timestamps and core `created`/`modified` metadata are fixed by
+  the generator; time-separated builds must be byte-for-byte identical.
 - Source fields may contain only structurally valid `http`/`https` URLs.
 - Reconciled fields require a stored source URL or explicit
   `Unresolved`/`Insufficient Evidence` wording.
@@ -38,7 +44,11 @@ files must not be hand-edited to synchronize facts.
   site data, rankings, or conclusions.
 - Missing score inputs return `null` / `Insufficient Evidence`; they never
   receive zero, an average, or a guessed default.
-- Repeated builds must be deterministic.
+- Repeated builds separated by more than two seconds must be deterministic, and
+  a build must not alter already-current generated artifacts.
+- Investor-facing pages must not publish the historical beachhead, launch
+  sequence, White Space, MVP, or Build/Buy hypotheses as current conclusions.
+  The detailed pre-Phase-0 narrative is isolated in the site Archive.
 
 ## Missing values
 

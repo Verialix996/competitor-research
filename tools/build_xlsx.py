@@ -3,6 +3,7 @@
 
 import csv
 import os
+import re
 import tempfile
 import zipfile
 from datetime import datetime
@@ -15,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
 XLSX_PATH = ROOT / "data" / "competitive-research-tracker.xlsx"
 FIXED_TIMESTAMP = (2026, 7, 30, 0, 0, 0)
+FIXED_ISO_TIMESTAMP = b"2026-07-30T00:00:00Z"
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 
 
@@ -55,6 +57,30 @@ def write_workbook(rows, target):
     workbook.save(target)
 
 
+def normalize_package_member(name, payload):
+    if name != "docProps/core.xml":
+        return payload
+    for property_name in (b"created", b"modified"):
+        pattern = (
+            rb"(<dcterms:"
+            + property_name
+            + rb"\b[^>]*>).*?(</dcterms:"
+            + property_name
+            + rb">)"
+        )
+        payload, replacements = re.subn(
+            pattern,
+            lambda match: match.group(1) + FIXED_ISO_TIMESTAMP + match.group(2),
+            payload,
+        )
+        if replacements != 1:
+            raise RuntimeError(
+                f"Expected one dcterms:{property_name.decode()} value in {name}; "
+                f"found {replacements}"
+            )
+    return payload
+
+
 def deterministic_repack(source, target):
     fd, repacked_name = tempfile.mkstemp(
         dir=target.parent, prefix=".competitive-tracker-", suffix=".xlsx"
@@ -70,7 +96,7 @@ def deterministic_repack(source, target):
                 info.compress_type = zipfile.ZIP_DEFLATED
                 info.create_system = 3
                 info.external_attr = 0o600 << 16
-                dst.writestr(info, src.read(name))
+                dst.writestr(info, normalize_package_member(name, src.read(name)))
         repacked.replace(target)
     finally:
         repacked.unlink(missing_ok=True)
