@@ -1,5 +1,10 @@
 # BizMatch Competitive Research — Historical Finalization Plan
 
+> **Phase 1 status (2026-07-30):** Substitute research is maintained separately
+> in `data/substitutes-research.csv`, `data/substitute-evidence.csv`, and
+> `data/substitute-workflows.csv`. See `SUBSTITUTE_RESEARCH.md`; this historical
+> Phase 0 plan does not define Phase 1 findings or completion.
+
 > **Phase 0 status (2026-07-30):** This file preserves the pre-reconciliation
 > plan and claims for audit. It is not the current source-of-truth description.
 > The only active source is `data/competitive-research-tracker.csv`; the cited

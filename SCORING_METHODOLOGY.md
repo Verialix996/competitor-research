@@ -1,5 +1,18 @@
 # Scoring Methodology — Phase 0
 
+## Phase 1 substitute boundary
+
+Substitute research does not use this scoring model. Phase 1 records only the
+qualitative labels `Strong Substitute`, `Partial Substitute`, `Weak
+Substitute`, `Complementary Tool`, and `Insufficient Evidence`. Those labels
+must be supported by Job coverage, observed use, trust or network advantage,
+switching cost, completion ability, and evidence quality. They are not
+converted to numbers, competitor rankings, threat scores, White Space, MVP, or
+Build/Buy recommendations.
+
+Missing substitute evidence remains `Unverified` / `Insufficient Evidence`; it
+is never replaced with zero, a midpoint, or another numeric default.
+
 ## Current status
 
 `relationship_score` is currently `null` for all companies and is displayed as

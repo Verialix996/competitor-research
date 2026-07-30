@@ -1,5 +1,9 @@
 # BizMatch Competitive Research Kanban
 
+> **Phase 1 status (2026-07-30):** Substitute research is tracked in the
+> separated canonical CSVs and `SUBSTITUTE_RESEARCH.md`. This historical board
+> is not evidence that Phase 1 or future Customer Discovery is complete.
+
 > **Phase 0 status (2026-07-30):** Historical board. Current canonical source is
 > `data/competitive-research-tracker.csv`. Legacy scores are deprecated and the
 > active relationship score is `Insufficient Evidence`. Previous “complete”

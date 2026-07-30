@@ -19,10 +19,111 @@ from openpyxl import load_workbook
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
 XLSX_PATH = ROOT / "data" / "competitive-research-tracker.xlsx"
+SUBSTITUTES_PATH = ROOT / "data" / "substitutes-research.csv"
+SUBSTITUTE_EVIDENCE_PATH = ROOT / "data" / "substitute-evidence.csv"
+SUBSTITUTE_WORKFLOWS_PATH = ROOT / "data" / "substitute-workflows.csv"
+SUBSTITUTE_REPORT_SCRIPT = ROOT / "tools" / "build_substitute_reports.py"
 GENERATOR = ROOT / "tools" / "generate_site.py"
 RECONCILIATION_SCRIPT = ROOT / "tools" / "apply_reconciliation.py"
 EXPECTED_ROWS = 36
 EXPECTED_COLUMNS = 65
+SUBSTITUTE_JOB_IDS = {
+    "JOB-COFOUNDER",
+    "JOB-FOUNDER-INVESTOR",
+    "JOB-INVESTOR-SOURCING",
+    "JOB-TRUSTED-PROGRESSION",
+}
+SUBSTITUTE_CLASSIFICATIONS = {
+    "Direct Competitor",
+    "Adjacent Competitor",
+    "Workflow Substitute",
+    "Service Substitute",
+    "Community/Network Substitute",
+    "Manual Process",
+    "Do Nothing",
+    "Infrastructure Tool",
+    "Unclear",
+}
+SUBSTITUTE_STRENGTHS = {
+    "Strong Substitute",
+    "Partial Substitute",
+    "Weak Substitute",
+    "Complementary Tool",
+    "Insufficient Evidence",
+}
+SUBSTITUTE_SOURCE_TYPES = {
+    "Independent Behavioral Evidence",
+    "Independent User Report",
+    "Independent Market Evidence",
+    "Company Documentation",
+    "Company Claim",
+    "Community Discussion",
+    "Anecdotal Evidence",
+    "Inference",
+    "Unverified",
+}
+SUBSTITUTE_HEADERS = (
+    "substitute_id",
+    "name",
+    "category",
+    "classification",
+    "target_persona",
+    "job_to_be_done",
+    "workflow_stages_covered",
+    "current_behavior",
+    "why_users_choose_it",
+    "advantages",
+    "limitations",
+    "switching_cost",
+    "trust_mechanism",
+    "payment_model",
+    "substitute_strength",
+    "evidence_summary",
+    "evidence_ids",
+    "source_url",
+    "source_title",
+    "source_type",
+    "source_date",
+    "last_verified",
+    "confidence",
+    "research_status",
+    "existing_competitor_slug",
+    "notes",
+)
+SUBSTITUTE_EVIDENCE_HEADERS = (
+    "evidence_id",
+    "substitute_id",
+    "job_id",
+    "claim_type",
+    "evidence_dimension",
+    "claim",
+    "source_url",
+    "source_title",
+    "source_date",
+    "last_verified",
+    "source_type",
+    "supporting_excerpt_or_summary",
+    "confidence",
+    "limitation",
+)
+SUBSTITUTE_WORKFLOW_HEADERS = (
+    "workflow_id",
+    "job_id",
+    "stage_id",
+    "stage_order",
+    "current_action",
+    "tools_channels",
+    "people_involved",
+    "manual_work",
+    "time_or_friction",
+    "trust_requirement",
+    "current_advantage",
+    "current_limitation",
+    "substitute_ids",
+    "evidence_ids",
+    "evidence_status",
+    "confidence",
+)
 LEGACY_FIELDS = {
     "product_overlap_score",
     "feature_maturity_score",
@@ -84,6 +185,20 @@ def read_canonical():
     return headers, rows
 
 
+def read_csv_table(path):
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        return tuple(reader.fieldnames or ()), list(reader)
+
+
+def split_values(value):
+    return [item.strip() for item in (value or "").split("|") if item.strip()]
+
+
+def normalized_name(value):
+    return re.sub(r"[^a-z0-9]+", "", (value or "").lower())
+
+
 def extract_urls(text):
     return [match.rstrip(").,") for match in re.findall(r"https?://[^\s;]+", text or "")]
 
@@ -99,9 +214,17 @@ def normalized(value):
 def check_canonical(validation, headers, rows):
     validation.check(CSV_PATH.exists(), "canonical CSV exists")
     active_csvs = sorted(path.name for path in (ROOT / "data").glob("*.csv"))
+    expected_csvs = sorted(
+        (
+            CSV_PATH.name,
+            SUBSTITUTES_PATH.name,
+            SUBSTITUTE_EVIDENCE_PATH.name,
+            SUBSTITUTE_WORKFLOWS_PATH.name,
+        )
+    )
     validation.check(
-        active_csvs == [CSV_PATH.name],
-        "data/ contains exactly one active CSV source",
+        active_csvs == expected_csvs,
+        "data/ contains only the separated canonical competitor and substitute CSV layers",
     )
     validation.check(len(rows) == EXPECTED_ROWS, "canonical CSV contains 36 companies")
     validation.check(len(headers) == EXPECTED_COLUMNS, "canonical CSV contains 65 columns")
@@ -152,6 +275,285 @@ def check_canonical(validation, headers, rows):
         "legacy score names do not appear in active research narratives",
     )
     return by_company
+
+
+def check_substitutes(validation, competitor_rows, artifacts_required):
+    tables = (
+        (SUBSTITUTES_PATH, SUBSTITUTE_HEADERS),
+        (SUBSTITUTE_EVIDENCE_PATH, SUBSTITUTE_EVIDENCE_HEADERS),
+        (SUBSTITUTE_WORKFLOWS_PATH, SUBSTITUTE_WORKFLOW_HEADERS),
+    )
+    loaded = {}
+    for path, expected_headers in tables:
+        validation.check(path.exists(), f"{path.name} exists")
+        headers, rows = read_csv_table(path)
+        loaded[path] = (headers, rows)
+        validation.check(
+            headers == expected_headers,
+            f"{path.name} uses the documented canonical schema and column order",
+        )
+        validation.check(
+            len(headers) == len(set(headers)),
+            f"{path.name} has unique headers",
+        )
+
+    substitute_headers, substitutes = loaded[SUBSTITUTES_PATH]
+    evidence_headers, evidence = loaded[SUBSTITUTE_EVIDENCE_PATH]
+    workflow_headers, workflows = loaded[SUBSTITUTE_WORKFLOWS_PATH]
+    del substitute_headers, evidence_headers, workflow_headers
+
+    substitute_ids = [row["substitute_id"].strip() for row in substitutes]
+    names = [row["name"].strip() for row in substitutes]
+    normalized_names = [normalized_name(name) for name in names]
+    validation.check(
+        all(substitute_ids) and len(substitute_ids) == len(set(substitute_ids)),
+        "substitute identifiers are non-empty and unique",
+    )
+    validation.check(
+        all(names) and len(normalized_names) == len(set(normalized_names)),
+        "substitute names remain unique after punctuation and case normalization",
+    )
+    validation.check(
+        all(row["classification"] in SUBSTITUTE_CLASSIFICATIONS for row in substitutes),
+        "every substitute has an allowed classification",
+    )
+    validation.check(
+        all(
+            split_values(row["job_to_be_done"])
+            and set(split_values(row["job_to_be_done"])) <= SUBSTITUTE_JOB_IDS
+            for row in substitutes
+        ),
+        "every substitute links to one or more allowed Jobs",
+    )
+    validation.check(
+        all(row["substitute_strength"] in SUBSTITUTE_STRENGTHS for row in substitutes),
+        "substitute strength is qualitative and uses only the documented categories",
+    )
+    validation.check(
+        not any("score" in header.lower() for header in SUBSTITUTE_HEADERS),
+        "substitute entity schema contains no numeric score field",
+    )
+
+    competitor_slugs = {slug(row["company"]): row["company"] for row in competitor_rows}
+    linked_errors = []
+    for row in substitutes:
+        link_slug = row["existing_competitor_slug"].strip()
+        name_slug = slug(row["name"].split(" such as ")[0])
+        if link_slug and link_slug not in competitor_slugs:
+            linked_errors.append(f"{row['substitute_id']}: unknown {link_slug}")
+        exact_competitor = next(
+            (
+                company_slug
+                for company_slug, company in competitor_slugs.items()
+                if normalized_name(company) in normalized_name(row["name"])
+            ),
+            None,
+        )
+        if exact_competitor and not link_slug:
+            linked_errors.append(
+                f"{row['substitute_id']}: existing competitor {exact_competitor} is not linked"
+            )
+        if link_slug and link_slug != name_slug and normalized_name(
+            competitor_slugs[link_slug]
+        ) not in normalized_name(row["name"] + " " + row["notes"]) and link_slug != "yc-co-founder-matching":
+            linked_errors.append(f"{row['substitute_id']}: ambiguous link {link_slug}")
+    validation.check(
+        not linked_errors,
+        "existing competitor entities are linked by canonical slug and not silently duplicated",
+    )
+
+    malformed = []
+    source_gaps = []
+    for row in substitutes:
+        source_type = row["source_type"].strip()
+        source_url = row["source_url"].strip()
+        if source_type not in SUBSTITUTE_SOURCE_TYPES:
+            source_gaps.append(f"{row['substitute_id']}: invalid source type {source_type}")
+        if source_type == "Unverified":
+            if row["research_status"] != "Unverified":
+                source_gaps.append(f"{row['substitute_id']}: unverified source not reflected in status")
+        elif not source_url:
+            source_gaps.append(f"{row['substitute_id']}: sourced record has no URL")
+        if source_url:
+            parsed = urlparse(source_url)
+            if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+                malformed.append(f"{row['substitute_id']}: {source_url}")
+    validation.check(
+        not source_gaps,
+        "every substitute has a source or is explicitly Unverified",
+    )
+    validation.check(
+        not malformed,
+        "all substitute representative source URLs are structurally valid",
+    )
+
+    evidence_ids = [row["evidence_id"].strip() for row in evidence]
+    validation.check(
+        all(evidence_ids) and len(evidence_ids) == len(set(evidence_ids)),
+        "substitute evidence identifiers are non-empty and unique",
+    )
+    evidence_id_set = set(evidence_ids)
+    evidence_source_errors = []
+    evidence_link_errors = []
+    for row in evidence:
+        source_type = row["source_type"].strip()
+        source_url = row["source_url"].strip()
+        if source_type not in SUBSTITUTE_SOURCE_TYPES:
+            evidence_source_errors.append(
+                f"{row['evidence_id']}: invalid source type {source_type}"
+            )
+        if not row["claim"].strip():
+            evidence_source_errors.append(f"{row['evidence_id']}: empty claim")
+        if source_type == "Unverified":
+            if source_url:
+                evidence_source_errors.append(
+                    f"{row['evidence_id']}: Unverified row unexpectedly has a URL"
+                )
+        elif not source_url:
+            evidence_source_errors.append(f"{row['evidence_id']}: sourced claim has no URL")
+        if source_url:
+            parsed = urlparse(source_url)
+            if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+                evidence_source_errors.append(
+                    f"{row['evidence_id']}: malformed URL {source_url}"
+                )
+        if source_type == "Inference" and row["evidence_dimension"] != "Inference":
+            evidence_source_errors.append(
+                f"{row['evidence_id']}: Inference is not explicitly labeled"
+            )
+        unknown_substitutes = set(split_values(row["substitute_id"])) - set(substitute_ids)
+        unknown_jobs = set(split_values(row["job_id"])) - SUBSTITUTE_JOB_IDS
+        if unknown_substitutes or unknown_jobs:
+            evidence_link_errors.append(
+                f"{row['evidence_id']}: substitutes={sorted(unknown_substitutes)} "
+                f"jobs={sorted(unknown_jobs)}"
+            )
+    validation.check(
+        not evidence_source_errors,
+        "every factual evidence claim has a valid source and explicit evidence type",
+    )
+    validation.check(
+        not evidence_link_errors,
+        "evidence records link only to canonical substitutes and Jobs",
+    )
+
+    orphan_references = []
+    for row in substitutes:
+        unknown = set(split_values(row["evidence_ids"])) - evidence_id_set
+        if unknown:
+            orphan_references.append(
+                f"{row['substitute_id']}: {sorted(unknown)}"
+            )
+    workflow_ids = [row["workflow_id"].strip() for row in workflows]
+    validation.check(
+        all(workflow_ids) and len(workflow_ids) == len(set(workflow_ids)),
+        "workflow identifiers are non-empty and unique",
+    )
+    workflow_errors = []
+    coverage = {job_id: set() for job_id in SUBSTITUTE_JOB_IDS}
+    for row in workflows:
+        job_id = row["job_id"].strip()
+        if job_id not in SUBSTITUTE_JOB_IDS:
+            workflow_errors.append(f"{row['workflow_id']}: invalid Job {job_id}")
+            continue
+        try:
+            stage_order = int(row["stage_order"])
+        except ValueError:
+            workflow_errors.append(f"{row['workflow_id']}: invalid stage order")
+            continue
+        coverage[job_id].add(stage_order)
+        unknown_substitutes = set(split_values(row["substitute_ids"])) - set(substitute_ids)
+        unknown_evidence = set(split_values(row["evidence_ids"])) - evidence_id_set
+        if unknown_substitutes or unknown_evidence:
+            workflow_errors.append(
+                f"{row['workflow_id']}: substitutes={sorted(unknown_substitutes)} "
+                f"evidence={sorted(unknown_evidence)}"
+            )
+        if not row["evidence_ids"].strip() and row["evidence_status"] != "Unverified":
+            workflow_errors.append(
+                f"{row['workflow_id']}: missing evidence is not marked Unverified"
+            )
+    validation.check(
+        not workflow_errors,
+        "workflow rows use canonical references and mark unsupported stages Unverified",
+    )
+    validation.check(
+        all(orders == set(range(1, 12)) for orders in coverage.values()),
+        "all four Jobs contain exactly the eleven documented workflow stages",
+    )
+    validation.check(
+        not orphan_references,
+        "substitute entity evidence references resolve to the evidence register",
+    )
+
+    tracker_text = CSV_PATH.read_text(encoding="utf-8")
+    validation.check(
+        "substitute_id" not in tracker_text
+        and not any(
+            row["substitute_id"] in tracker_text
+            for row in substitutes
+        ),
+        "substitute records are not injected into the 36-company tracker",
+    )
+
+    score_source = function_source(GENERATOR, "relationship_score")
+    validation.check(
+        not any(
+            repr(row["name"]) in score_source or f'"{row["name"]}"' in score_source
+            for row in substitutes
+        ),
+        "relationship scoring contains no substitute-name assignments",
+    )
+    renderer_source = function_source(GENERATOR, "substitutes_page")
+    report_source = SUBSTITUTE_REPORT_SCRIPT.read_text(encoding="utf-8")
+    validation.check(
+        not any(
+            row["name"] in renderer_source or row["name"] in report_source
+            for row in substitutes
+        ),
+        "substitute outputs are data-driven and contain no hard-coded substitute list",
+    )
+
+    if not artifacts_required:
+        return
+    substitute_page = ROOT / "sites" / "full-report-site" / "alternative-workflows.html"
+    substitute_data = ROOT / "sites" / "full-report-site" / "substitutes-data.js"
+    generated_reports = (
+        ROOT / "SUBSTITUTE_MATRIX.md",
+        ROOT / "SUBSTITUTE_WORKFLOWS.md",
+        ROOT / "SUBSTITUTE_EVIDENCE_REGISTER.md",
+    )
+    validation.check(
+        substitute_page.exists() and substitute_data.exists(),
+        "site includes the generated Alternative Workflows data and page",
+    )
+    validation.check(
+        all(path.exists() for path in generated_reports),
+        "generated substitute matrix, workflow maps, and evidence register exist",
+    )
+    if substitute_page.exists() and substitute_data.exists():
+        page_text = substitute_page.read_text(encoding="utf-8")
+        data_text = substitute_data.read_text(encoding="utf-8")
+        validation.check(
+            all(row["substitute_id"] in data_text for row in substitutes)
+            and "data/substitutes-research.csv" in data_text,
+            "Alternative Workflows data is generated from every canonical substitute record",
+        )
+        labeled_types = {
+            row["source_type"]
+            for row in evidence
+            if row["source_type"] in {"Company Claim", "Inference", "Unverified"}
+        }
+        validation.check(
+            all(source_type in page_text for source_type in labeled_types)
+            and "not independent proof of effectiveness" in page_text,
+            "Company Claim, Inference, and Unverified evidence remain visibly labeled",
+        )
+        validation.check(
+            "relationship_score" not in data_text
+            and "direct_threat_score" not in data_text,
+            "substitute site data contains no numeric relationship or legacy threat score",
+        )
 
 
 def check_xlsx(validation, headers, rows, required):
@@ -335,7 +737,15 @@ def check_investor_facing_strategy(validation, required):
 
 
 def artifact_paths():
-    paths = [ROOT / "index.html", ROOT / "START_HERE.html", ROOT / "README.html", XLSX_PATH]
+    paths = [
+        ROOT / "index.html",
+        ROOT / "START_HERE.html",
+        ROOT / "README.html",
+        ROOT / "SUBSTITUTE_MATRIX.md",
+        ROOT / "SUBSTITUTE_WORKFLOWS.md",
+        ROOT / "SUBSTITUTE_EVIDENCE_REGISTER.md",
+        XLSX_PATH,
+    ]
     for base in (
         ROOT / "sites" / "full-report-site",
         ROOT / "sites" / "citation-site",
@@ -360,6 +770,7 @@ def hashes():
 def run_build_twice(validation):
     commands = (
         [sys.executable, str(ROOT / "tools" / "build_xlsx.py")],
+        [sys.executable, str(SUBSTITUTE_REPORT_SCRIPT)],
         [sys.executable, str(GENERATOR)],
     )
     before = hashes()
@@ -389,6 +800,7 @@ def main():
     validation = Validation()
     headers, rows = read_canonical()
     by_company = check_canonical(validation, headers, rows)
+    check_substitutes(validation, rows, artifacts_required=not args.pre_build)
     check_scoring(validation, rows, artifacts_required=not args.pre_build)
     if not args.pre_build:
         check_profile_manifest(

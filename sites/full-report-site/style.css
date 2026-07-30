@@ -107,6 +107,14 @@ details[open] summary { margin-bottom:10px; }
 .source-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
 .source-card { border:1px solid var(--line); border-radius:8px; background:#fbfdff; padding:12px; min-width:0; overflow-wrap:anywhere; }
 .source-note { color:#92400e; background:#fef3c7; border:1px solid #fbbf24; border-radius:6px; padding:7px; font-size:12px; }
+.substitute-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(310px,1fr)); gap:12px; }
+.substitute-card { border:1px solid var(--line); border-radius:8px; background:#fbfdff; padding:14px; min-width:0; overflow-wrap:anywhere; }
+.substitute-card h3, .source-card h3 { font-size:15px; margin-bottom:8px; }
+.substitute-strong-substitute { background:#dcfce7; color:#166534; border:1px solid #86efac; }
+.substitute-partial-substitute { background:#fef3c7; color:#92400e; border:1px solid #fbbf24; }
+.substitute-weak-substitute, .substitute-insufficient-evidence { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+.substitute-complementary-tool, .substitute-infrastructure-tool { background:#e0f2fe; color:#075985; border:1px solid #bae6fd; }
+.substitute-company-claim, .substitute-company-documentation, .substitute-inference, .substitute-unverified { background:#fef3c7; color:#92400e; border:1px solid #fbbf24; }
 .score-box { border:1px solid var(--line); border-radius:8px; background:#fbfdff; padding:12px; }
 .competitor-deep { scroll-margin-top:120px; }
 @media (max-width:700px){

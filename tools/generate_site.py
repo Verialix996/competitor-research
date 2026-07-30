@@ -8,11 +8,21 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
+SUBSTITUTES_PATH = ROOT / "data" / "substitutes-research.csv"
+SUBSTITUTE_EVIDENCE_PATH = ROOT / "data" / "substitute-evidence.csv"
+SUBSTITUTE_WORKFLOWS_PATH = ROOT / "data" / "substitute-workflows.csv"
 SITE = ROOT / "sites" / "full-report-site"
 COMPANY_SITE = SITE / "companies"
 CITATION_SITE = ROOT / "sites" / "citation-site"
 REPORTS = ROOT / "reports"
 RECONCILIATION_DATE = "2026-07-30"
+
+SUBSTITUTE_JOB_LABELS = {
+    "JOB-COFOUNDER": "Founder seeking a co-founder",
+    "JOB-FOUNDER-INVESTOR": "Founder seeking an investor",
+    "JOB-INVESTOR-SOURCING": "Investor sourcing startups or founders",
+    "JOB-TRUSTED-PROGRESSION": "Founder and investor progressing to trusted interaction",
+}
 
 FEATURES = [
     ("swipe_card_interface", "Swipe/card interface"),
@@ -412,6 +422,7 @@ def enrich(rows):
 def nav(active, prefix=""):
     items = [
         ("index.html", "Evidence Status"),
+        ("alternative-workflows.html", "Alternative Workflows"),
         ("priority-competitors.html", "Priority Competitors"),
         ("research-table.html", "Full Research Table"),
         ("category-analysis.html", "Category Analysis"),
@@ -426,7 +437,7 @@ def page(title, active, body, subtitle="", prefix="", data_prefix="../../"):
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>{escape(title)}</title><link rel="icon" href="data:,"><link href="{prefix}style.css" rel="stylesheet"/></head><body>
 <header class="site-header"><div class="header-inner"><h1>{escape(title)}</h1><p>{escape(subtitle)}</p>{nav(active, prefix)}</div></header>
-<main>{body}<p class="footer">Canonical source: <a href="{data_prefix}data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. Technical reconciliation: {RECONCILIATION_DATE}. Row-level research dates are preserved in the canonical tracker.</p></main></body></html>"""
+<main>{body}<p class="footer">Canonical sources are separated by scope: <a href="{data_prefix}data/competitive-research-tracker.csv">competitor tracker</a> for the 36-company research and <a href="{data_prefix}data/substitutes-research.csv">substitutes research</a> with linked <a href="{data_prefix}data/substitute-evidence.csv">evidence</a> and <a href="{data_prefix}data/substitute-workflows.csv">workflow stages</a>. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
 
 def confidence_badge(text):
     t = escape(overall_confidence(text) if text not in ("High", "Medium", "Low") else text)
@@ -557,15 +568,16 @@ def evidence_status_page(rows):
 <section class="panel warning-panel"><h2>No current strategic recommendation is published</h2>
 <p>Phase 0 established data integrity; it did not validate White Space, an Israeli beachhead, MVP scope, Build/Buy choices, or a launch sequence. Those topics require separate approved research before they can be presented as conclusions.</p></section>
 <section class="hero-panel">
-  <p class="eyebrow">Phase 0 evidence status</p>
+  <p class="eyebrow">Phase 0 integrity · Phase 1 substitute evidence</p>
   <h2>{len(rows)} canonical company records are available for evidence review.</h2>
-  <p>The active dataset, company profiles, source pages, and XLSX are generated from one canonical CSV. Numeric relationship and threat rankings remain paused because the required sourced inputs are incomplete.</p>
+  <p>The competitor tracker remains isolated. Phase 1 adds a separate canonical substitute layer for behavior, evidence, and four Job workflows. Numeric relationship and threat rankings remain paused because the required sourced inputs are incomplete.</p>
 </section>
 <section class="panel"><h2>Safe current uses</h2><ul class="clean-list">
   <li>Review recorded competitor facts and their source confidence.</li>
   <li>Inspect capability evidence and explicit research gaps.</li>
+  <li>Review how users combine networks, services, manual work, infrastructure, and non-adoption.</li>
   <li>Audit reconciled conflicts and unresolved findings.</li>
-</ul><div class="archive-list"><a href="research-table.html">Open the canonical research table</a><a href="category-analysis.html">Review evidence groups without ranking</a><a href="sources-methodology.html">Read sources and methodology</a></div></section>
+</ul><div class="archive-list"><a href="alternative-workflows.html">Open alternative workflows</a><a href="research-table.html">Open the canonical research table</a><a href="category-analysis.html">Review evidence groups without ranking</a><a href="sources-methodology.html">Read sources and methodology</a></div></section>
 <section class="panel"><h2>Not approved for investor presentation</h2><ul class="clean-list">
   <li>White Space claims or claims that BizMatch owns an unserved journey.</li>
   <li>Recommended market beachhead, launch sequence, or first-user acquisition plan.</li>
@@ -700,7 +712,8 @@ def methodology_page(rows):
         for name, (v1, v3, v5) in RUBRIC.items()
     )
     body = f"""
-<section class="panel"><h2>Single Source Of Truth</h2><p>The only active research source is <a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a>. The XLSX, generated site data, tables, company profiles, category pages, source pages, and report notices are derived from it. The generator never writes back to the CSV.</p><p>Historical cited datasets are kept under <code>archive/data/</code>. Production code does not read them.</p></section>
+<section class="panel"><h2>Separated Canonical Sources</h2><p><a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> is the only active source for the 36-company competitor research. The XLSX, generated site data, tables, company profiles, category pages, source pages, and report notices are derived from it.</p><p>Phase 1 has a separate normalized source of truth: <a href="../../data/substitutes-research.csv">substitute entities</a>, <a href="../../data/substitute-evidence.csv">claim-level evidence</a>, and <a href="../../data/substitute-workflows.csv">Job-stage workflows</a>. They generate <a href="alternative-workflows.html">How Users Solve It Today</a> and the Phase 1 registers; they never write into or rank the competitor tracker. Generators never write back to canonical CSVs.</p><p>Historical cited datasets are kept under <code>archive/data/</code>. Production code does not read them.</p></section>
+<section class="panel"><h2>Substitute Evidence Method</h2><p>Each material claim is linked to a source record and labeled as Independent Behavioral Evidence, Independent User Report, Independent Market Evidence, Company Documentation, Company Claim, Community Discussion, Anecdotal Evidence, Inference, or Unverified. Existence, observed use, effectiveness, satisfaction, search for an alternative, and willingness to pay or change behavior are separate evidence dimensions.</p><p>Phase 1 publishes only qualitative substitute strength. Missing evidence stays Unverified / Insufficient Evidence; no numeric threat score, White Space, market-gap, MVP, product-market-fit, or Build/Buy conclusion is produced.</p></section>
 <section class="panel"><h2>Strategic Classification Rules</h2><ul class="clean-list"><li><strong>Direct competitor:</strong> competes for a core BizMatch discovery or matching workflow.</li><li><strong>Substitute / network threat:</strong> solves an adjacent job and has unusually strong network, brand, or ecosystem pull.</li><li><strong>Substitute:</strong> solves an adjacent job users could choose instead of BizMatch.</li><li><strong>Feature benchmark:</strong> helps evaluate a supporting capability but is not the full product category.</li><li><strong>Infrastructure / potential partner:</strong> can support signing, disclosure, security, or data-room needs without being the core network.</li></ul></section>
 <section class="panel warning-panel"><h2>Relationship score status</h2><p>Numeric scoring is paused. The weights below are preserved analytical choices that require approval; the required explicit component fields and per-input evidence metadata are absent from the current 65-column schema. Missing inputs return null / Insufficient Evidence, never a default number.</p></section>
 <section class="panel"><h2>Preserved Segmented Weights</h2><div class="category-grid">{"".join(formula_blocks)}</div></section>
@@ -708,7 +721,7 @@ def methodology_page(rows):
 <section class="panel"><h2>Research Limitations</h2><ul class="clean-list">{"".join(f"<li>{escape(x)}</li>" for x in limitations)}</ul></section>
 <section class="panel"><h2>Research Backlog</h2><ol class="clean-list numbered">{"".join(f"<li>{escape(x)}</li>" for x in backlog)}</ol></section>
 <section class="panel"><h2>Capability Verification Model</h2><p>Capabilities are displayed as Confirmed, Partial, Not found, or Not applicable. Confirmed requires direct support in the canonical tracker's cited notes. Partial is used for limited analogs or marketing-level evidence. Not found is transparent uncertainty, not a negative factual claim.</p></section>"""
-    return page("Sources & Methodology", "Sources & Methodology", body, "Canonical source, scoring method, research limitations, and follow-up backlog.")
+    return page("Sources & Methodology", "Sources & Methodology", body, "Separated canonical sources, evidence method, scoring limits, and follow-up backlog.")
 
 def archive_page():
     body = """
@@ -760,6 +773,162 @@ def data_js(rows):
         })
     return "window.BIZMATCH_RESEARCH = " + json.dumps({"source": "data/competitive-research-tracker.csv", "reconciled_at": RECONCILIATION_DATE, "companies": public}, ensure_ascii=False, indent=2) + ";\n"
 
+def split_values(value):
+    return [item.strip() for item in (value or "").split("|") if item.strip()]
+
+
+def substitute_data_js(substitutes, evidence, workflows):
+    payload = {
+        "source": "data/substitutes-research.csv",
+        "evidence_source": "data/substitute-evidence.csv",
+        "workflow_source": "data/substitute-workflows.csv",
+        "last_built_from_source": RECONCILIATION_DATE,
+        "substitutes": substitutes,
+        "evidence": evidence,
+        "workflows": workflows,
+    }
+    return "window.BIZMATCH_SUBSTITUTES = " + json.dumps(
+        payload,
+        ensure_ascii=False,
+        indent=2,
+    ) + ";\n"
+
+
+def substitute_badge(value):
+    return f'<span class="badge substitute-{slug(value)}">{escape(value)}</span>'
+
+
+def substitute_source_link(row):
+    if not row.get("source_url"):
+        return '<span class="empty">Unverified — no source recorded</span>'
+    return (
+        f'<a href="{escape(row["source_url"])}" target="_blank" rel="noopener">'
+        f'{escape(row.get("source_title") or urlparse(row["source_url"]).netloc)}</a>'
+    )
+
+
+def substitutes_page(substitutes, evidence, workflows):
+    evidence_by_id = {row["evidence_id"]: row for row in evidence}
+    workflows_by_job = {
+        job_id: sorted(
+            [row for row in workflows if row["job_id"] == job_id],
+            key=lambda row: int(row["stage_order"]),
+        )
+        for job_id in SUBSTITUTE_JOB_LABELS
+    }
+    substitutes_by_job = {
+        job_id: [
+            row
+            for row in substitutes
+            if job_id in split_values(row.get("job_to_be_done"))
+        ]
+        for job_id in SUBSTITUTE_JOB_LABELS
+    }
+
+    cards_by_job = []
+    for job_id, job_label in SUBSTITUTE_JOB_LABELS.items():
+        cards = []
+        for row in substitutes_by_job[job_id]:
+            source_types = sorted(
+                {
+                    evidence_by_id[evidence_id]["source_type"]
+                    for evidence_id in split_values(row.get("evidence_ids"))
+                    if evidence_id in evidence_by_id
+                }
+            )
+            existing_link = ""
+            if row.get("existing_competitor_slug"):
+                existing_link = (
+                    f'<p><a href="companies/{escape(row["existing_competitor_slug"])}.html">'
+                    "Open linked canonical competitor record</a></p>"
+                )
+            cards.append(
+                f"""<article class="substitute-card">
+<h3>{escape(row['name'])}</h3>
+<p>{substitute_badge(row['classification'])} {substitute_badge(row['substitute_strength'])} {confidence_badge(row['confidence'])}</p>
+<dl class="mini-dl">
+<dt>Category</dt><dd>{escape(row['category'])}</dd>
+<dt>Current behavior</dt><dd>{escape(row['current_behavior'])}</dd>
+<dt>Why chosen</dt><dd>{escape(row['why_users_choose_it'])}</dd>
+<dt>Advantage</dt><dd>{escape(row['advantages'])}</dd>
+<dt>Limitation</dt><dd>{escape(row['limitations'])}</dd>
+<dt>Trust</dt><dd>{escape(row['trust_mechanism'])}</dd>
+<dt>Switching cost</dt><dd>{escape(row['switching_cost'])}</dd>
+<dt>Evidence types</dt><dd>{escape(', '.join(source_types) or row['source_type'] or 'Unverified')}</dd>
+<dt>Status</dt><dd>{escape(row['research_status'])}</dd>
+</dl>
+<p class="source-note">{escape(row['evidence_summary'])}</p>
+<p class="sources">{substitute_source_link(row)}</p>
+{existing_link}</article>"""
+            )
+        cards_by_job.append(
+            f'<section class="panel" id="{escape(job_id.lower())}"><h2>{escape(job_label)}</h2>'
+            '<p class="muted">Alternatives are ordered by their canonical data order, not by a numeric rank.</p>'
+            f'<div class="substitute-grid">{"".join(cards)}</div></section>'
+        )
+
+    workflow_sections = []
+    for job_id, job_label in SUBSTITUTE_JOB_LABELS.items():
+        rows = "".join(
+            f"<tr><th>{escape(row['stage_order'])}. {escape(row['stage_id'])}</th>"
+            f"<td>{escape(row['current_action'])}</td>"
+            f"<td>{escape(row['tools_channels'])}</td>"
+            f"<td>{escape(row['trust_requirement'])}</td>"
+            f"<td>{escape(row['current_advantage'])}</td>"
+            f"<td>{escape(row['current_limitation'])}</td>"
+            f"<td>{escape(row['evidence_status'])} · {escape(row['confidence'])}</td></tr>"
+            for row in workflows_by_job[job_id]
+        )
+        workflow_sections.append(
+            f'<section class="panel"><h2>{escape(job_label)} — current workflow</h2>'
+            '<div class="table-wrap"><table><thead><tr><th>Stage</th><th>Current action</th>'
+            '<th>Tools / channels</th><th>Trust requirement</th><th>Advantage</th>'
+            f'<th>Limitation</th><th>Evidence status</th></tr></thead><tbody>{rows}</tbody></table></div></section>'
+        )
+
+    evidence_cards = []
+    for row in evidence:
+        source_type = row["source_type"]
+        source_warning = ""
+        if source_type in {"Company Claim", "Company Documentation", "Inference", "Unverified"}:
+            source_warning = (
+                f'<p class="source-note">Interpretation boundary: {escape(source_type)} '
+                "is displayed as labeled and is not independent proof of effectiveness.</p>"
+            )
+        evidence_cards.append(
+            f"""<article class="source-card">
+<h3>{escape(row['evidence_id'])} · {escape(row['claim_type'])}</h3>
+<p>{substitute_badge(source_type)} {confidence_badge(row['confidence'])}</p>
+<p><strong>Claim:</strong> {escape(row['claim'])}</p>
+<p><strong>Dimension:</strong> {escape(row['evidence_dimension'])}</p>
+<p><strong>Support:</strong> {escape(row['supporting_excerpt_or_summary'])}</p>
+<p><strong>Limitation:</strong> {escape(row['limitation'])}</p>
+<p class="sources">{substitute_source_link(row)}</p>
+{source_warning}</article>"""
+        )
+
+    unverified = sum(1 for row in substitutes if row["research_status"] == "Unverified")
+    body = f"""
+<section class="panel warning-panel"><h2>Evidence boundary</h2>
+<p>This Phase 1 view documents how people can solve the Jobs today. It does not assert product-market fit, a strategic opportunity, an MVP priority, or a Build/Buy recommendation. Company documentation establishes capabilities or claims only; it is not relabeled as independent behavior.</p></section>
+<section class="hero-panel"><p class="eyebrow">Phase 1 · substitute workflows</p>
+<h2>{len(substitutes)} alternatives across {len(SUBSTITUTE_JOB_LABELS)} separately mapped Jobs</h2>
+<p>The research includes professional networks, communities, human referrals, programs, manual processes, infrastructure tools, services, and deliberate non-adoption. Strength is qualitative and evidence-constrained.</p></section>
+<div class="summary-grid"><article class="metric"><span class="num">{len(substitutes)}</span><span class="label">Substitute patterns</span></article><article class="metric"><span class="num">{len(evidence)}</span><span class="label">Traceable evidence records</span></article><article class="metric"><span class="num">{len(workflows)}</span><span class="label">Mapped Job stages</span></article><article class="metric"><span class="num">{unverified}</span><span class="label">Explicitly unverified alternatives</span></article></div>
+<section class="panel"><h2>How to read this view</h2><ul class="clean-list"><li><strong>Strong Substitute</strong> means the evidence supports broad Job coverage, trust or network advantage, or a costly embedded workflow; it is not a numeric threat rank.</li><li><strong>Complementary Tool</strong> means the tool replaces a bounded capability rather than the relationship.</li><li><strong>Insufficient Evidence</strong> preserves a required alternative without inventing adoption or outcomes.</li><li>Existing companies are linked to their canonical 36-company profile instead of being duplicated as new competitors.</li></ul><div class="archive-list"><a href="../../SUBSTITUTE_RESEARCH.md">Read the qualitative analysis</a><a href="../../SUBSTITUTE_MATRIX.md">Open the generated matrix</a><a href="../../SUBSTITUTE_WORKFLOWS.md">Open full workflow maps</a><a href="../../SUBSTITUTE_EVIDENCE_REGISTER.md">Open the evidence register</a></div></section>
+{''.join(cards_by_job)}
+<section class="panel"><h2>Workflow maps</h2><p>The tables below keep all eleven stages visible, including stages where the evidence is insufficient. They describe current behavior and do not prescribe a product workflow.</p></section>
+{''.join(workflow_sections)}
+<section class="panel"><h2>Source and evidence register</h2><p class="muted">A source may support existence without supporting use, effectiveness, satisfaction, desire to switch, or willingness to pay.</p><div class="source-grid">{''.join(evidence_cards)}</div></section>
+"""
+    return page(
+        "How Users Solve It Today",
+        "Alternative Workflows",
+        body,
+        "Evidence-based substitutes, manual processes, services, infrastructure, and non-adoption.",
+    )
+
+
 def compatibility_ranker_js(rows):
     del rows
     return (
@@ -768,7 +937,7 @@ def compatibility_ranker_js(rows):
     )
 
 def root_entry():
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Competitor Research</h1><div class="warn"><strong>Phase 0:</strong> numeric relationship and threat rankings are paused because explicit sourced inputs are missing. White Space, MVP, Build/Buy, and launch recommendations are not published as current conclusions.</div><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Evidence Status</a><p>Canonical evidence, research limits, and conclusions that remain unvalidated.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Single source of truth, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated canonical tracker XLSX</a></li></ul><p>Archived generated drafts, historical strategic hypotheses, and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Competitor Research</h1><div class="warn"><strong>Evidence boundary:</strong> numeric relationship and threat rankings are paused. Phase 1 maps substitutes and existing behavior without publishing product-market fit, MVP, Build/Buy, or launch recommendations.</div><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Evidence Status</a><p>Canonical evidence, research limits, and conclusions that remain unvalidated.</p></div><div class="card"><a href="sites/full-report-site/alternative-workflows.html">How Users Solve It Today</a><p>Phase 1 substitutes, manual workflows, services, infrastructure, and non-adoption across four Jobs.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Separated canonical sources, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical competitor tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated competitor tracker XLSX</a></li><li><a href="data/substitutes-research.csv">Canonical substitute entities CSV</a></li><li><a href="data/substitute-evidence.csv">Canonical substitute evidence CSV</a></li><li><a href="data/substitute-workflows.csv">Canonical substitute workflow CSV</a></li></ul><p>Archived generated drafts, historical strategic hypotheses, and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
 
 def archive_notice(title):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)} - Archived</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:880px;margin:auto;background:#fff;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;font-weight:600;text-decoration:none}}li{{margin:8px 0}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>{escape(title)} - Archived</h1><div class="warn"><p>This old generated report is audit material only. Production code reads only the canonical tracker.</p></div><p>Use <a href="../sites/full-report-site/research-table.html">Full Research Table</a> and <a href="../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> for current facts.</p><p>Archived before or during the {RECONCILIATION_DATE} reconciliation.</p></main></body></html>"""
@@ -899,14 +1068,29 @@ def write_citation_site(rows):
 
 def main():
     rows = enrich(list(csv.DictReader(CSV_PATH.open(encoding="utf-8"))))
+    substitutes = list(csv.DictReader(SUBSTITUTES_PATH.open(encoding="utf-8")))
+    substitute_evidence = list(
+        csv.DictReader(SUBSTITUTE_EVIDENCE_PATH.open(encoding="utf-8"))
+    )
+    substitute_workflows = list(
+        csv.DictReader(SUBSTITUTE_WORKFLOWS_PATH.open(encoding="utf-8"))
+    )
     expected_profiles = {f"{slug(row['company'])}.html" for row in rows}
     COMPANY_SITE.mkdir(parents=True, exist_ok=True)
     for profile in COMPANY_SITE.glob("*.html"):
         if profile.name not in expected_profiles:
             profile.unlink()
     (SITE / "canonical-data.js").write_text(data_js(rows), encoding="utf-8")
+    (SITE / "substitutes-data.js").write_text(
+        substitute_data_js(substitutes, substitute_evidence, substitute_workflows),
+        encoding="utf-8",
+    )
     (SITE / "ranker-data.js").write_text(compatibility_ranker_js(rows), encoding="utf-8")
     (SITE / "index.html").write_text(evidence_status_page(rows), encoding="utf-8")
+    (SITE / "alternative-workflows.html").write_text(
+        substitutes_page(substitutes, substitute_evidence, substitute_workflows),
+        encoding="utf-8",
+    )
     (SITE / "strategic-conclusions-historical.html").write_text(
         historical_strategic_page(rows),
         encoding="utf-8",
@@ -944,7 +1128,10 @@ def main():
             ),
             encoding="utf-8",
         )
-    print(f"Generated {len(rows)} company profiles and strategic pages from {CSV_PATH}")
+    print(
+        f"Generated {len(rows)} company profiles and {len(substitutes)} substitute "
+        f"patterns from their separated canonical sources"
+    )
 
 if __name__ == "__main__":
     main()

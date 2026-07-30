@@ -19,9 +19,10 @@ def run(script, *args):
 def main():
     run("validate_data.py", "--pre-build")
     run("build_xlsx.py")
+    run("build_substitute_reports.py")
     run("generate_site.py")
     run("validate_data.py")
-    print("Canonical Phase 0 build completed successfully")
+    print("Canonical Phase 0 + Phase 1 build completed successfully")
 
 
 if __name__ == "__main__":
