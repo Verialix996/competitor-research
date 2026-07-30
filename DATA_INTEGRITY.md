@@ -22,6 +22,23 @@ tables linked by `substitute_id`, `evidence_id`, and `job_id`. They are not
 fallback copies of one another. No code selects among them by availability or
 filename.
 
+The public market-research assessment is stored separately in:
+
+`data/market-research.json`
+
+It contains only aggregate, non-identifying findings from the existing
+research material. It is not a replacement for the private raw interview
+corpus and must never contain participant names, contact details, recordings,
+or transcripts.
+
+Active conclusions are stored separately in:
+
+`data/findings-and-implications.json`
+
+This structured source links conclusions to substitute evidence IDs, substitute
+IDs, canonical competitor slugs, and aggregate market-research paths. It does
+not replace or write back to any underlying research source.
+
 ## Canonical flow
 
 ```text
@@ -46,6 +63,25 @@ data/substitutes-research.csv
   -> sites/full-report-site/alternative-workflows.html /
      sites/full-report-site/substitutes-data.js
   -> tools/validate_data.py (post-build and deterministic validation)
+```
+
+```text
+data/market-research.json
+  -> tools/validate_data.py (schema, arithmetic, evidence-label, URL, and PII checks)
+  -> tools/generate_site.py
+  -> market-research/index.html
+  -> tools/validate_data.py (route, navigation, content-boundary, and deterministic checks)
+```
+
+```text
+data/findings-and-implications.json
+  + canonical competitor / substitute / evidence / workflow / market sources
+  -> tools/validate_data.py (schema, controlled values, and reference checks)
+  -> tools/build_findings_report.py
+  -> FINDINGS_AND_STRATEGIC_IMPLICATIONS.md
+  -> tools/generate_site.py
+  -> findings-conclusions/index.html
+  -> tools/validate_data.py (traceability, route, wording, and deterministic checks)
 ```
 
 `tools/generate_site.py` is read-only with respect to the canonical CSV. Derived
@@ -75,7 +111,9 @@ directory whose filename is not one of the canonical company slugs.
   a build must not alter already-current generated artifacts.
 - Investor-facing pages must not publish the historical beachhead, launch
   sequence, White Space, MVP, or Build/Buy hypotheses as current conclusions.
-  The detailed pre-Phase-0 narrative is isolated in the site Archive.
+  The active findings page may publish only evidence-linked findings and
+  explicitly conditional implications. The detailed pre-Phase-0 narrative is
+  isolated in the site Archive.
 - Substitute entity, evidence, and workflow schemas and column order must match
   the documented canonical schemas.
 - Substitute IDs, evidence IDs, and workflow IDs must be non-empty and unique.
@@ -84,7 +122,10 @@ directory whose filename is not one of the canonical company slugs.
   four documented Jobs.
 - Every evidence claim must have a structurally valid source URL and evidence
   type, or be explicitly `Unverified`.
-- Every Job must contain the eleven workflow stages exactly once.
+- Every Job must contain the thirteen workflow stages exactly once: need
+  definition, discovery/sourcing, initial screen, fit check, outreach,
+  response/follow-up, trust building, verification, controlled disclosure,
+  NDA, meeting, diligence, and decision/follow-up.
 - Cross-table IDs must resolve; orphan substitute, evidence, Job, or existing
   competitor references fail validation.
 - Existing companies must use `existing_competitor_slug` and are not appended
@@ -94,6 +135,11 @@ directory whose filename is not one of the canonical company slugs.
   remain visibly labeled in generated output and cannot be rendered as
   independent proof.
 - Missing substitute evidence is not assigned a default value or numeric zero.
+- Every active finding must resolve its evidence, substitute, Job, competitor,
+  and market-research references, or carry an explicit `Insufficient Evidence`
+  boundary.
+- Active conclusions use qualitative statuses and contain no numeric threat,
+  opportunity, readiness, priority, or thesis-fit score.
 
 ## Missing values
 

@@ -123,6 +123,7 @@ def build_evidence_register(evidence):
     for row in evidence:
         parts.extend(
             [
+                f'<a id="{row["evidence_id"]}"></a>',
                 f"## {row['evidence_id']} — {row['claim_type']}",
                 "",
                 f"- Claim: {row['claim']}",

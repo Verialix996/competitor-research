@@ -1,0 +1,594 @@
+{
+  "meta": {
+    "title": "Findings & Strategic Implications",
+    "subtitle": "Active conclusions from the separated competitor, substitute-workflow, and exploratory market-research evidence",
+    "status": "Evidence-constrained active research",
+    "last_reviewed": "2026-07-30",
+    "scope_note": "This file is the canonical active conclusions layer. It references, but never replaces, the canonical competitor tracker, substitute records, workflow records, evidence register, and aggregate market-research assessment.",
+    "decision_boundary": "The evidence supports narrower Customer Discovery. It does not establish product-market fit, a market gap, a final White Space, willingness to pay, an MVP priority, or a Build/Buy decision."
+  },
+  "executive_conclusion": {
+    "headline": "BizMatch would compete first with trusted relationships and assembled workflows, not only with matching products.",
+    "summary": "Evidence suggests that founders and investors already combine prior relationships, warm introductions, communities, databases, email, spreadsheets, meetings, professional advisers, and specialist disclosure tools. These approaches are fragmented, but fragmentation alone does not show that users will adopt an integrated marketplace. The strongest current evidence concerns trust, reference context, progressive disclosure, and embedded investor selection processes. The evidence is weaker on whether discovery is the primary failure, whether algorithmic or swipe matching improves outcomes, whether early NDA gating helps, and whether either side will pay or change behavior.",
+    "current_decision": "Narrow the research",
+    "evidence_ids": [
+      "EV-001",
+      "EV-002",
+      "EV-003",
+      "EV-005",
+      "EV-006",
+      "EV-024",
+      "EV-026",
+      "EV-029",
+      "EV-034"
+    ],
+    "market_research_refs": [
+      "interview_findings.primary_pain",
+      "interview_findings.partner_origin",
+      "interview_findings.trust",
+      "interview_findings.disclosure"
+    ],
+    "confidence": "Medium"
+  },
+  "jobs": [
+    {
+      "job_id": "JOB-COFOUNDER",
+      "title": "Founder seeking a co-founder",
+      "dominant_current_workflow": "Define the missing role; search prior relationships, professional profiles, communities and programs; use warm context to approach candidates; test compatibility through repeated interaction or shared work; verify references; then commit, hire instead, continue solo, defer or stop.",
+      "competitor_slugs": [
+        "yc-co-founder-matching",
+        "coffeespace",
+        "cofounderslab"
+      ],
+      "substitute_ids": [
+        "SUB-003",
+        "SUB-004",
+        "SUB-005",
+        "SUB-008",
+        "SUB-021",
+        "SUB-022"
+      ],
+      "main_trust_mechanism": "Prior shared work, accountable references, mutual contacts and observed follow-through.",
+      "supported_advantages": "Existing relationships carry identity and behavioral context; trials can reveal compatibility that a profile cannot.",
+      "supported_weaknesses": "Networks can reproduce homophily and unequal access. Search and follow-up span multiple channels, but the prevalence and outcome cost of that fragmentation are not measured.",
+      "evidence_quality": "Mixed independent behavioral evidence, independent market evidence and low-confidence community reports.",
+      "unresolved_questions": "Urgency among active seekers, dissatisfaction with warm-network options, outcome quality of matching platforms, willingness to complete rich profiles, and willingness to switch.",
+      "evidence_ids": [
+        "EV-004",
+        "EV-006",
+        "EV-008",
+        "EV-009",
+        "EV-010",
+        "EV-011",
+        "EV-033"
+      ],
+      "market_research_refs": [
+        "interview_findings.primary_pain",
+        "interview_findings.partner_origin",
+        "interview_findings.trust"
+      ],
+      "confidence": "Medium"
+    },
+    {
+      "job_id": "JOB-FOUNDER-INVESTOR",
+      "title": "Founder seeking an investor",
+      "dominant_current_workflow": "Define the round and target criteria; assemble investors through databases, portfolio research, events, advisers and referrals; prioritize manually; request introductions or send targeted outreach; track replies; build credibility; disclose progressively; and continue into meetings, diligence and legal close.",
+      "competitor_slugs": [
+        "openvc",
+        "foundersuite",
+        "cherub",
+        "angellist",
+        "signal-nfx"
+      ],
+      "substitute_ids": [
+        "SUB-005",
+        "SUB-007",
+        "SUB-009",
+        "SUB-010",
+        "SUB-011",
+        "SUB-012",
+        "SUB-013",
+        "SUB-018",
+        "SUB-022"
+      ],
+      "main_trust_mechanism": "Introducer context, founder progress, references, portfolio evidence and repeated interaction.",
+      "supported_advantages": "The modular workflow is flexible and works without another marketplace account; specialist databases and fundraising workspaces cover research and pipeline tasks.",
+      "supported_weaknesses": "Information quality changes over time, access to warm paths is unequal, and context can fragment. Evidence does not establish that consolidation improves fundraising outcomes.",
+      "evidence_quality": "Independent market and behavioral evidence supplemented by company documentation and community reports.",
+      "unresolved_questions": "Whether active fundraisers prefer mutual matching, what causes failed follow-through, willingness to switch from familiar tools, and willingness to pay for an integrated process.",
+      "evidence_ids": [
+        "EV-001",
+        "EV-005",
+        "EV-016",
+        "EV-017",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-024",
+        "EV-026",
+        "EV-031",
+        "EV-034"
+      ],
+      "market_research_refs": [
+        "hypotheses.Investors want deal flow from a new platform",
+        "hypotheses.Either side will pay"
+      ],
+      "confidence": "Medium"
+    },
+    {
+      "job_id": "JOB-INVESTOR-SOURCING",
+      "title": "Investor sourcing startups or founders",
+      "dominant_current_workflow": "Set a fund-specific mandate; source through professional networks, other investors, portfolio companies, proactive research, events, databases, scouts and inbound; triage in an internal funnel; meet and verify teams; then conduct fund-specific diligence and partner review.",
+      "competitor_slugs": [
+        "crunchbase",
+        "angellist",
+        "openvc",
+        "signal-nfx"
+      ],
+      "substitute_ids": [
+        "SUB-005",
+        "SUB-007",
+        "SUB-009",
+        "SUB-010",
+        "SUB-012",
+        "SUB-020"
+      ],
+      "main_trust_mechanism": "Source reputation, fund identity, references, repeated founder interaction and accountable internal review.",
+      "supported_advantages": "A fund's own process applies thesis-specific judgment, preserves governance and combines proprietary network context with active sourcing.",
+      "supported_weaknesses": "The process consumes time and can reinforce network bias. That does not establish demand for another feed.",
+      "evidence_quality": "Strongest of the four Jobs: independent investor-funnel research and a randomized field experiment, plus company documentation for bounded tools.",
+      "unresolved_questions": "Whether investors want external mutual matching, which source-quality problems remain unsolved, what verified signal would change behavior, and why an investor would maintain another profile or feed.",
+      "evidence_ids": [
+        "EV-001",
+        "EV-002",
+        "EV-003",
+        "EV-020",
+        "EV-029",
+        "EV-034"
+      ],
+      "market_research_refs": [
+        "research_inventory.Investor evidence",
+        "hypotheses.Investors want deal flow from a new platform"
+      ],
+      "confidence": "High"
+    },
+    {
+      "job_id": "JOB-TRUSTED-PROGRESSION",
+      "title": "Founder and investor progressing from discovery to trusted interaction",
+      "dominant_current_workflow": "Carry referral and conversation context into repeated contact; verify identity, claims and fit; build trust through references and behavior; stage disclosure from public context to controlled documents; use an NDA selectively; coordinate meetings; complete additional checks; and record a decision or next milestone.",
+      "competitor_slugs": [
+        "docsend",
+        "digify",
+        "securedocs",
+        "dropbox-sign",
+        "pandadoc"
+      ],
+      "substitute_ids": [
+        "SUB-005",
+        "SUB-012",
+        "SUB-014",
+        "SUB-015",
+        "SUB-016",
+        "SUB-017",
+        "SUB-019",
+        "SUB-020"
+      ],
+      "main_trust_mechanism": "Repeated behavior, accountable references, professional duties, source triangulation and controlled access.",
+      "supported_advantages": "Established tools cover scheduling, documents, permissions and signatures; human reviewers adapt verification and diligence to context.",
+      "supported_weaknesses": "Handoffs can fragment context, while deep verification remains slow and sensitive. The effect of fragmentation on conversion or satisfaction is unmeasured.",
+      "evidence_quality": "Independent investor-process evidence plus strong capability documentation; user preference and end-to-end outcome evidence remain limited.",
+      "unresolved_questions": "Which handoff causes abandonment, whether an integrated process changes outcomes, when disclosure becomes a barrier, and whether NDA gating adds confidence or friction by context.",
+      "evidence_ids": [
+        "EV-002",
+        "EV-003",
+        "EV-005",
+        "EV-023",
+        "EV-024",
+        "EV-025",
+        "EV-026",
+        "EV-027",
+        "EV-028",
+        "EV-034"
+      ],
+      "market_research_refs": [
+        "interview_findings.trust",
+        "interview_findings.disclosure"
+      ],
+      "confidence": "High"
+    }
+  ],
+  "cross_market_findings": [
+    {
+      "finding": "Discovery is only one part of the work; the evidence does not establish that it is the primary failure.",
+      "interpretation": "Selection, reference context, trust, verification, follow-through and disclosure occur after discovery and remain human- and context-intensive.",
+      "evidence_ids": ["EV-002", "EV-003", "EV-005", "EV-034"],
+      "market_research_refs": ["interview_findings.primary_pain"],
+      "confidence": "Medium"
+    },
+    {
+      "finding": "Warm paths add context, but the evidence does not prove that they outperform algorithmic matching on partnership or investment outcomes.",
+      "interpretation": "Introducers and prior relationships carry reputation and history; network exposure can also create bias and unequal access.",
+      "evidence_ids": ["EV-004", "EV-005", "EV-006", "EV-029", "EV-034"],
+      "market_research_refs": ["interview_findings.partner_origin"],
+      "confidence": "Medium"
+    },
+    {
+      "finding": "Users can assemble a functional stack from specialized tools.",
+      "interpretation": "Databases, email, spreadsheets, calendars, data rooms, e-signature and general AI cover bounded steps. Evidence of fragmentation exists, but evidence of dissatisfaction, switching intent and superior integrated outcomes is insufficient.",
+      "evidence_ids": ["EV-016", "EV-020", "EV-023", "EV-024", "EV-025", "EV-028"],
+      "market_research_refs": [],
+      "confidence": "High"
+    },
+    {
+      "finding": "Founder and investor Jobs are materially asymmetric.",
+      "interpretation": "Founders seek access and response; investors manage scarce attention, mandate-specific selection and governance. A shared interface does not by itself create balanced incentives.",
+      "evidence_ids": ["EV-001", "EV-002", "EV-003", "EV-034"],
+      "market_research_refs": ["hypotheses.Sufficient marketplace liquidity can be created in Israel"],
+      "confidence": "High"
+    },
+    {
+      "finding": "Early NDA is context-dependent and may create friction in early VC interactions.",
+      "interpretation": "Selective disclosure is a supported concern, but an NDA is not validated as the preferred universal trust mechanism.",
+      "evidence_ids": ["EV-024", "EV-025", "EV-026", "EV-027"],
+      "market_research_refs": ["interview_findings.disclosure"],
+      "confidence": "High"
+    }
+  ],
+  "competitive_pressures": [
+    {
+      "pressure": "Prior relationships, warm introductions and shared work",
+      "why_it_matters": "They provide identity, reputation, reference context and observed behavior before a new platform has network density.",
+      "substitute_ids": ["SUB-003", "SUB-004", "SUB-005", "SUB-008"],
+      "evidence_ids": ["EV-004", "EV-005", "EV-006", "EV-009"],
+      "confidence": "Medium"
+    },
+    {
+      "pressure": "Investor internal sourcing, selection and governance",
+      "why_it_matters": "The institutional funnel is mandate-specific and difficult for a generic self-service feed to replace.",
+      "substitute_ids": ["SUB-020"],
+      "evidence_ids": ["EV-001", "EV-002", "EV-003", "EV-034"],
+      "confidence": "High"
+    },
+    {
+      "pressure": "An assembled stack of familiar specialist tools",
+      "why_it_matters": "Users can retain control and avoid migration while replacing individual BizMatch capabilities.",
+      "substitute_ids": ["SUB-009", "SUB-010", "SUB-012", "SUB-013", "SUB-014", "SUB-015", "SUB-016", "SUB-017"],
+      "evidence_ids": ["EV-016", "EV-020", "EV-023", "EV-024", "EV-025", "EV-028"],
+      "confidence": "High"
+    },
+    {
+      "pressure": "Human professionals and trusted intermediaries",
+      "why_it_matters": "Advisers, lawyers, accountants, mentors and existing investors combine context, accountability and judgment that software capability claims do not establish.",
+      "substitute_ids": ["SUB-018", "SUB-019"],
+      "evidence_ids": ["EV-003", "EV-026", "EV-027", "EV-030", "EV-031"],
+      "confidence": "Medium"
+    },
+    {
+      "pressure": "Non-adoption and reversible fallback paths",
+      "why_it_matters": "A founder can hire, continue solo, bootstrap, defer, retain a manual process or stop. Evidence does not quantify how often or how satisfactory these choices are.",
+      "substitute_ids": ["SUB-021", "SUB-022"],
+      "evidence_ids": ["EV-032"],
+      "confidence": "Low"
+    }
+  ],
+  "assumptions_strengthened": [
+    {
+      "assumption": "Trust and verification matter after initial discovery.",
+      "supporting_evidence": "Investor-process evidence documents references, team assessment and multi-stage diligence; founder-team evidence and interview observations emphasize shared work, references and behavior.",
+      "counterevidence": "The relative importance and willingness to pay for a productized trust layer were not measured.",
+      "evidence_ids": ["EV-002", "EV-003", "EV-006", "EV-009", "EV-034"],
+      "market_research_refs": ["interview_findings.trust"],
+      "confidence": "High",
+      "unproven": "That BizMatch can verify claims better than existing people and processes."
+    },
+    {
+      "assumption": "Selective disclosure is a real concern in some interactions.",
+      "supporting_evidence": "The aggregate interview assessment records selective-disclosure concerns, and controlled-document products exist for staged access.",
+      "counterevidence": "Capability documentation does not show that disclosure concern causes abandonment or demand for mandatory gating.",
+      "evidence_ids": ["EV-024", "EV-027"],
+      "market_research_refs": ["interview_findings.disclosure"],
+      "confidence": "Medium",
+      "unproven": "Severity, behavioral effect, preferred intervention and willingness to pay."
+    },
+    {
+      "assumption": "Workflow continuity can matter beyond a first match.",
+      "supporting_evidence": "Real workflows span response, references, meetings, documents, diligence and decisions across several tools.",
+      "counterevidence": "No comparative evidence shows that one integrated platform improves completion, satisfaction or outcomes.",
+      "evidence_ids": ["EV-002", "EV-003", "EV-016", "EV-023", "EV-024", "EV-025"],
+      "market_research_refs": [],
+      "confidence": "Medium",
+      "unproven": "That users want the continuity inside BizMatch rather than in their existing stack."
+    }
+  ],
+  "assumptions_weakened": [
+    {
+      "assumption": "Matching or discovery is the primary pain across the broad target market.",
+      "supporting_evidence": "Dedicated matching and discovery products exist and networks can exclude outsiders.",
+      "counterevidence": "In the existing broad interview sample, finding a co-founder was not the primary pain; investor evidence emphasizes selection and diligence after sourcing.",
+      "evidence_ids": ["EV-002", "EV-029", "EV-033"],
+      "market_research_refs": ["interview_findings.primary_pain"],
+      "confidence": "Medium",
+      "unproven": "Pain urgency within the narrower population of active co-founder seekers."
+    },
+    {
+      "assumption": "A mutual or AI match is more valuable than warm context and observed behavior.",
+      "supporting_evidence": "Matching mechanisms exist and one study reports improved matching-tool outcomes in its specific setting.",
+      "counterevidence": "Current behavioral evidence favors prior work, references and network context; no comparable BizMatch-relevant outcome evidence shows algorithmic superiority.",
+      "evidence_ids": ["EV-005", "EV-006", "EV-009", "EV-033", "EV-034"],
+      "market_research_refs": ["interview_findings.partner_origin", "interview_findings.trust"],
+      "confidence": "Medium",
+      "unproven": "Incremental value of AI or mutual matching over curated introductions."
+    },
+    {
+      "assumption": "A pre-disclosure NDA is a broadly useful differentiator.",
+      "supporting_evidence": "E-signature and NDA infrastructure can execute agreements when the context warrants one.",
+      "counterevidence": "Documented early-stage VC practice often avoids early NDAs because of conflict and administrative friction; interviews did not validate NDA as the preferred response.",
+      "evidence_ids": ["EV-025", "EV-026", "EV-027"],
+      "market_research_refs": ["interview_findings.disclosure"],
+      "confidence": "High",
+      "unproven": "Which user segments and disclosure moments benefit from an NDA gate."
+    },
+    {
+      "assumption": "One coherent marketplace can serve all four Jobs.",
+      "supporting_evidence": "The Jobs share identities, introductions, messaging, documents and meetings.",
+      "counterevidence": "Founder access, co-founder compatibility, investor sourcing and institutional diligence have different actors, incentives, trust standards and fallback options.",
+      "evidence_ids": ["EV-001", "EV-002", "EV-003", "EV-006", "EV-024"],
+      "market_research_refs": [],
+      "confidence": "High",
+      "unproven": "Whether one narrowly defined entry Job can create value for both sides before expansion."
+    }
+  ],
+  "pains": [
+    {
+      "pain": "Network access is unequal and can reproduce bias.",
+      "status": "Evidence-supported pain",
+      "evidence_ids": ["EV-006", "EV-029"],
+      "market_research_refs": [],
+      "caveat": "The evidence does not establish demand for BizMatch as the remedy."
+    },
+    {
+      "pain": "Investor sourcing, selection and diligence consume time and multiple human checks.",
+      "status": "Evidence-supported pain",
+      "evidence_ids": ["EV-001", "EV-002", "EV-003"],
+      "market_research_refs": [],
+      "caveat": "Investor dissatisfaction with the process or willingness to adopt a new feed was not shown."
+    },
+    {
+      "pain": "Selective disclosure concerns exist.",
+      "status": "Partially supported pain",
+      "evidence_ids": ["EV-024", "EV-027"],
+      "market_research_refs": ["interview_findings.disclosure"],
+      "caveat": "Severity, abandonment and preferred solution were not measured."
+    },
+    {
+      "pain": "Cross-tool context and follow-up can fragment.",
+      "status": "Inference",
+      "evidence_ids": ["EV-016", "EV-023", "EV-024"],
+      "market_research_refs": [],
+      "caveat": "The workflow spans tools, but the causal effect on outcomes is unmeasured."
+    },
+    {
+      "pain": "Cold outreach, spam and ghosting prevent viable relationships.",
+      "status": "Hypothesis requiring validation",
+      "evidence_ids": ["EV-014", "EV-017"],
+      "market_research_refs": [],
+      "caveat": "Community reports are low-confidence and prevalence was not measured."
+    },
+    {
+      "pain": "Israeli founders urgently need a dedicated co-founder marketplace.",
+      "status": "Insufficient Evidence",
+      "evidence_ids": [],
+      "market_research_refs": ["hypotheses.Israeli founders struggle to find co-founders"],
+      "caveat": "Only two interview participants were active seekers; the sample was not representative."
+    },
+    {
+      "pain": "Investors need another startup-discovery feed.",
+      "status": "Insufficient Evidence",
+      "evidence_ids": [],
+      "market_research_refs": ["hypotheses.Investors want deal flow from a new platform"],
+      "caveat": "Investor evidence in the existing market-research corpus is insufficient."
+    }
+  ],
+  "conclusion_boundaries": {
+    "justified": [
+      "Users can solve each Job through a combination of networks, manual work, services and specialist infrastructure.",
+      "Trust and verification rely heavily on human context, references, repeated behavior and accountable processes.",
+      "Investor sourcing is inseparable from selection, diligence and fund governance.",
+      "An early universal NDA gate conflicts with documented early-stage VC practice.",
+      "The existing broad interview sample did not identify co-founder search as its primary pain."
+    ],
+    "plausible_unverified": [
+      "Better curation or verification could be more valuable than more discovery.",
+      "Workflow continuity could reduce lost context or improve follow-through.",
+      "A focused segment of active co-founder seekers may experience urgent unmet need.",
+      "Structured trial collaboration may provide stronger compatibility evidence than profiles alone."
+    ],
+    "prohibited": [
+      "BizMatch has product-market fit or validated demand.",
+      "A market gap, White Space or defensible beachhead has been established.",
+      "Users will switch from warm introductions or existing tool stacks.",
+      "Investors want another feed or will maintain another profile.",
+      "Either side will pay.",
+      "NDA, AI matching or swipe is a validated differentiator.",
+      "A broad MVP, final feature priority or Build/Buy decision is justified."
+    ]
+  },
+  "customer_discovery": [
+    {
+      "priority": "P1",
+      "job_id": "JOB-COFOUNDER",
+      "question": "Among founders actively seeking a co-founder now, what triggered the search, what alternatives have they used, what happened, and what would make them change behavior?",
+      "decision_link": "Tests urgency, recurrence, alternative adequacy and switching rather than feature preference."
+    },
+    {
+      "priority": "P1",
+      "job_id": "JOB-INVESTOR-SOURCING",
+      "question": "Which sourced opportunities receive attention, which are rejected, what trust signal changes the decision, and why would an investor add or ignore a new source?",
+      "decision_link": "Tests investor-side incentive, curation value and marketplace liquidity."
+    },
+    {
+      "priority": "P1",
+      "job_id": "JOB-TRUSTED-PROGRESSION",
+      "question": "At which real interaction did trust, verification, disclosure or follow-through fail, and what action did each party take next?",
+      "decision_link": "Separates observed failure from general concern."
+    },
+    {
+      "priority": "P2",
+      "job_id": "JOB-FOUNDER-INVESTOR",
+      "question": "During a recent raise, which tools and people were used from target selection through decision, where was context re-entered, and did that change an outcome?",
+      "decision_link": "Tests whether fragmentation is consequential and whether consolidation is valuable."
+    },
+    {
+      "priority": "P2",
+      "job_id": "JOB-TRUSTED-PROGRESSION",
+      "question": "What information was withheld, from whom, until what event, and would an NDA have accelerated or delayed disclosure?",
+      "decision_link": "Tests disclosure severity and context-specific NDA value or friction."
+    },
+    {
+      "priority": "P2",
+      "job_id": "JOB-COFOUNDER",
+      "question": "What evidence from a trial project, reference or profile changed a co-founder decision, and what information was unavailable beforehand?",
+      "decision_link": "Tests matching-data sufficiency versus behavioral compatibility evidence."
+    }
+  ],
+  "conditional_implications": [
+    {
+      "evidence_observed": "Prior work, references and warm context carry trust information.",
+      "implication_if_confirmed": "A future intervention would need to preserve or create accountable context, not merely increase profile volume.",
+      "risk_of_acting_too_early": "Building matching mechanics before confirming the missing trust signal could add low-quality discovery.",
+      "validation_needed": "Compare recent decisions made through warm paths, cold paths and matching tools in an active-seeker sample.",
+      "evidence_ids": ["EV-005", "EV-006", "EV-009", "EV-034"],
+      "market_research_refs": ["interview_findings.trust"],
+      "confidence": "Medium"
+    },
+    {
+      "evidence_observed": "Existing specialist tools cover research, communication, scheduling, controlled documents and signatures.",
+      "implication_if_confirmed": "Any integrated experience would need to improve a measured handoff or outcome, not duplicate commodity capabilities.",
+      "risk_of_acting_too_early": "A broad suite could increase switching cost without displacing the trusted stack.",
+      "validation_needed": "Observe recent workflows and quantify re-entry, delay, abandonment and workaround behavior by stage.",
+      "evidence_ids": ["EV-016", "EV-020", "EV-023", "EV-024", "EV-025"],
+      "market_research_refs": [],
+      "confidence": "High"
+    },
+    {
+      "evidence_observed": "Early-stage investors often avoid broad pre-pitch NDAs while selective disclosure remains a concern.",
+      "implication_if_confirmed": "Confidentiality controls may need to be progressive and context-specific.",
+      "risk_of_acting_too_early": "Mandatory NDA gating could reduce participation or delay first contact.",
+      "validation_needed": "Test actual disclosure decisions and abandonment at defined information thresholds with founders and investors.",
+      "evidence_ids": ["EV-024", "EV-026", "EV-027"],
+      "market_research_refs": ["interview_findings.disclosure"],
+      "confidence": "High"
+    }
+  ],
+  "red_team": [
+    {
+      "id": "RT-01",
+      "possibility": "LinkedIn plus WhatsApp, email, spreadsheets and general AI may be good enough.",
+      "supporting_evidence": "Each tool covers a bounded step and the stack works without another marketplace account.",
+      "counterevidence": "Cross-tool context can be manual and uneven; no end-to-end satisfaction evidence was collected.",
+      "unknowns": "Outcome quality, dissatisfaction, switching intent and willingness to pay.",
+      "evidence_ids": ["EV-012", "EV-013", "EV-016", "EV-022", "EV-028"],
+      "confidence": "Medium",
+      "customer_discovery_test": "Reconstruct recent workflows and identify any consequential failure rather than asking whether an integrated product sounds useful."
+    },
+    {
+      "id": "RT-02",
+      "possibility": "Warm introductions may provide more value than algorithmic matching.",
+      "supporting_evidence": "Warm context, prior work and references carry reputation and behavioral information.",
+      "counterevidence": "One setting reports benefits from a matching tool; warm networks can exclude outsiders.",
+      "unknowns": "Comparable relationship outcomes and marginal value of algorithms.",
+      "evidence_ids": ["EV-005", "EV-006", "EV-009", "EV-029", "EV-033", "EV-034"],
+      "confidence": "Medium",
+      "customer_discovery_test": "Compare recent warm, cold and platform-originated candidates using observed progression and outcome criteria."
+    },
+    {
+      "id": "RT-03",
+      "possibility": "Investors may prefer curated deal flow from trusted networks over another feed.",
+      "supporting_evidence": "Investor sourcing uses professional networks, active research and fund-specific internal screening.",
+      "counterevidence": "Databases and inbound channels are also used; a randomized study shows source framing can affect response.",
+      "unknowns": "Which external source would earn recurring investor attention.",
+      "evidence_ids": ["EV-001", "EV-002", "EV-029", "EV-034"],
+      "confidence": "High",
+      "customer_discovery_test": "Observe triage of real opportunities and test which source and verification signals change advancement."
+    },
+    {
+      "id": "RT-04",
+      "possibility": "Founders may withhold the information required for reliable matching.",
+      "supporting_evidence": "Selective disclosure appears in the interview assessment and controlled sharing tools exist.",
+      "counterevidence": "No evidence quantifies missing fields or matching degradation.",
+      "unknowns": "Required data, actual withholding behavior and effect on match quality.",
+      "evidence_ids": ["EV-024", "EV-027"],
+      "confidence": "Low",
+      "customer_discovery_test": "Test real profile completion and staged disclosure with explicit information categories and abandonment observation."
+    },
+    {
+      "id": "RT-05",
+      "possibility": "Early NDA requests may create friction rather than trust.",
+      "supporting_evidence": "Documented early-stage VC practice often avoids early NDAs because of conflict and administrative concerns.",
+      "counterevidence": "Narrow NDAs can protect genuinely sensitive information in appropriate contexts.",
+      "unknowns": "Segment, timing and abandonment effect.",
+      "evidence_ids": ["EV-025", "EV-026", "EV-027"],
+      "confidence": "High",
+      "customer_discovery_test": "Compare actual disclosure progression with and without an NDA request at defined stages."
+    },
+    {
+      "id": "RT-06",
+      "possibility": "Swipe interaction may reduce the perceived seriousness of a business relationship.",
+      "supporting_evidence": "Insufficient Evidence.",
+      "counterevidence": "Existing direct competitors use card or swipe interfaces, which proves availability but not seriousness or outcomes.",
+      "unknowns": "Perceived credibility, completion behavior and segment differences.",
+      "evidence_ids": [],
+      "confidence": "Insufficient Evidence",
+      "customer_discovery_test": "Use non-deceptive concept testing with identical profiles in swipe and deliberative formats; measure comprehension and next-step behavior."
+    },
+    {
+      "id": "RT-07",
+      "possibility": "The primary failure may be verification, trust or follow-through rather than discovery.",
+      "supporting_evidence": "References, repeated interaction and diligence remain material after sourcing.",
+      "counterevidence": "The evidence does not compare failure rates by stage.",
+      "unknowns": "Which stage most often prevents a viable relationship.",
+      "evidence_ids": ["EV-002", "EV-003", "EV-005", "EV-034"],
+      "confidence": "Medium",
+      "customer_discovery_test": "Code recent failed and successful journeys by stage, observed action and consequence."
+    },
+    {
+      "id": "RT-08",
+      "possibility": "One side may receive value while the other has no sufficient reason to join.",
+      "supporting_evidence": "Founders seek access while investors protect scarce attention through a selective internal funnel.",
+      "counterevidence": "No BizMatch-side participation experiment exists.",
+      "unknowns": "Acquisition incentive, retention and cross-side liquidity.",
+      "evidence_ids": ["EV-001", "EV-002", "EV-034"],
+      "confidence": "Medium",
+      "customer_discovery_test": "Test separate founder and investor value exchanges and observe repeated participation without subsidized demand."
+    },
+    {
+      "id": "RT-09",
+      "possibility": "The strongest substitute may be a human-mediated process that self-service software cannot replace.",
+      "supporting_evidence": "Warm introducers, professionals, references and investment committees add context and accountability.",
+      "counterevidence": "Software can organize bounded tasks and widen access.",
+      "unknowns": "Which judgment can be standardized without losing trust or quality.",
+      "evidence_ids": ["EV-003", "EV-005", "EV-026", "EV-031", "EV-034"],
+      "confidence": "Medium",
+      "customer_discovery_test": "Identify the exact human judgment in recent decisions and test whether structured evidence can support, not replace, it."
+    },
+    {
+      "id": "RT-10",
+      "possibility": "The four Jobs may be too different for one coherent product.",
+      "supporting_evidence": "The Jobs have different actors, incentives, stages, trust standards and institutional constraints.",
+      "counterevidence": "They share identity, communication, documents and meetings.",
+      "unknowns": "Whether one entry Job creates enough bilateral value to support adjacent workflows.",
+      "evidence_ids": ["EV-001", "EV-002", "EV-003", "EV-006", "EV-024"],
+      "confidence": "High",
+      "customer_discovery_test": "Validate each Job separately before testing any cross-Job expansion or shared marketplace loop."
+    }
+  ],
+  "methodology_limitations": [
+    "Substitute evidence mixes independent research, company documentation, company claims and community discussion; labels are preserved and not treated as equivalent.",
+    "No consistent comparative outcome dataset ranks direct competitors or substitutes across the four Jobs.",
+    "The 15 existing founder interviews are exploratory, methodologically primed and not representative of Israeli founders.",
+    "Investor evidence in the existing market-research corpus is insufficient; the independent investor-process sources provide context, not BizMatch demand validation.",
+    "Adoption, satisfaction, willingness to switch and willingness to pay are usually unmeasured.",
+    "Venture studios, co-founder recruiters, headhunters and fractional executives were considered but not added as evidence-backed substitutes because the opened sources did not establish a sufficiently specific connection to one of the four Jobs.",
+    "No Customer Discovery, survey, account creation, outreach or mystery shopping was performed in this phase."
+  ]
+}

@@ -11,10 +11,14 @@ CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
 SUBSTITUTES_PATH = ROOT / "data" / "substitutes-research.csv"
 SUBSTITUTE_EVIDENCE_PATH = ROOT / "data" / "substitute-evidence.csv"
 SUBSTITUTE_WORKFLOWS_PATH = ROOT / "data" / "substitute-workflows.csv"
+MARKET_RESEARCH_PATH = ROOT / "data" / "market-research.json"
+FINDINGS_PATH = ROOT / "data" / "findings-and-implications.json"
 SITE = ROOT / "sites" / "full-report-site"
 COMPANY_SITE = SITE / "companies"
 CITATION_SITE = ROOT / "sites" / "citation-site"
 REPORTS = ROOT / "reports"
+MARKET_RESEARCH_SITE = ROOT / "market-research"
+FINDINGS_SITE = ROOT / "findings-conclusions"
 RECONCILIATION_DATE = "2026-07-30"
 
 SUBSTITUTE_JOB_LABELS = {
@@ -422,22 +426,34 @@ def enrich(rows):
 def nav(active, prefix=""):
     items = [
         ("index.html", "Evidence Status"),
+        ("/findings-conclusions/", "Findings & Conclusions"),
         ("alternative-workflows.html", "Alternative Workflows"),
+        ("/market-research/", "Market Research"),
         ("priority-competitors.html", "Priority Competitors"),
         ("research-table.html", "Full Research Table"),
         ("category-analysis.html", "Category Analysis"),
         ("sources-methodology.html", "Sources & Methodology"),
         ("archive.html", "Archive"),
     ]
-    return '<div class="nav">' + "".join(
-        f'<a class="{"active" if label == active else ""}" href="{prefix}{href}">{label}</a>' for href, label in items
-    ) + "</div>"
+    links = []
+    for href, label in items:
+        resolved_href = href if href.startswith("/") else prefix + href
+        current = ' aria-current="page"' if label == active else ""
+        links.append(
+            f'<a class="{"active" if label == active else ""}" '
+            f'href="{resolved_href}"{current}>{escape(label)}</a>'
+        )
+    return (
+        '<nav aria-label="Primary research navigation" class="nav">'
+        + "".join(links)
+        + "</nav>"
+    )
 
 def page(title, active, body, subtitle="", prefix="", data_prefix="../../"):
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>{escape(title)}</title><link rel="icon" href="data:,"><link href="{prefix}style.css" rel="stylesheet"/></head><body>
 <header class="site-header"><div class="header-inner"><h1>{escape(title)}</h1><p>{escape(subtitle)}</p>{nav(active, prefix)}</div></header>
-<main>{body}<p class="footer">Canonical sources are separated by scope: <a href="{data_prefix}data/competitive-research-tracker.csv">competitor tracker</a> for the 36-company research and <a href="{data_prefix}data/substitutes-research.csv">substitutes research</a> with linked <a href="{data_prefix}data/substitute-evidence.csv">evidence</a> and <a href="{data_prefix}data/substitute-workflows.csv">workflow stages</a>. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
+<main>{body}<p class="footer">Canonical sources are separated by scope: <a href="{data_prefix}data/competitive-research-tracker.csv">competitor tracker</a> for the 36-company research; <a href="{data_prefix}data/substitutes-research.csv">substitutes research</a> with linked <a href="{data_prefix}data/substitute-evidence.csv">evidence</a> and <a href="{data_prefix}data/substitute-workflows.csv">workflow stages</a>; <a href="{data_prefix}data/market-research.json">market-research assessment</a> for aggregate interview and secondary-research findings; and <a href="{data_prefix}data/findings-and-implications.json">active findings</a> for evidence-linked conclusions. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
 
 def confidence_badge(text):
     t = escape(overall_confidence(text) if text not in ("High", "Medium", "Low") else text)
@@ -565,8 +581,8 @@ def historical_strategic_page(rows):
 
 def evidence_status_page(rows):
     body = f"""
-<section class="panel warning-panel"><h2>No current strategic recommendation is published</h2>
-<p>Phase 0 established data integrity; it did not validate White Space, an Israeli beachhead, MVP scope, Build/Buy choices, or a launch sequence. Those topics require separate approved research before they can be presented as conclusions.</p></section>
+<section class="panel warning-panel"><h2>No final product or market recommendation is published</h2>
+<p>The active findings support narrower Customer Discovery and conditional implications only. The research does not validate White Space, a market gap, an Israeli beachhead, MVP scope, Build/Buy choices, product-market fit, or a launch sequence.</p></section>
 <section class="hero-panel">
   <p class="eyebrow">Phase 0 integrity · Phase 1 substitute evidence</p>
   <h2>{len(rows)} canonical company records are available for evidence review.</h2>
@@ -577,7 +593,7 @@ def evidence_status_page(rows):
   <li>Inspect capability evidence and explicit research gaps.</li>
   <li>Review how users combine networks, services, manual work, infrastructure, and non-adoption.</li>
   <li>Audit reconciled conflicts and unresolved findings.</li>
-</ul><div class="archive-list"><a href="alternative-workflows.html">Open alternative workflows</a><a href="research-table.html">Open the canonical research table</a><a href="category-analysis.html">Review evidence groups without ranking</a><a href="sources-methodology.html">Read sources and methodology</a></div></section>
+</ul><div class="archive-list"><a href="/findings-conclusions/">Open active findings &amp; conclusions</a><a href="alternative-workflows.html">Open alternative workflows</a><a href="research-table.html">Open the canonical research table</a><a href="category-analysis.html">Review evidence groups without ranking</a><a href="sources-methodology.html">Read sources and methodology</a></div></section>
 <section class="panel"><h2>Not approved for investor presentation</h2><ul class="clean-list">
   <li>White Space claims or claims that BizMatch owns an unserved journey.</li>
   <li>Recommended market beachhead, launch sequence, or first-user acquisition plan.</li>
@@ -712,7 +728,7 @@ def methodology_page(rows):
         for name, (v1, v3, v5) in RUBRIC.items()
     )
     body = f"""
-<section class="panel"><h2>Separated Canonical Sources</h2><p><a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> is the only active source for the 36-company competitor research. The XLSX, generated site data, tables, company profiles, category pages, source pages, and report notices are derived from it.</p><p>Phase 1 has a separate normalized source of truth: <a href="../../data/substitutes-research.csv">substitute entities</a>, <a href="../../data/substitute-evidence.csv">claim-level evidence</a>, and <a href="../../data/substitute-workflows.csv">Job-stage workflows</a>. They generate <a href="alternative-workflows.html">How Users Solve It Today</a> and the Phase 1 registers; they never write into or rank the competitor tracker. Generators never write back to canonical CSVs.</p><p>Historical cited datasets are kept under <code>archive/data/</code>. Production code does not read them.</p></section>
+<section class="panel"><h2>Separated Canonical Sources</h2><p><a href="../../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> is the only active source for the 36-company competitor research. The XLSX, generated site data, tables, company profiles, category pages, source pages, and report notices are derived from it.</p><p>Phase 1 has a separate normalized source of truth: <a href="../../data/substitutes-research.csv">substitute entities</a>, <a href="../../data/substitute-evidence.csv">claim-level evidence</a>, and <a href="../../data/substitute-workflows.csv">Job-stage workflows</a>. They generate <a href="alternative-workflows.html">How Users Solve It Today</a> and the Phase 1 registers; they never write into or rank the competitor tracker.</p><p><a href="../../data/market-research.json">data/market-research.json</a> is the separate public source for the aggregate <a href="/market-research/">Market Research assessment</a>. It contains no raw interviews or participant identifiers and does not alter competitor or substitute data.</p><p><a href="../../data/findings-and-implications.json">data/findings-and-implications.json</a> links the active <a href="/findings-conclusions/">Findings &amp; Conclusions</a> to the underlying evidence, substitute IDs, canonical competitor slugs, and aggregate market-research paths. It does not replace or write back to those sources. Generators never write back to canonical data files.</p><p>Historical cited datasets are kept under <code>archive/data/</code>. Production code does not read them.</p></section>
 <section class="panel"><h2>Substitute Evidence Method</h2><p>Each material claim is linked to a source record and labeled as Independent Behavioral Evidence, Independent User Report, Independent Market Evidence, Company Documentation, Company Claim, Community Discussion, Anecdotal Evidence, Inference, or Unverified. Existence, observed use, effectiveness, satisfaction, search for an alternative, and willingness to pay or change behavior are separate evidence dimensions.</p><p>Phase 1 publishes only qualitative substitute strength. Missing evidence stays Unverified / Insufficient Evidence; no numeric threat score, White Space, market-gap, MVP, product-market-fit, or Build/Buy conclusion is produced.</p></section>
 <section class="panel"><h2>Strategic Classification Rules</h2><ul class="clean-list"><li><strong>Direct competitor:</strong> competes for a core BizMatch discovery or matching workflow.</li><li><strong>Substitute / network threat:</strong> solves an adjacent job and has unusually strong network, brand, or ecosystem pull.</li><li><strong>Substitute:</strong> solves an adjacent job users could choose instead of BizMatch.</li><li><strong>Feature benchmark:</strong> helps evaluate a supporting capability but is not the full product category.</li><li><strong>Infrastructure / potential partner:</strong> can support signing, disclosure, security, or data-room needs without being the core network.</li></ul></section>
 <section class="panel warning-panel"><h2>Relationship score status</h2><p>Numeric scoring is paused. The weights below are preserved analytical choices that require approval; the required explicit component fields and per-input evidence metadata are absent from the current 65-column schema. Missing inputs return null / Insufficient Evidence, never a default number.</p></section>
@@ -843,7 +859,7 @@ def substitutes_page(substitutes, evidence, workflows):
                     "Open linked canonical competitor record</a></p>"
                 )
             cards.append(
-                f"""<article class="substitute-card">
+                f"""<article class="substitute-card" id="substitute-{escape(row['substitute_id'])}">
 <h3>{escape(row['name'])}</h3>
 <p>{substitute_badge(row['classification'])} {substitute_badge(row['substitute_strength'])} {confidence_badge(row['confidence'])}</p>
 <dl class="mini-dl">
@@ -896,7 +912,7 @@ def substitutes_page(substitutes, evidence, workflows):
                 "is displayed as labeled and is not independent proof of effectiveness.</p>"
             )
         evidence_cards.append(
-            f"""<article class="source-card">
+            f"""<article class="source-card" id="evidence-{escape(row['evidence_id'])}">
 <h3>{escape(row['evidence_id'])} · {escape(row['claim_type'])}</h3>
 <p>{substitute_badge(source_type)} {confidence_badge(row['confidence'])}</p>
 <p><strong>Claim:</strong> {escape(row['claim'])}</p>
@@ -917,7 +933,7 @@ def substitutes_page(substitutes, evidence, workflows):
 <div class="summary-grid"><article class="metric"><span class="num">{len(substitutes)}</span><span class="label">Substitute patterns</span></article><article class="metric"><span class="num">{len(evidence)}</span><span class="label">Traceable evidence records</span></article><article class="metric"><span class="num">{len(workflows)}</span><span class="label">Mapped Job stages</span></article><article class="metric"><span class="num">{unverified}</span><span class="label">Explicitly unverified alternatives</span></article></div>
 <section class="panel"><h2>How to read this view</h2><ul class="clean-list"><li><strong>Strong Substitute</strong> means the evidence supports broad Job coverage, trust or network advantage, or a costly embedded workflow; it is not a numeric threat rank.</li><li><strong>Complementary Tool</strong> means the tool replaces a bounded capability rather than the relationship.</li><li><strong>Insufficient Evidence</strong> preserves a required alternative without inventing adoption or outcomes.</li><li>Existing companies are linked to their canonical 36-company profile instead of being duplicated as new competitors.</li></ul><div class="archive-list"><a href="../../SUBSTITUTE_RESEARCH.md">Read the qualitative analysis</a><a href="../../SUBSTITUTE_MATRIX.md">Open the generated matrix</a><a href="../../SUBSTITUTE_WORKFLOWS.md">Open full workflow maps</a><a href="../../SUBSTITUTE_EVIDENCE_REGISTER.md">Open the evidence register</a></div></section>
 {''.join(cards_by_job)}
-<section class="panel"><h2>Workflow maps</h2><p>The tables below keep all eleven stages visible, including stages where the evidence is insufficient. They describe current behavior and do not prescribe a product workflow.</p></section>
+<section class="panel"><h2>Workflow maps</h2><p>The tables below keep all thirteen stages visible, including stages where the evidence is insufficient. They describe current behavior and do not prescribe a product workflow.</p></section>
 {''.join(workflow_sections)}
 <section class="panel"><h2>Source and evidence register</h2><p class="muted">A source may support existence without supporting use, effectiveness, satisfaction, desire to switch, or willingness to pay.</p><div class="source-grid">{''.join(evidence_cards)}</div></section>
 """
@@ -929,6 +945,326 @@ def substitutes_page(substitutes, evidence, workflows):
     )
 
 
+def findings_badge(value):
+    return f'<span class="badge finding-{slug(value)}">{escape(value)}</span>'
+
+
+def findings_evidence_links(ids):
+    if not ids:
+        return findings_badge("Insufficient Evidence")
+    return " ".join(
+        f'<a class="evidence-chip" href="../sites/full-report-site/alternative-workflows.html#evidence-{escape(evidence_id)}">{escape(evidence_id)}</a>'
+        for evidence_id in ids
+    )
+
+
+def findings_market_trace(refs):
+    if not refs:
+        return ""
+    return (
+        '<span class="market-trace">Market research: '
+        + ", ".join(f"<code>{escape(ref)}</code>" for ref in refs)
+        + ' · <a href="/market-research/">open aggregate assessment</a></span>'
+    )
+
+
+def findings_trace(item):
+    return (
+        '<div class="finding-trace"><strong>Trace:</strong> '
+        + findings_evidence_links(item.get("evidence_ids", []))
+        + findings_market_trace(item.get("market_research_refs", []))
+        + "</div>"
+    )
+
+
+def findings_list(items):
+    return '<ul class="clean-list">' + "".join(
+        f"<li>{escape(item)}</li>" for item in items
+    ) + "</ul>"
+
+
+def findings_page(research):
+    meta = research["meta"]
+    executive = research["executive_conclusion"]
+
+    job_cards = []
+    for job in research["jobs"]:
+        competitor_links = " ".join(
+            f'<a class="entity-chip" href="../sites/full-report-site/companies/{escape(company_slug)}.html">{escape(company_slug)}</a>'
+            for company_slug in job["competitor_slugs"]
+        )
+        substitute_links = " ".join(
+            f'<a class="entity-chip" href="../sites/full-report-site/alternative-workflows.html#substitute-{escape(substitute_id)}">{escape(substitute_id)}</a>'
+            for substitute_id in job["substitute_ids"]
+        )
+        job_cards.append(
+            f"""<article class="job-conclusion-card" id="{escape(job['job_id'].lower())}">
+<p class="eyebrow">{escape(job['job_id'])}</p><h3>{escape(job['title'])}</h3>
+<dl class="conclusion-dl">
+<dt>Dominant current workflow</dt><dd>{escape(job['dominant_current_workflow'])}</dd>
+<dt>Relevant researched competitors</dt><dd>{competitor_links}<small>Relevance set, not a numeric ranking.</small></dd>
+<dt>Strongest substitute patterns</dt><dd>{substitute_links}</dd>
+<dt>Main trust mechanism</dt><dd>{escape(job['main_trust_mechanism'])}</dd>
+<dt>Supported advantages</dt><dd>{escape(job['supported_advantages'])}</dd>
+<dt>Supported weaknesses</dt><dd>{escape(job['supported_weaknesses'])}</dd>
+<dt>Evidence quality</dt><dd>{escape(job['evidence_quality'])}</dd>
+<dt>Unresolved</dt><dd>{escape(job['unresolved_questions'])}</dd>
+</dl>
+<p>{findings_badge(job['confidence'])}</p>{findings_trace(job)}</article>"""
+        )
+
+    cross_cards = "".join(
+        f"""<article class="finding-summary-card"><h3>{escape(item['finding'])}</h3>
+<p>{escape(item['interpretation'])}</p><p>{findings_badge(item['confidence'])}</p>
+{findings_trace(item)}</article>"""
+        for item in research["cross_market_findings"]
+    )
+
+    pressure_cards = "".join(
+        f"""<article class="pressure-card"><h3>{escape(item['pressure'])}</h3>
+<p>{escape(item['why_it_matters'])}</p>
+<p>{' '.join(f'<a class="entity-chip" href="../sites/full-report-site/alternative-workflows.html#substitute-{escape(sid)}">{escape(sid)}</a>' for sid in item['substitute_ids'])}</p>
+<p>{findings_badge(item['confidence'])}</p>{findings_trace(item)}</article>"""
+        for item in research["competitive_pressures"]
+    )
+
+    def assumption_cards(items, modifier):
+        return "".join(
+            f"""<article class="assumption-card {modifier}"><h3>{escape(item['assumption'])}</h3>
+<p><strong>Supporting evidence:</strong> {escape(item['supporting_evidence'])}</p>
+<p><strong>Counterevidence:</strong> {escape(item['counterevidence'])}</p>
+<p><strong>Still unproven:</strong> {escape(item['unproven'])}</p>
+<p>{findings_badge(item['confidence'])}</p>{findings_trace(item)}</article>"""
+            for item in items
+        )
+
+    pain_rows = "".join(
+        f"""<tr><th scope="row">{escape(item['pain'])}</th>
+<td>{findings_badge(item['status'])}</td>
+<td>{findings_evidence_links(item.get('evidence_ids', []))}{findings_market_trace(item.get('market_research_refs', []))}</td>
+<td>{escape(item['caveat'])}</td></tr>"""
+        for item in research["pains"]
+    )
+
+    boundaries = research["conclusion_boundaries"]
+    discovery_rows = "".join(
+        f"<tr><th scope=\"row\">{escape(item['priority'])}</th><td>{escape(item['job_id'])}</td>"
+        f"<td>{escape(item['question'])}</td><td>{escape(item['decision_link'])}</td></tr>"
+        for item in research["customer_discovery"]
+    )
+    implication_cards = "".join(
+        f"""<article class="implication-card"><h3>Evidence observed</h3><p>{escape(item['evidence_observed'])}</p>
+<h4>Implication if confirmed</h4><p>{escape(item['implication_if_confirmed'])}</p>
+<h4>Risk of acting too early</h4><p>{escape(item['risk_of_acting_too_early'])}</p>
+<h4>Validation needed</h4><p>{escape(item['validation_needed'])}</p>
+<p>{findings_badge(item['confidence'])}</p>{findings_trace(item)}</article>"""
+        for item in research["conditional_implications"]
+    )
+    red_team_cards = "".join(
+        f"""<details class="red-team-card"><summary>{escape(item['id'])} · {escape(item['possibility'])} {findings_badge(item['confidence'])}</summary>
+<div><p><strong>Supporting evidence:</strong> {escape(item['supporting_evidence'])}</p>
+<p><strong>Counterevidence:</strong> {escape(item['counterevidence'])}</p>
+<p><strong>Unknowns:</strong> {escape(item['unknowns'])}</p>
+<p><strong>Customer Discovery test:</strong> {escape(item['customer_discovery_test'])}</p>
+{findings_trace(item)}</div></details>"""
+        for item in research["red_team"]
+    )
+
+    body = f"""
+<div class="findings-page">
+<section class="panel warning-panel"><h2>Decision boundary</h2><p>{escape(meta['decision_boundary'])}</p></section>
+<section class="findings-hero"><p class="eyebrow">Active evidence-linked conclusion</p>
+<h2>{escape(executive['headline'])}</h2><p>{escape(executive['summary'])}</p>
+<div class="decision-strip"><span>Current decision</span><strong>{escape(executive['current_decision'])}</strong>{findings_badge(executive['confidence'])}</div>
+{findings_trace(executive)}</section>
+
+<section class="panel evidence-legend"><h2>Evidence and uncertainty labels</h2>
+<p>{findings_badge('Evidence suggests')} {findings_badge('Independent Evidence')} {findings_badge('Company Claim')} {findings_badge('Inference')} {findings_badge('Unverified')} {findings_badge('Insufficient Evidence')} {findings_badge('Hypothesis requiring validation')}</p>
+<p class="muted">Labels are qualitative. Company Claim is never treated as independent evidence, and inference is never rendered as fact.</p></section>
+
+<section class="panel"><h2>Conclusions by Job-to-be-Done</h2>
+<p class="muted">Competitor links resolve to the canonical 36-company profiles. Substitute links resolve to the separate workflow layer; the datasets are not mixed.</p>
+<div class="job-conclusion-grid">{''.join(job_cards)}</div></section>
+
+<section class="panel"><h2>Cross-market findings</h2><div class="finding-summary-grid">{cross_cards}</div></section>
+<section class="panel"><h2>Strongest competitive pressures</h2><p class="muted">These are behavioral pressures, not numeric threat ranks.</p><div class="pressure-grid">{pressure_cards}</div></section>
+
+<section class="panel"><h2>BizMatch assumptions that gained support</h2>
+<div class="assumption-grid">{assumption_cards(research['assumptions_strengthened'], 'strengthened')}</div></section>
+<section class="panel"><h2>BizMatch assumptions that weakened</h2>
+<div class="assumption-grid">{assumption_cards(research['assumptions_weakened'], 'weakened')}</div></section>
+
+<section class="panel"><h2>Supported pains versus hypotheses</h2>
+<div class="table-wrap"><table class="findings-table"><thead><tr><th>Pain</th><th>Evidence status</th><th>Trace</th><th>Caveat</th></tr></thead><tbody>{pain_rows}</tbody></table></div></section>
+
+<section class="panel"><h2>What can and cannot be concluded</h2>
+<div class="boundary-grid"><article class="boundary-card justified"><h3>Justified by current evidence</h3>{findings_list(boundaries['justified'])}</article>
+<article class="boundary-card plausible"><h3>Plausible but unverified</h3>{findings_list(boundaries['plausible_unverified'])}</article>
+<article class="boundary-card prohibited"><h3>Prohibited by insufficient evidence</h3>{findings_list(boundaries['prohibited'])}</article></div></section>
+
+<section class="panel"><h2>Customer Discovery agenda</h2><p>This is a research agenda only; no interviews or surveys were conducted in this phase.</p>
+<div class="table-wrap"><table><thead><tr><th>Priority</th><th>Job</th><th>Research question</th><th>Decision link</th></tr></thead><tbody>{discovery_rows}</tbody></table></div></section>
+
+<section class="panel"><h2>Conditional strategic implications</h2><p class="muted">Each implication is conditional and includes the risk of acting before validation.</p>
+<div class="implication-grid">{implication_cards}</div></section>
+
+<section class="panel"><h2>Required Red Team assessment</h2><p class="muted">Supporting evidence, counterevidence, unknowns and a future test are kept together.</p>
+<div class="red-team-list">{red_team_cards}</div></section>
+
+<section class="panel"><h2>Methodology and evidence limitations</h2>{findings_list(research['methodology_limitations'])}
+<div class="archive-list"><a href="../FINDINGS_AND_STRATEGIC_IMPLICATIONS.md">Open generated report</a><a href="../data/findings-and-implications.json">Open canonical conclusions data</a><a href="../SUBSTITUTE_EVIDENCE_REGISTER.md">Open evidence register</a><a href="../sites/full-report-site/sources-methodology.html">Open methodology</a></div></section>
+</div>"""
+    return page(
+        meta["title"],
+        "Findings & Conclusions",
+        body,
+        meta["subtitle"],
+        prefix="../sites/full-report-site/",
+        data_prefix="../",
+    )
+
+
+def market_research_badge(status):
+    return f'<span class="badge research-{slug(status)}">{escape(status)}</span>'
+
+
+def market_research_list(items):
+    return (
+        '<ul class="clean-list">'
+        + "".join(f"<li>{escape(item)}</li>" for item in items)
+        + "</ul>"
+    )
+
+
+def market_research_page(research):
+    meta = research["meta"]
+    executive = research["executive_conclusion"]
+    inventory = research["research_inventory"]
+    secondary = research["secondary_research_assessment"]
+    sample = research["interview_sample"]
+    findings = research["interview_findings"]
+    guidance = research["evidence_use_guidance"]
+    gate = research["decision_gate"]
+
+    inventory_rows = "".join(
+        f'<tr><th scope="row">{escape(row["area"])}</th>'
+        f'<td>{escape(row["material"])}</td><td>{escape(row["status"])}</td></tr>'
+        for row in inventory["rows"]
+    )
+    stage_rows = "".join(
+        f'<tr><th scope="row">{escape(row["stage"])}</th>'
+        f'<td class="numeric-cell">{row["interviews"]}</td></tr>'
+        for row in sample["stages"]
+    )
+    origin_cards = "".join(
+        f'<article class="metric"><span class="num">{row["count"]}</span>'
+        f'<span class="label">{escape(row["channel"])}</span></article>'
+        for row in findings["partner_origin"]["channels"]
+    )
+    trust_items = "".join(
+        f'<li>{escape(item)}</li>' for item in findings["trust"]["mechanisms"]
+    )
+    disclosure_metrics = (
+        f'<article class="metric"><span class="num">{findings["disclosure"]["would_not_disclose_openly"]}</span>'
+        '<span class="label">Would not disclose some information openly</span></article>'
+        f'<article class="metric"><span class="num">{findings["disclosure"]["reported_no_restriction"]}</span>'
+        '<span class="label">Reported no such information</span></article>'
+        f'<article class="metric"><span class="num">{findings["disclosure"]["not_asked_or_no_answer"]}</span>'
+        '<span class="label">Not asked or no answer</span></article>'
+        f'<article class="metric"><span class="num">{findings["disclosure"]["explicit_nda_mentions"]}</span>'
+        '<span class="label">Explicitly mentioned using an NDA before disclosure</span></article>'
+    )
+    hypothesis_rows = "".join(
+        f'<tr><th scope="row">{escape(row["hypothesis"])}</th>'
+        f'<td>{market_research_badge(row["status"])}'
+        f'{"<small>" + escape(row["detail"]) + "</small>" if row["detail"] else ""}</td></tr>'
+        for row in research["hypothesis_register"]
+    )
+    methodology_items = "".join(
+        f"<li>{escape(item)}</li>" for item in research["methodology_problems"]
+    )
+    source_cards = "".join(
+        f'<article class="source-card"><h3><a href="{escape(source["url"])}" '
+        f'target="_blank" rel="noopener">{escape(source["title"])}</a></h3>'
+        f'<p>{market_research_badge(source["type"])}</p>'
+        f'<p>{escape(source["use"])}</p></article>'
+        for source in research["sources"]
+    )
+
+    body = f"""
+<div class="market-page">
+<section class="research-status-card" aria-labelledby="market-status-title">
+<p class="eyebrow">Current research decision</p>
+<h2 id="market-status-title">{escape(meta['status'])}</h2>
+<p class="status-boundary">{escape(meta['evidence_boundary'])}</p>
+<p>{escape(executive['summary'])}</p>
+{market_research_list(executive['findings'])}
+</section>
+
+<section class="panel" aria-labelledby="inventory-title"><h2 id="inventory-title">Existing research inventory</h2>
+<div class="table-wrap"><table class="market-table"><caption>Material located in the existing research corpus and its current evidentiary status</caption><thead><tr><th scope="col">Research area</th><th scope="col">Existing material</th><th scope="col">Current status</th></tr></thead><tbody>{inventory_rows}</tbody></table></div>
+<blockquote class="research-clarification">{escape(inventory['clarification'])}</blockquote>
+</section>
+
+<section class="panel" aria-labelledby="secondary-title"><h2 id="secondary-title">Secondary research assessment</h2>
+<div class="split-grid"><article class="assessment-card useful"><h3>What is useful</h3>{market_research_list(secondary['useful'])}</article>
+<article class="assessment-card limitation"><h3>What is unreliable or overstated</h3>{market_research_list(secondary['limitations'])}</article></div>
+<p class="scenario-note"><strong>Scenario boundary:</strong> {escape(secondary['scenario_note'])}</p>
+</section>
+
+<section class="panel" aria-labelledby="sample-title"><h2 id="sample-title">Interview sample assessment</h2>
+<div class="sample-layout"><div class="table-wrap"><table class="market-table compact-table"><caption>Interview distribution by reported venture stage</caption><thead><tr><th scope="col">Venture stage</th><th scope="col">Interviews</th></tr></thead><tbody>{stage_rows}<tr class="total-row"><th scope="row">Total</th><td class="numeric-cell">{sample['total']}</td></tr></tbody></table></div>
+<article class="assessment-card limitation"><h3>Interpretation boundary</h3>{market_research_list(sample['assessment'])}</article></div>
+</section>
+
+<section class="panel" aria-labelledby="method-title"><h2 id="method-title">Interview-methodology problems</h2>
+<ol class="clean-list numbered methodology-list">{methodology_items}</ol>
+<p class="privacy-note"><strong>Privacy boundary:</strong> {escape(meta['privacy_note'])}</p>
+</section>
+
+<section class="panel" aria-labelledby="findings-title"><h2 id="findings-title">What the interviews actually show</h2>
+<div class="finding-grid">
+<article class="finding-card negative-finding"><p class="eyebrow">Primary pain</p><span class="finding-number">{escape(findings['primary_pain']['headline'])}</span><h3>{escape(findings['primary_pain']['label'])}</h3>{market_research_list(findings['primary_pain']['details'])}</article>
+<article class="finding-card"><p class="eyebrow">How partners were found</p><h3>{findings['partner_origin']['usable_interviews']} usable records</h3><p>{market_research_badge(findings['partner_origin']['excluded_record_status'])} {escape(findings['partner_origin']['excluded_record_note'])}</p><div class="summary-grid compact-metrics">{origin_cards}</div><p class="positioning">{escape(findings['partner_origin']['conclusion'])}</p></article>
+<article class="finding-card"><p class="eyebrow">How trust is built</p><ul class="clean-list">{trust_items}</ul><blockquote class="hypothesis-callout"><span>{escape(findings['trust']['hypothesis_status'])}</span>{escape(findings['trust']['hypothesis'])}</blockquote></article>
+<article class="finding-card"><p class="eyebrow">Disclosure and NDA</p><div class="summary-grid compact-metrics">{disclosure_metrics}</div>{market_research_list(findings['disclosure']['conclusions'])}</article>
+</div>
+</section>
+
+<section class="panel" aria-labelledby="hypothesis-title"><h2 id="hypothesis-title">Hypothesis register</h2>
+<p class="muted">Statuses are qualitative evidence labels, not numerical scores.</p>
+<div class="table-wrap"><table class="market-table hypothesis-table"><caption>Current status of core BizMatch market hypotheses</caption><thead><tr><th scope="col">Hypothesis</th><th scope="col">Current evidence status</th></tr></thead><tbody>{hypothesis_rows}</tbody></table></div>
+</section>
+
+<section class="panel" aria-labelledby="guidance-title"><h2 id="guidance-title">Evidence-use guidance</h2>
+<div class="guidance-grid"><article class="guidance-card keep"><h3>Keep as evidence</h3>{market_research_list(guidance['keep'])}</article>
+<article class="guidance-card recode"><h3>Requires recoding</h3>{market_research_list(guidance['recode'])}</article>
+<article class="guidance-card exclude"><h3>Must not support decisions</h3>{market_research_list(guidance['exclude'])}</article></div>
+</section>
+
+<section class="panel decision-panel" aria-labelledby="decision-title"><h2 id="decision-title">Decision gate</h2>
+<div class="decision-grid"><article><h3>What we learned</h3><p>{escape(gate['learned'])}</p></article>
+<article><h3>What remains unknown</h3><p>{escape(gate['unknown'])}</p></article>
+<article><h3>What could falsify the core hypothesis</h3><p>{escape(gate['falsification'])}</p></article>
+<article class="current-decision"><h3>Current decision</h3><p><strong>Allowed:</strong> {escape(gate['allowed'])}</p><p><strong>Not allowed:</strong> {escape(gate['not_allowed'])}</p><p>{market_research_badge(gate['status'])}</p></article></div>
+</section>
+
+<section class="panel" aria-labelledby="sources-title"><h2 id="sources-title">Sources and interpretation limits</h2>
+<p class="muted">The external references below provide context or company documentation. They do not convert the current interview sample into market validation. No private interview artifact is linked from this public page because no approved public internal-document links were supplied in the repository.</p>
+<div class="source-grid">{source_cards}</div>
+</section>
+</div>
+"""
+    return page(
+        meta["title"],
+        "Market Research",
+        body,
+        meta["subtitle"],
+        prefix="../sites/full-report-site/",
+        data_prefix="../",
+    )
+
+
 def compatibility_ranker_js(rows):
     del rows
     return (
@@ -937,7 +1273,7 @@ def compatibility_ranker_js(rows):
     )
 
 def root_entry():
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Competitor Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Competitor Research</h1><div class="warn"><strong>Evidence boundary:</strong> numeric relationship and threat rankings are paused. Phase 1 maps substitutes and existing behavior without publishing product-market fit, MVP, Build/Buy, or launch recommendations.</div><h2>Start Here</h2><div class="card"><a href="sites/full-report-site/index.html">Evidence Status</a><p>Canonical evidence, research limits, and conclusions that remain unvalidated.</p></div><div class="card"><a href="sites/full-report-site/alternative-workflows.html">How Users Solve It Today</a><p>Phase 1 substitutes, manual workflows, services, infrastructure, and non-adoption across four Jobs.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Separated canonical sources, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical competitor tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated competitor tracker XLSX</a></li><li><a href="data/substitutes-research.csv">Canonical substitute entities CSV</a></li><li><a href="data/substitute-evidence.csv">Canonical substitute evidence CSV</a></li><li><a href="data/substitute-workflows.csv">Canonical substitute workflow CSV</a></li></ul><p>Archived generated drafts, historical strategic hypotheses, and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BizMatch Research</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:900px;margin:auto;background:white;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;text-decoration:none;font-weight:600}}a:hover{{text-decoration:underline}}a:focus-visible{{outline:3px solid #f59e0b;outline-offset:2px}}li{{margin:10px 0}}code{{background:#eef2f7;padding:2px 5px;border-radius:4px}}.card{{border:1px solid #d8e0e8;border-radius:8px;padding:16px;margin:12px 0}}.card p{{margin:4px 0 0;font-weight:400;color:#42546b}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>BizMatch Research</h1><div class="warn"><strong>Evidence boundary:</strong> competitor, substitute, market-research, and active-conclusion sources are separated. Neither numeric relationship rankings nor market validation claims are published.</div><h2>Start Here</h2><div class="card"><a href="findings-conclusions/">Findings &amp; Conclusions</a><p>Active evidence-linked conclusions, weakened assumptions, Red Team assessment, and Customer Discovery agenda.</p></div><div class="card"><a href="sites/full-report-site/index.html">Competitor Research — Evidence Status</a><p>Canonical competitor evidence, research limits, and conclusions that remain unvalidated.</p></div><div class="card"><a href="market-research/">Market Research</a><p>Critical assessment of the existing exploratory research and interview findings; current decision: Narrow the research.</p></div><div class="card"><a href="sites/full-report-site/alternative-workflows.html">How Users Solve It Today</a><p>Phase 1 substitutes, manual workflows, services, infrastructure, and non-adoption across four Jobs.</p></div><div class="card"><a href="sites/full-report-site/priority-competitors.html">Priority Competitors</a><p>Pre-existing review scope; not a score ranking.</p></div><div class="card"><a href="sites/full-report-site/research-table.html">Full Research Table</a><p>Canonical table with relationship filters, source confidence, score status, and source links.</p></div><div class="card"><a href="sites/full-report-site/sources-methodology.html">Sources and Methodology</a><p>Separated canonical sources, missing-data policy, preserved weights, and research limits.</p></div><h2>Raw Data</h2><ul><li><a href="data/competitive-research-tracker.csv">Canonical competitor tracker CSV</a></li><li><a href="data/competitive-research-tracker.xlsx">Generated competitor tracker XLSX</a></li><li><a href="data/substitutes-research.csv">Canonical substitute entities CSV</a></li><li><a href="data/substitute-evidence.csv">Canonical substitute evidence CSV</a></li><li><a href="data/substitute-workflows.csv">Canonical substitute workflow CSV</a></li><li><a href="data/market-research.json">Market-research assessment content</a></li><li><a href="data/findings-and-implications.json">Active findings and implications content</a></li></ul><p>Archived generated drafts, historical strategic hypotheses, and cited datasets are audit material only. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
 
 def archive_notice(title):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)} - Archived</title><link rel="icon" href="data:,"><style>body{{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:32px;background:#f7f9fb;color:#17202a}}main{{max-width:880px;margin:auto;background:#fff;border:1px solid #d8e0e8;border-radius:8px;padding:24px}}a{{color:#075985;font-weight:600;text-decoration:none}}li{{margin:8px 0}}.warn{{border:1px solid #fbbf24;background:#fffbeb;border-radius:8px;padding:14px}}</style></head><body><main><h1>{escape(title)} - Archived</h1><div class="warn"><p>This old generated report is audit material only. Production code reads only the canonical tracker.</p></div><p>Use <a href="../sites/full-report-site/research-table.html">Full Research Table</a> and <a href="../data/competitive-research-tracker.csv">data/competitive-research-tracker.csv</a> for current facts.</p><p>Archived before or during the {RECONCILIATION_DATE} reconciliation.</p></main></body></html>"""
@@ -1069,6 +1405,8 @@ def write_citation_site(rows):
 def main():
     rows = enrich(list(csv.DictReader(CSV_PATH.open(encoding="utf-8"))))
     substitutes = list(csv.DictReader(SUBSTITUTES_PATH.open(encoding="utf-8")))
+    market_research = json.loads(MARKET_RESEARCH_PATH.read_text(encoding="utf-8"))
+    findings = json.loads(FINDINGS_PATH.read_text(encoding="utf-8"))
     substitute_evidence = list(
         csv.DictReader(SUBSTITUTE_EVIDENCE_PATH.open(encoding="utf-8"))
     )
@@ -1077,6 +1415,8 @@ def main():
     )
     expected_profiles = {f"{slug(row['company'])}.html" for row in rows}
     COMPANY_SITE.mkdir(parents=True, exist_ok=True)
+    MARKET_RESEARCH_SITE.mkdir(parents=True, exist_ok=True)
+    FINDINGS_SITE.mkdir(parents=True, exist_ok=True)
     for profile in COMPANY_SITE.glob("*.html"):
         if profile.name not in expected_profiles:
             profile.unlink()
@@ -1100,6 +1440,14 @@ def main():
     (SITE / "category-analysis.html").write_text(category_page(rows), encoding="utf-8")
     (SITE / "sources-methodology.html").write_text(methodology_page(rows), encoding="utf-8")
     (SITE / "archive.html").write_text(archive_page(), encoding="utf-8")
+    (MARKET_RESEARCH_SITE / "index.html").write_text(
+        market_research_page(market_research),
+        encoding="utf-8",
+    )
+    (FINDINGS_SITE / "index.html").write_text(
+        findings_page(findings),
+        encoding="utf-8",
+    )
     for r in rows:
         (COMPANY_SITE / f"{slug(r['company'])}.html").write_text(
             company_page(r),
@@ -1130,7 +1478,8 @@ def main():
         )
     print(
         f"Generated {len(rows)} company profiles and {len(substitutes)} substitute "
-        f"patterns from their separated canonical sources"
+        "patterns plus the Market Research and Findings & Conclusions routes "
+        "from their separated sources"
     )
 
 if __name__ == "__main__":

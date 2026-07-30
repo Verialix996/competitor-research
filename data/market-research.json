@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "title": "Market Research",
+    "subtitle": "Critical assessment of the existing BizMatch market-research and interview material",
+    "status": "Narrow the research",
+    "evidence_boundary": "Exploratory research; not market validation",
+    "privacy_note": "This public report contains aggregate findings only. Participant names, contact details, recordings, transcripts, and other identifying information are intentionally excluded."
+  },
+  "executive_conclusion": {
+    "summary": "The existing material is useful exploratory research, but it does not constitute market validation for BizMatch.",
+    "findings": [
+      "Finding a co-founder was not the primary pain identified by the current interview sample.",
+      "The correct current recommendation is Narrow the research.",
+      "The research does not yet justify Proceed, Pivot, or Stop for the full venture."
+    ]
+  },
+  "research_inventory": {
+    "clarification": "The folder previously described as a “market survey” contains secondary market research. No quantitative survey was found.",
+    "rows": [
+      {
+        "area": "Secondary market research",
+        "material": "Two research documents",
+        "status": "Context and hypotheses, not validation"
+      },
+      {
+        "area": "Quantitative survey",
+        "material": "No distributed survey or response dataset found",
+        "status": "Not conducted"
+      },
+      {
+        "area": "Interview guide",
+        "material": "Interview tree, prepared guide and KPI document",
+        "status": "Useful but methodologically flawed"
+      },
+      {
+        "area": "Founder interviews",
+        "material": "15 structured interviews",
+        "status": "11 complete, 3 partial, 1 still marked in progress"
+      },
+      {
+        "area": "Online interviews",
+        "material": "Folder exists but is empty",
+        "status": "Not conducted"
+      },
+      {
+        "area": "Investor evidence",
+        "material": "One separate recording without structured transcription",
+        "status": "Insufficient"
+      },
+      {
+        "area": "Recruitment",
+        "material": "Personal LinkedIn/contact list",
+        "status": "Possible convenience-sample bias"
+      },
+      {
+        "area": "Strategy documents",
+        "material": "SWOT, planning and product recommendations",
+        "status": "Opinions and decisions, not research evidence"
+      }
+    ]
+  },
+  "secondary_research_assessment": {
+    "useful": [
+      "The research distinguishes between evidence, estimates, and information gaps.",
+      "It acknowledges missing Israeli data about active co-founder searches and willingness to pay.",
+      "It identifies liquidity, community-selection bias, and the difference between a match, a meeting, and a partnership."
+    ],
+    "limitations": [
+      "International platform activity does not validate urgent Israeli demand.",
+      "The TEA population is too broad to serve as BizMatch’s practical TAM.",
+      "The estimated SAM of 6,000–12,000 is based on weak proxy assumptions.",
+      "Employees are not a valid proxy for co-founder demand.",
+      "Business openings and business births are different measurements.",
+      "Conflicting GEM figures must not be used without identifying the correct source and year.",
+      "The previous 72/100 score creates false precision and must not be used as evidence supporting an MVP."
+    ],
+    "scenario_note": "Any TAM, SAM, or SOM values in the existing material are scenarios, not validated forecasts."
+  },
+  "interview_sample": {
+    "stages": [
+      {
+        "stage": "Idea",
+        "interviews": 3
+      },
+      {
+        "stage": "MVP",
+        "interviews": 3
+      },
+      {
+        "stage": "Product",
+        "interviews": 2
+      },
+      {
+        "stage": "Customers",
+        "interviews": 3
+      },
+      {
+        "stage": "Revenue",
+        "interviews": 3
+      },
+      {
+        "stage": "Scale",
+        "interviews": 1
+      }
+    ],
+    "total": 15,
+    "active_partner_seekers": 2,
+    "later_stage_participants": 7,
+    "assessment": [
+      "Only 2 of the 15 participants were actively looking for a partner.",
+      "Seven were already in Customers, Revenue, or Scale.",
+      "The sample did not match the intended Validation/MVP ICP.",
+      "Recruitment-source data was not consistently preserved.",
+      "Convenience-sample and personal-network bias are plausible.",
+      "The interviews cannot be treated as representative of Israeli founders."
+    ]
+  },
+  "methodology_problems": [
+    "BizMatch was introduced before the participant’s problem was independently discovered.",
+    "The interview primed participants to discuss partners, trust, and disclosure.",
+    "Some raw questions directly introduced AI, swipe, NDA, and matching concepts.",
+    "The KPI combined partner, investor, and trust problems even though they are different Jobs to Be Done.",
+    "One record intentionally marked a participant as having a partner in order to continue through the interview flow.",
+    "“Partner” was not consistently defined as co-founder, ownership partner, business partner, or collaborator.",
+    "Personally identifying information was stored alongside research data without a documented anonymization and retention process."
+  ],
+  "interview_findings": {
+    "primary_pain": {
+      "headline": "0/15",
+      "label": "identified finding a co-founder as the single problem they would remove",
+      "details": [
+        "More common problems included sales, distribution, cash flow, funding, customers, product-market fit, and operational pressure.",
+        "This is an important negative finding, but it does not disprove the problem among a narrower sample of active co-founder seekers."
+      ]
+    },
+    "partner_origin": {
+      "usable_interviews": 10,
+      "excluded_record_note": "One intentionally invalid record is excluded from the partner-origin analysis.",
+      "excluded_record_status": "Invalid evidence",
+      "channels": [
+        {
+          "channel": "Friends",
+          "count": 3
+        },
+        {
+          "channel": "Previous work",
+          "count": 3
+        },
+        {
+          "channel": "Studies, programs, or another existing relationship",
+          "count": 4
+        },
+        {
+          "channel": "Dedicated matching platform",
+          "count": 0
+        }
+      ],
+      "conclusion": "The current alternative is not merely LinkedIn or WhatsApp. It is prior relationships, shared work, and warm introductions."
+    },
+    "trust": {
+      "mechanisms": [
+        "Time and shared work",
+        "Reference checks",
+        "Reputation",
+        "Honesty and integrity",
+        "Chemistry and shared values",
+        "Observing how disagreements are handled"
+      ],
+      "hypothesis": "A structured trial project or collaboration period may create more value than profile matching alone.",
+      "hypothesis_status": "Hypothesis requiring validation"
+    },
+    "disclosure": {
+      "would_not_disclose_openly": 12,
+      "reported_no_restriction": 1,
+      "not_asked_or_no_answer": 2,
+      "explicit_nda_mentions": 1,
+      "conclusions": [
+        "Selective disclosure is supported as a concern.",
+        "The severity and behavioural effect of that concern were not measured.",
+        "NDA was not validated as the preferred solution.",
+        "NDA friction and abandonment were not tested."
+      ]
+    }
+  },
+  "hypothesis_register": [
+    {
+      "hypothesis": "Israeli founders struggle to find co-founders",
+      "status": "Unresolved",
+      "detail": "Only two active seekers were interviewed"
+    },
+    {
+      "hypothesis": "The problem is urgent and recurring",
+      "status": "Not supported",
+      "detail": "Not supported by the broad sample"
+    },
+    {
+      "hypothesis": "Current alternatives are inadequate",
+      "status": "Unresolved",
+      "detail": ""
+    },
+    {
+      "hypothesis": "Users want mutual matching",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "Rich profiles improve matching",
+      "status": "Not tested",
+      "detail": "Not behaviourally tested"
+    },
+    {
+      "hypothesis": "AI matching creates value",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "Users will provide sufficient profile data",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "Early disclosure creates concern",
+      "status": "Partially supported",
+      "detail": "Self-report only"
+    },
+    {
+      "hypothesis": "NDA solves the concern",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "NDA creates friction",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "A structured post-match process is needed",
+      "status": "Unresolved",
+      "detail": "Indirect indication only"
+    },
+    {
+      "hypothesis": "Investors want deal flow from a new platform",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "Either side will pay",
+      "status": "Not tested",
+      "detail": ""
+    },
+    {
+      "hypothesis": "Sufficient marketplace liquidity can be created in Israel",
+      "status": "Not tested",
+      "detail": ""
+    }
+  ],
+  "evidence_use_guidance": {
+    "keep": [
+      "Raw recordings, JSON, and summaries in the private research repository.",
+      "Behaviour-based questions about previous cases, time, money, trust, and partner origin.",
+      "Negative findings such as 0/15.",
+      "Observations about reference checks, shared work, and selective disclosure."
+    ],
+    "recode": [
+      "Co-founder versus other types of partners.",
+      "The intentionally incorrect interview record.",
+      "Venture stages.",
+      "Partner, investor, sales, and trust problems.",
+      "Recruitment source.",
+      "An anonymized analysis dataset."
+    ],
+    "exclude": [
+      "The previous 72/100 score.",
+      "A combined “thesis fit” percentage.",
+      "Raw partner-ownership rates.",
+      "Urgency percentages that mix different problems.",
+      "Willingness-to-pay assumptions based on money spent solving other problems.",
+      "TAM/SAM/SOM as financial forecasts.",
+      "Treating the 15 interviews as representative."
+    ]
+  },
+  "decision_gate": {
+    "learned": "Trust and selective disclosure matter, but partnerships were mainly created through existing relationships and shared experience. Co-founder search was not the primary pain in this sample.",
+    "unknown": "Urgency among active co-founder seekers, dissatisfaction with alternatives, willingness to switch, NDA value and friction, investor demand, willingness to pay, and marketplace liquidity.",
+    "falsification": "A focused sample of active Validation/MVP founders may show that the problem is not urgent, warm introductions are sufficient, or users will not complete profiles and participate in curated introductions.",
+    "allowed": "Continue with narrower, hypothesis-driven research.",
+    "not_allowed": "Claim that the need is validated, NDA is the differentiator, willingness to pay exists, the SAM is 6,000–12,000, or a broad MVP should be built.",
+    "status": "Narrow the research"
+  },
+  "sources": [
+    {
+      "title": "Israel Innovation Authority — Israeli High-Tech Status Report 2026",
+      "url": "https://innovationisrael.org.il/en/press_release/israeli-high-tech-report-2026/",
+      "use": "Israeli high-tech context only; not evidence of co-founder demand or willingness to pay",
+      "type": "Independent market context"
+    },
+    {
+      "title": "Y Combinator Launches Co-Founder Matching Platform",
+      "url": "https://www.ycombinator.com/blog/co-founder-matching/",
+      "use": "International company documentation and self-reported platform activity; not validation of Israeli demand",
+      "type": "Company documentation"
+    },
+    {
+      "title": "Y Combinator — What do people want in a co-founder?",
+      "url": "https://www.ycombinator.com/blog/what-do-people-want-in-a-co-founder",
+      "use": "International company-reported profile and match data; not independent effectiveness evidence",
+      "type": "Company claim"
+    },
+    {
+      "title": "Israel Central Bureau of Statistics — Business Demography 2024",
+      "url": "https://www.cbs.gov.il/he/mediarelease/DocLib/2025/250/29_25_250b.pdf",
+      "use": "Business-demography context; business openings and births are not direct measures of co-founder demand",
+      "type": "Official statistics"
+    }
+  ]
+}

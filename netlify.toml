@@ -1,6 +1,16 @@
 [build]
   publish = "."
 
+[[redirects]]
+  from = "/market-research"
+  to = "/market-research/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/findings-conclusions"
+  to = "/findings-conclusions/index.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

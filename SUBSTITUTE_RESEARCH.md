@@ -11,8 +11,10 @@ need a dedicated BizMatch-like matching platform:
 4. `JOB-TRUSTED-PROGRESSION` — founder and investor progressing from discovery
    to a trusted interaction.
 
-The work is based on repository commit
-`bc9e4701e01367b84329374aa87607d029d355f6`. Phase 0 reconciliation
+The Phase 0 integrity baseline is repository commit
+`bc9e4701e01367b84329374aa87607d029d355f6`. The completion and active-
+conclusions pass began from
+`3989b85f49c6a9c9491bf5236acfd70aeaa5c061`. Phase 0 reconciliation
 decisions, the 36-company canonical tracker, legacy-score isolation, and
 relationship-score handling were not changed.
 
@@ -115,6 +117,11 @@ Important limitations:
 - this phase did not create accounts, contact users, or observe private groups;
 - no evidence collected here estimates Israeli target-market prevalence,
   conversion, willingness to pay, or switching intent.
+- venture studios, co-founder recruiters, headhunters, and fractional
+  executives were considered but were not added as evidence-backed substitute
+  records because the opened source set did not establish a sufficiently
+  specific connection to one of the four Jobs. This is an evidence gap, not a
+  finding that those services are irrelevant.
 
 ## Findings by Job
 

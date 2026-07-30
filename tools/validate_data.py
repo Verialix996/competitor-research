@@ -6,6 +6,7 @@ import ast
 import csv
 import hashlib
 import html
+import json
 import re
 import subprocess
 import sys
@@ -22,16 +23,58 @@ XLSX_PATH = ROOT / "data" / "competitive-research-tracker.xlsx"
 SUBSTITUTES_PATH = ROOT / "data" / "substitutes-research.csv"
 SUBSTITUTE_EVIDENCE_PATH = ROOT / "data" / "substitute-evidence.csv"
 SUBSTITUTE_WORKFLOWS_PATH = ROOT / "data" / "substitute-workflows.csv"
+MARKET_RESEARCH_PATH = ROOT / "data" / "market-research.json"
+MARKET_RESEARCH_PAGE = ROOT / "market-research" / "index.html"
+FINDINGS_PATH = ROOT / "data" / "findings-and-implications.json"
+FINDINGS_PAGE = ROOT / "findings-conclusions" / "index.html"
+FINDINGS_REPORT = ROOT / "FINDINGS_AND_STRATEGIC_IMPLICATIONS.md"
 SUBSTITUTE_REPORT_SCRIPT = ROOT / "tools" / "build_substitute_reports.py"
+FINDINGS_REPORT_SCRIPT = ROOT / "tools" / "build_findings_report.py"
 GENERATOR = ROOT / "tools" / "generate_site.py"
 RECONCILIATION_SCRIPT = ROOT / "tools" / "apply_reconciliation.py"
 EXPECTED_ROWS = 36
 EXPECTED_COLUMNS = 65
+EXPECTED_TRACKER_SHA256 = "cb6b808ab11198d2896a383e815c2b3c728000adfdeb785aafd4ec2882069a51"
+MARKET_RESEARCH_TOP_LEVEL_KEYS = {
+    "meta",
+    "executive_conclusion",
+    "research_inventory",
+    "secondary_research_assessment",
+    "interview_sample",
+    "methodology_problems",
+    "interview_findings",
+    "hypothesis_register",
+    "evidence_use_guidance",
+    "decision_gate",
+    "sources",
+}
+MARKET_RESEARCH_HYPOTHESIS_STATUSES = {
+    "Partially supported",
+    "Not supported",
+    "Not tested",
+    "Unresolved",
+    "Invalid evidence",
+}
 SUBSTITUTE_JOB_IDS = {
     "JOB-COFOUNDER",
     "JOB-FOUNDER-INVESTOR",
     "JOB-INVESTOR-SOURCING",
     "JOB-TRUSTED-PROGRESSION",
+}
+SUBSTITUTE_STAGE_IDS = {
+    "need_definition",
+    "discovery",
+    "initial_screen",
+    "fit_check",
+    "contact",
+    "response_followup",
+    "trust_building",
+    "verification",
+    "disclosure",
+    "nda",
+    "meeting",
+    "diligence",
+    "decision_followup",
 }
 SUBSTITUTE_CLASSIFICATIONS = {
     "Direct Competitor",
@@ -62,6 +105,7 @@ SUBSTITUTE_SOURCE_TYPES = {
     "Inference",
     "Unverified",
 }
+FINDINGS_CONFIDENCE = {"High", "Medium", "Low", "Insufficient Evidence"}
 SUBSTITUTE_HEADERS = (
     "substitute_id",
     "name",
@@ -213,6 +257,10 @@ def normalized(value):
 
 def check_canonical(validation, headers, rows):
     validation.check(CSV_PATH.exists(), "canonical CSV exists")
+    validation.check(
+        hashlib.sha256(CSV_PATH.read_bytes()).hexdigest() == EXPECTED_TRACKER_SHA256,
+        "Phase 0 canonical competitor tracker remains byte-for-byte unchanged",
+    )
     active_csvs = sorted(path.name for path in (ROOT / "data").glob("*.csv"))
     expected_csvs = sorted(
         (
@@ -451,6 +499,7 @@ def check_substitutes(validation, competitor_rows, artifacts_required):
     )
     workflow_errors = []
     coverage = {job_id: set() for job_id in SUBSTITUTE_JOB_IDS}
+    stage_coverage = {job_id: set() for job_id in SUBSTITUTE_JOB_IDS}
     for row in workflows:
         job_id = row["job_id"].strip()
         if job_id not in SUBSTITUTE_JOB_IDS:
@@ -462,6 +511,7 @@ def check_substitutes(validation, competitor_rows, artifacts_required):
             workflow_errors.append(f"{row['workflow_id']}: invalid stage order")
             continue
         coverage[job_id].add(stage_order)
+        stage_coverage[job_id].add(row["stage_id"].strip())
         unknown_substitutes = set(split_values(row["substitute_ids"])) - set(substitute_ids)
         unknown_evidence = set(split_values(row["evidence_ids"])) - evidence_id_set
         if unknown_substitutes or unknown_evidence:
@@ -478,8 +528,12 @@ def check_substitutes(validation, competitor_rows, artifacts_required):
         "workflow rows use canonical references and mark unsupported stages Unverified",
     )
     validation.check(
-        all(orders == set(range(1, 12)) for orders in coverage.values()),
-        "all four Jobs contain exactly the eleven documented workflow stages",
+        all(orders == set(range(1, 14)) for orders in coverage.values()),
+        "all four Jobs contain exactly the thirteen documented workflow stages",
+    )
+    validation.check(
+        all(stages == SUBSTITUTE_STAGE_IDS for stages in stage_coverage.values()),
+        "every Job uses each documented workflow-stage identifier exactly once",
     )
     validation.check(
         not orphan_references,
@@ -554,6 +608,447 @@ def check_substitutes(validation, competitor_rows, artifacts_required):
             and "direct_threat_score" not in data_text,
             "substitute site data contains no numeric relationship or legacy threat score",
         )
+
+
+def nested_keys(value):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            yield key
+            yield from nested_keys(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from nested_keys(child)
+
+
+def check_market_research(validation, artifacts_required):
+    validation.check(
+        MARKET_RESEARCH_PATH.exists(),
+        "separate canonical market-research content source exists",
+    )
+    if not MARKET_RESEARCH_PATH.exists():
+        return
+    try:
+        research = json.loads(MARKET_RESEARCH_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        validation.check(False, "market-research content is valid UTF-8 JSON")
+        return
+    validation.check(True, "market-research content is valid UTF-8 JSON")
+    validation.check(
+        set(research) == MARKET_RESEARCH_TOP_LEVEL_KEYS,
+        "market-research content uses the documented top-level structure",
+    )
+
+    sample = research.get("interview_sample", {})
+    stages = sample.get("stages", [])
+    expected_stages = {
+        "Idea": 3,
+        "MVP": 3,
+        "Product": 2,
+        "Customers": 3,
+        "Revenue": 3,
+        "Scale": 1,
+    }
+    actual_stages = {
+        row.get("stage"): row.get("interviews")
+        for row in stages
+        if isinstance(row, dict)
+    }
+    validation.check(
+        actual_stages == expected_stages
+        and sum(expected_stages.values()) == sample.get("total") == 15,
+        "interview stage distribution preserves the supplied 15-participant counts",
+    )
+    validation.check(
+        sample.get("active_partner_seekers") == 2
+        and sample.get("later_stage_participants") == 7,
+        "sample assessment preserves the supplied active-seeker and later-stage counts",
+    )
+
+    findings = research.get("interview_findings", {})
+    partner_origin = findings.get("partner_origin", {})
+    channel_counts = {
+        row.get("channel"): row.get("count")
+        for row in partner_origin.get("channels", [])
+        if isinstance(row, dict)
+    }
+    validation.check(
+        partner_origin.get("usable_interviews") == 10
+        and partner_origin.get("excluded_record_status") == "Invalid evidence"
+        and sum(channel_counts.values()) == 10
+        and channel_counts.get("Friends") == 3
+        and channel_counts.get("Previous work") == 3
+        and channel_counts.get("Studies, programs, or another existing relationship") == 4
+        and channel_counts.get("Dedicated matching platform") == 0,
+        "partner-origin findings preserve the supplied valid-record arithmetic",
+    )
+    disclosure = findings.get("disclosure", {})
+    validation.check(
+        disclosure.get("would_not_disclose_openly") == 12
+        and disclosure.get("reported_no_restriction") == 1
+        and disclosure.get("not_asked_or_no_answer") == 2
+        and disclosure.get("explicit_nda_mentions") == 1
+        and (
+            disclosure.get("would_not_disclose_openly", 0)
+            + disclosure.get("reported_no_restriction", 0)
+            + disclosure.get("not_asked_or_no_answer", 0)
+            == 15
+        ),
+        "disclosure and NDA findings preserve the supplied interview counts",
+    )
+
+    hypotheses = research.get("hypothesis_register", [])
+    validation.check(
+        len(hypotheses) == 14
+        and all(
+            row.get("status") in MARKET_RESEARCH_HYPOTHESIS_STATUSES
+            for row in hypotheses
+        ),
+        "hypothesis register uses qualitative evidence statuses only",
+    )
+    all_keys = set(nested_keys(research))
+    validation.check(
+        not any(
+            re.search(r"(?:score|rating|percentage)$", key, flags=re.IGNORECASE)
+            for key in all_keys
+        ),
+        "market research defines no numerical validation or decision score",
+    )
+
+    malformed_sources = []
+    for source in research.get("sources", []):
+        parsed = urlparse(source.get("url", ""))
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            malformed_sources.append(source.get("url", ""))
+    validation.check(
+        len(research.get("sources", [])) == 4 and not malformed_sources,
+        "market-research source register contains the four supplied structural URLs",
+    )
+
+    private_keys = {
+        "participant_name",
+        "participant_names",
+        "email",
+        "phone",
+        "contact_details",
+        "recording_url",
+        "transcript",
+        "transcript_url",
+    }
+    raw_content = MARKET_RESEARCH_PATH.read_text(encoding="utf-8")
+    validation.check(
+        not (all_keys & private_keys)
+        and not re.search(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b", raw_content)
+        and not re.search(r"\b05\d[- ]?\d{3}[- ]?\d{4}\b", raw_content),
+        "public market-research content contains no participant PII fields or contact values",
+    )
+
+    if not artifacts_required:
+        return
+    validation.check(
+        MARKET_RESEARCH_PAGE.exists(),
+        "stable /market-research/ page is generated",
+    )
+    if not MARKET_RESEARCH_PAGE.exists():
+        return
+    page_text = MARKET_RESEARCH_PAGE.read_text(encoding="utf-8")
+    required_sections = (
+        "Existing research inventory",
+        "Secondary research assessment",
+        "Interview sample assessment",
+        "Interview-methodology problems",
+        "What the interviews actually show",
+        "Hypothesis register",
+        "Evidence-use guidance",
+        "Decision gate",
+        "Sources and interpretation limits",
+    )
+    validation.check(
+        all(section in page_text for section in required_sections),
+        "Market Research page contains every required analytical section",
+    )
+    required_boundaries = (
+        "Exploratory research; not market validation",
+        "Narrow the research",
+        "0/15",
+        "Scenario boundary",
+        "Hypothesis requiring validation",
+        "Statuses are qualitative evidence labels, not numerical scores.",
+        "No private interview artifact is linked",
+    )
+    validation.check(
+        all(boundary in page_text for boundary in required_boundaries)
+        and "does not yet justify Proceed, Pivot, or Stop" in page_text,
+        "Market Research page distinguishes evidence, hypothesis, uncertainty, and decision",
+    )
+    validation.check(
+        all(source["url"] in page_text for source in research.get("sources", [])),
+        "all supplied external source links are rendered on the Market Research page",
+    )
+    validation.check(
+        not re.search(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b", page_text)
+        and not re.search(r"\b05\d[- ]?\d{3}[- ]?\d{4}\b", page_text)
+        and "mailto:" not in page_text,
+        "generated Market Research page exposes no participant contact information",
+    )
+
+    full_report_pages = list((ROOT / "sites" / "full-report-site").rglob("*.html"))
+    validation.check(
+        bool(full_report_pages)
+        and all(
+            'href="/market-research/"' in path.read_text(encoding="utf-8")
+            and ">Market Research</a>" in path.read_text(encoding="utf-8")
+            for path in full_report_pages
+        )
+        and 'aria-current="page">Market Research</a>' in page_text,
+        "Market Research is a keyboard-accessible top-level tab across existing routes",
+    )
+    netlify_config = (ROOT / "netlify.toml").read_text(encoding="utf-8")
+    validation.check(
+        'from = "/market-research"' in netlify_config
+        and 'to = "/market-research/index.html"' in netlify_config
+        and "status = 200" in netlify_config,
+        "Netlify direct loading and refresh are configured for /market-research",
+    )
+
+
+def walk_dicts(value):
+    if isinstance(value, dict):
+        yield value
+        for child in value.values():
+            yield from walk_dicts(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from walk_dicts(child)
+
+
+def check_findings(validation, competitor_rows, artifacts_required):
+    validation.check(
+        FINDINGS_PATH.exists(),
+        "separate canonical active-findings source exists",
+    )
+    if not FINDINGS_PATH.exists():
+        return
+    try:
+        findings = json.loads(FINDINGS_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        validation.check(False, "active-findings content is valid UTF-8 JSON")
+        return
+    validation.check(True, "active-findings content is valid UTF-8 JSON")
+    required_top_level = {
+        "meta",
+        "executive_conclusion",
+        "jobs",
+        "cross_market_findings",
+        "competitive_pressures",
+        "assumptions_strengthened",
+        "assumptions_weakened",
+        "pains",
+        "conclusion_boundaries",
+        "customer_discovery",
+        "conditional_implications",
+        "red_team",
+        "methodology_limitations",
+    }
+    validation.check(
+        set(findings) == required_top_level,
+        "active findings use the documented structured conclusion schema",
+    )
+
+    _, evidence_rows = read_csv_table(SUBSTITUTE_EVIDENCE_PATH)
+    _, substitute_rows = read_csv_table(SUBSTITUTES_PATH)
+    evidence_ids = {row["evidence_id"] for row in evidence_rows}
+    substitute_ids = {row["substitute_id"] for row in substitute_rows}
+    competitor_slugs = {slug(row["company"]) for row in competitor_rows}
+    market = json.loads(MARKET_RESEARCH_PATH.read_text(encoding="utf-8"))
+    hypothesis_names = {
+        row["hypothesis"] for row in market.get("hypothesis_register", [])
+    }
+    inventory_areas = {
+        row["area"] for row in market.get("research_inventory", {}).get("rows", [])
+    }
+
+    reference_errors = []
+    confidence_errors = []
+    material_without_trace = []
+    material_markers = {
+        "headline",
+        "finding",
+        "pressure",
+        "assumption",
+        "pain",
+        "evidence_observed",
+        "possibility",
+        "dominant_current_workflow",
+    }
+    for item in walk_dicts(findings):
+        unknown_evidence = set(item.get("evidence_ids", [])) - evidence_ids
+        unknown_substitutes = set(item.get("substitute_ids", [])) - substitute_ids
+        unknown_competitors = set(item.get("competitor_slugs", [])) - competitor_slugs
+        if unknown_evidence or unknown_substitutes or unknown_competitors:
+            reference_errors.append(
+                f"evidence={sorted(unknown_evidence)} "
+                f"substitutes={sorted(unknown_substitutes)} "
+                f"competitors={sorted(unknown_competitors)}"
+            )
+        if "job_id" in item and item["job_id"] not in SUBSTITUTE_JOB_IDS:
+            reference_errors.append(f"unknown Job {item['job_id']}")
+        for ref in item.get("market_research_refs", []):
+            if ref.startswith("interview_findings."):
+                valid = ref.split(".", 1)[1] in market.get("interview_findings", {})
+            elif ref.startswith("hypotheses."):
+                valid = ref.split(".", 1)[1] in hypothesis_names
+            elif ref.startswith("research_inventory."):
+                valid = ref.split(".", 1)[1] in inventory_areas
+            else:
+                valid = False
+            if not valid:
+                reference_errors.append(f"unknown market-research reference {ref}")
+        if "confidence" in item and item["confidence"] not in FINDINGS_CONFIDENCE:
+            confidence_errors.append(str(item["confidence"]))
+        if material_markers & set(item):
+            has_trace = bool(item.get("evidence_ids") or item.get("market_research_refs"))
+            explicit_gap = "Insufficient Evidence" in json.dumps(item, ensure_ascii=False)
+            if not has_trace and not explicit_gap:
+                material_without_trace.append(
+                    next(iter(material_markers & set(item)))
+                )
+    validation.check(
+        not reference_errors,
+        "active findings resolve every evidence, substitute, Job, competitor, and market reference",
+    )
+    validation.check(
+        not confidence_errors,
+        "active findings use qualitative controlled confidence values",
+    )
+    validation.check(
+        not material_without_trace,
+        "every material active conclusion is evidence-traceable or explicitly Insufficient Evidence",
+    )
+
+    jobs = findings.get("jobs", [])
+    validation.check(
+        len(jobs) == 4
+        and {item.get("job_id") for item in jobs} == SUBSTITUTE_JOB_IDS,
+        "active conclusions analyze all four Jobs separately",
+    )
+    red_team = findings.get("red_team", [])
+    validation.check(
+        len(red_team) == 10
+        and {item.get("id") for item in red_team}
+        == {f"RT-{number:02d}" for number in range(1, 11)}
+        and all(
+            all(
+                item.get(key)
+                for key in (
+                    "supporting_evidence",
+                    "counterevidence",
+                    "unknowns",
+                    "confidence",
+                    "customer_discovery_test",
+                )
+            )
+            for item in red_team
+        ),
+        "all ten required Red Team possibilities retain support, counterevidence, unknowns, confidence, and a test",
+    )
+    all_keys = set(nested_keys(findings))
+    validation.check(
+        not any(
+            re.search(
+                r"(?:score|rating|percentage|threat_rank|priority_score)$",
+                key,
+                flags=re.IGNORECASE,
+            )
+            for key in all_keys
+        ),
+        "active findings define no arbitrary numeric research or decision score",
+    )
+    raw_text = FINDINGS_PATH.read_text(encoding="utf-8")
+    validation.check(
+        '"current_decision": "Narrow the research"' in raw_text
+        and "does not establish product-market fit" in raw_text
+        and "does not establish demand for BizMatch" in raw_text,
+        "active findings preserve the skeptical decision and adoption boundaries",
+    )
+
+    if not artifacts_required:
+        return
+    validation.check(
+        FINDINGS_PAGE.exists() and FINDINGS_REPORT.exists(),
+        "active findings generate both the website section and Markdown report",
+    )
+    if not FINDINGS_PAGE.exists() or not FINDINGS_REPORT.exists():
+        return
+    page_text = FINDINGS_PAGE.read_text(encoding="utf-8")
+    report_text = FINDINGS_REPORT.read_text(encoding="utf-8")
+    required_sections = (
+        "Conclusions by Job-to-be-Done",
+        "Cross-market findings",
+        "Strongest competitive pressures",
+        "BizMatch assumptions that gained support",
+        "BizMatch assumptions that weakened",
+        "Supported pains versus hypotheses",
+        "What can and cannot be concluded",
+        "Customer Discovery agenda",
+        "Conditional strategic implications",
+        "Required Red Team assessment",
+        "Methodology and evidence limitations",
+    )
+    validation.check(
+        all(section in page_text for section in required_sections)
+        and all(section in report_text for section in required_sections),
+        "active website and report contain every required conclusions section",
+    )
+    used_evidence = {
+        evidence_id
+        for item in walk_dicts(findings)
+        for evidence_id in item.get("evidence_ids", [])
+    }
+    validation.check(
+        all(
+            f"#evidence-{evidence_id}" in page_text
+            and f"[{evidence_id}]" in report_text
+            for evidence_id in used_evidence
+        ),
+        "every cited evidence ID is linked from both active conclusion outputs",
+    )
+    required_labels = (
+        "Evidence suggests",
+        "Company Claim",
+        "Independent Evidence",
+        "Inference",
+        "Unverified",
+        "Insufficient Evidence",
+        "Hypothesis requiring validation",
+    )
+    validation.check(
+        all(label in page_text for label in required_labels),
+        "active conclusions visibly distinguish evidence and uncertainty labels",
+    )
+    validation.check(
+        "numeric threat ranks" in page_text
+        and "This is a research agenda only" in page_text
+        and "product-market fit" in page_text,
+        "active conclusions preserve rank, research-agenda, and PMF boundaries",
+    )
+    full_report_pages = list((ROOT / "sites" / "full-report-site").rglob("*.html"))
+    validation.check(
+        bool(full_report_pages)
+        and all(
+            'href="/findings-conclusions/"' in path.read_text(encoding="utf-8")
+            and ">Findings &amp; Conclusions</a>"
+            in path.read_text(encoding="utf-8")
+            for path in full_report_pages
+        )
+        and 'aria-current="page">Findings &amp; Conclusions</a>' in page_text,
+        "Findings & Conclusions is a keyboard-accessible top-level tab across existing routes",
+    )
+    netlify_config = (ROOT / "netlify.toml").read_text(encoding="utf-8")
+    validation.check(
+        'from = "/findings-conclusions"' in netlify_config
+        and 'to = "/findings-conclusions/index.html"' in netlify_config,
+        "Netlify direct loading and refresh are configured for /findings-conclusions",
+    )
 
 
 def check_xlsx(validation, headers, rows, required):
@@ -721,6 +1216,11 @@ def check_investor_facing_strategy(validation, required):
         validation.check(not required, "strategic recommendations are isolated from the active page")
         return
     active_text = active.read_text(encoding="utf-8")
+    findings_text = (
+        FINDINGS_PAGE.read_text(encoding="utf-8")
+        if FINDINGS_PAGE.exists()
+        else ""
+    )
     historical_text = historical.read_text(encoding="utf-8")
     investor_risk_phrases = (
         "Recommended Israeli Beachhead",
@@ -730,7 +1230,9 @@ def check_investor_facing_strategy(validation, required):
     )
     validation.check(
         not any(phrase in active_text for phrase in investor_risk_phrases)
-        and "No current strategic recommendation is published" in active_text
+        and not any(phrase in findings_text for phrase in investor_risk_phrases)
+        and "No final product or market recommendation is published" in active_text
+        and "Conditional strategic implications" in findings_text
         and "ARCHIVED — not current investor conclusions" in historical_text,
         "strategic recommendations are isolated from the active page",
     )
@@ -744,6 +1246,9 @@ def artifact_paths():
         ROOT / "SUBSTITUTE_MATRIX.md",
         ROOT / "SUBSTITUTE_WORKFLOWS.md",
         ROOT / "SUBSTITUTE_EVIDENCE_REGISTER.md",
+        FINDINGS_REPORT,
+        MARKET_RESEARCH_PAGE,
+        FINDINGS_PAGE,
         XLSX_PATH,
     ]
     for base in (
@@ -771,6 +1276,7 @@ def run_build_twice(validation):
     commands = (
         [sys.executable, str(ROOT / "tools" / "build_xlsx.py")],
         [sys.executable, str(SUBSTITUTE_REPORT_SCRIPT)],
+        [sys.executable, str(FINDINGS_REPORT_SCRIPT)],
         [sys.executable, str(GENERATOR)],
     )
     before = hashes()
@@ -801,6 +1307,8 @@ def main():
     headers, rows = read_canonical()
     by_company = check_canonical(validation, headers, rows)
     check_substitutes(validation, rows, artifacts_required=not args.pre_build)
+    check_market_research(validation, artifacts_required=not args.pre_build)
+    check_findings(validation, rows, artifacts_required=not args.pre_build)
     check_scoring(validation, rows, artifacts_required=not args.pre_build)
     if not args.pre_build:
         check_profile_manifest(
