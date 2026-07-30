@@ -149,7 +149,35 @@
     update(current);
   }
 
+  function setupMarketSectionNavigation() {
+    const navigation = document.querySelector('.market-section-nav');
+    if (!navigation) return;
+    const links = Array.from(navigation.querySelectorAll('a[href^="#"]'));
+    const update = () => {
+      const target = window.location.hash
+        ? document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
+        : null;
+      links.forEach(link => {
+        const active = Boolean(target) && link.hash === window.location.hash;
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+      if (!target) return;
+      const alignTarget = () => {
+        const top = target.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo(0, Math.max(0, top));
+      };
+      alignTarget();
+      window.setTimeout(alignTarget, 250);
+      window.setTimeout(alignTarget, 700);
+    };
+    window.addEventListener('hashchange', update);
+    if (document.readyState === 'complete') update();
+    else window.addEventListener('load', update, { once: true });
+  }
+
   setupSubstituteExplorer();
   setupLandscapeExplorer();
   setupPresentation();
+  setupMarketSectionNavigation();
 })();

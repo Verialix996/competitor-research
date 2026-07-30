@@ -141,14 +141,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* Market research */
 .market-page { max-width:1180px; }
+.anchored-section { scroll-margin-top:142px; }
 .research-status-card { background:#fff7ed; border:1px solid #fdba74; border-left:5px solid #c2410c; border-radius:8px; padding:20px; margin:14px 0; box-shadow:var(--shadow); }
 .research-status-card h2 { font-size:30px; color:#9a3412; margin-bottom:5px; }
 .status-boundary { color:#7c2d12; font-weight:800; }
+.research-scope-banner { display:grid; grid-template-columns:150px minmax(0,1fr); gap:14px; align-items:start; margin:14px 0; padding:14px 16px; border:1px solid #bfdbfe; border-left:4px solid #2563eb; border-radius:8px; background:#f8fbff; color:#1e3a5f; }
+.research-scope-banner strong { font-size:13px; text-transform:uppercase; letter-spacing:.04em; }
+.research-scope-banner p { margin:0; }
+.market-section-nav { display:grid; grid-template-columns:120px minmax(0,1fr); gap:12px; align-items:start; margin:14px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:#fff; box-shadow:var(--shadow); }
+.market-section-nav > strong { color:var(--accent-dark); padding-top:6px; }
+.market-section-nav > div { display:flex; gap:6px; overflow-x:auto; padding:1px 2px 6px; scrollbar-width:thin; }
+.market-section-nav a { flex:0 0 auto; display:inline-flex; align-items:center; min-height:32px; padding:5px 9px; border:1px solid var(--line); border-radius:999px; background:#fbfdff; font-size:12px; font-weight:700; }
+.market-section-nav a:hover, .market-section-nav a:active, .market-section-nav a[aria-current="location"] { border-color:#5eead4; background:var(--soft); color:var(--accent-dark); text-decoration:none; }
 .research-clarification { margin:14px 0 0; border-left:4px solid var(--accent); background:#f0fdfa; padding:12px 14px; font-weight:700; }
-.assessment-card, .finding-card, .guidance-card, .decision-grid article { border:1px solid var(--line); border-radius:8px; background:#fbfdff; padding:14px; min-width:0; }
+.assessment-card, .finding-card, .guidance-card, .decision-grid article, .decision-summary article { border:1px solid var(--line); border-radius:8px; background:#fbfdff; padding:14px; min-width:0; }
 .assessment-card.useful { border-top:4px solid #15803d; }
 .assessment-card.limitation { border-top:4px solid #c2410c; }
 .scenario-note, .privacy-note { margin-top:14px; border:1px solid #fbbf24; border-radius:8px; background:#fffbeb; padding:12px; }
+.coding-note { margin-top:14px; padding:11px 12px; border:1px solid var(--line); border-radius:8px; background:#f8fafc; color:#334155; }
 .sample-layout { display:grid; grid-template-columns:minmax(300px, .75fr) minmax(0, 1.25fr); gap:14px; align-items:start; }
 .market-table caption { text-align:left; color:var(--muted); padding:9px; font-size:12px; }
 .market-table th { cursor:default; }
@@ -162,14 +172,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .finding-card { background:#fff; }
 .negative-finding { border-top:4px solid #c2410c; }
 .finding-number { display:block; color:#9a3412; font-size:42px; line-height:1; font-weight:800; margin:8px 0; }
+.finding-number.denominator-unknown { max-width:520px; font-size:18px; line-height:1.25; color:#7c2d12; }
+.denominator-audit { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin:14px 0; }
+.denominator-audit div { border:1px solid var(--line); border-radius:6px; padding:8px; background:#fbfdff; min-width:0; }
+.denominator-audit dt { color:var(--muted); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; }
+.denominator-audit dd { margin:3px 0 0; font-size:12px; overflow-wrap:anywhere; }
+.provisional-note { margin:12px 0; padding:10px 12px; border:1px solid #fbbf24; border-left:4px solid #d97706; border-radius:7px; background:#fffbeb; }
 .compact-metrics { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); margin:12px 0; }
 .compact-metrics .metric { box-shadow:none; }
 .hypothesis-callout { margin:14px 0 0; border-left:4px solid #2563eb; background:#eff6ff; padding:12px 14px; }
 .hypothesis-callout span { display:block; color:#1d4ed8; font-size:12px; font-weight:800; text-transform:uppercase; margin-bottom:5px; }
 .hypothesis-table td small { display:block; margin-top:6px; }
-.research-partially-supported { background:#fef3c7; color:#92400e; border:1px solid #fbbf24; }
+.research-partially-supported, .research-partially-supported-by-self-report, .research-self-report { background:#fef3c7; color:#92400e; border:1px solid #fbbf24; }
 .research-not-supported, .research-invalid-evidence { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
-.research-not-tested, .research-unresolved { background:#eef2f7; color:#475467; border:1px solid #cbd5e1; }
+.research-not-tested, .research-unresolved, .research-unresolved-for-the-target-icp { background:#eef2f7; color:#475467; border:1px solid #cbd5e1; }
 .research-narrow-the-research { background:#ffedd5; color:#9a3412; border:1px solid #fdba74; font-weight:800; }
 .research-independent-market-context, .research-official-statistics { background:#e0f2fe; color:#075985; border:1px solid #bae6fd; }
 .research-company-documentation, .research-company-claim { background:#fef3c7; color:#92400e; border:1px solid #fbbf24; }
@@ -178,13 +194,52 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .guidance-card.recode { border-top:4px solid #d97706; }
 .guidance-card.exclude { border-top:4px solid #b91c1c; }
 .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.claim-id { white-space:nowrap; font-family:ui-monospace, SFMono-Regular, Consolas, monospace; font-size:12px; }
+.evidence-table-wrap { max-height:720px; }
+.evidence-register-table { min-width:2200px; }
+.evidence-register-table th, .evidence-register-table td { min-width:180px; max-width:300px; }
+.evidence-register-table th:nth-child(2), .evidence-register-table td:nth-child(2),
+.evidence-register-table th:nth-child(11), .evidence-register-table td:nth-child(11) { min-width:260px; }
+.section-lede { max-width:850px; color:#334155; font-size:16px; }
+.research-phase-list { display:grid; gap:12px; margin-top:14px; }
+.research-phase { border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; background:#fff; padding:16px; }
+.research-phase header { display:flex; align-items:baseline; gap:12px; margin-bottom:8px; }
+.research-phase header span { flex:0 0 auto; color:var(--accent-dark); font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.04em; }
+.research-phase header h3 { margin:0; font-size:18px; }
+.research-phase h4 { margin:12px 0 5px; font-size:13px; }
+.phase-block { min-width:0; }
+.phase-deliverable, .measurement-boundary { margin-top:12px; padding:10px 12px; border-radius:7px; background:#f0fdfa; border:1px solid #99f6e4; }
+.measurement-boundary { background:#f8fafc; border-color:var(--line); }
+.threshold-notice { padding:12px 14px; border:1px solid #fbbf24; border-left:4px solid #d97706; border-radius:8px; background:#fffbeb; }
+.decision-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:14px 0; }
+.decision-gate-table th:first-child, .decision-gate-table td:first-child { min-width:280px; }
 .current-decision { border-top:4px solid #c2410c !important; background:#fff7ed !important; }
+.market-footer { border-top:1px solid var(--line); padding-top:18px; }
 @media (max-width:760px){
-  .sample-layout, .finding-grid, .guidance-grid, .decision-grid { grid-template-columns:1fr; }
+  .anchored-section { scroll-margin-top:20px; }
+  .sample-layout, .finding-grid, .guidance-grid, .decision-grid, .decision-summary { grid-template-columns:1fr; }
   .research-status-card { padding:16px; }
   .research-status-card h2 { font-size:25px; }
+  .research-scope-banner, .market-section-nav { grid-template-columns:1fr; }
+  .market-section-nav { position:static; padding:12px; }
+  .market-section-nav > div { padding-bottom:7px; }
   .finding-number { font-size:36px; }
-  .market-table th:first-child, .market-table td:first-child { min-width:180px; }
+  .denominator-audit { grid-template-columns:1fr; }
+  .responsive-table { overflow:visible; border:0; background:transparent; }
+  .mobile-card-table { display:block; box-sizing:border-box; table-layout:fixed; width:100% !important; min-width:0 !important; max-width:100% !important; inline-size:100% !important; min-inline-size:0 !important; max-inline-size:100% !important; contain:inline-size; }
+  .mobile-card-table caption { display:block; width:100%; }
+  .mobile-card-table thead { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  .mobile-card-table tbody { display:grid; gap:10px; width:100%; }
+  .mobile-card-table tr { display:block; width:100%; border:1px solid var(--line); border-radius:8px; background:#fff; overflow:hidden; }
+  .mobile-card-table th, .mobile-card-table td,
+  .mobile-card-table th:first-child, .mobile-card-table td:first-child { position:static; display:block; width:100% !important; min-width:0 !important; max-width:none !important; padding:9px 10px; border-right:0; white-space:normal; background:#fff; text-align:left; }
+  .mobile-card-table th::before, .mobile-card-table td::before { content:attr(data-label); display:block; margin-bottom:4px; color:var(--muted); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.02em; }
+  .mobile-card-table tr > :last-child { border-bottom:0; }
+  .mobile-card-table .badge { width:max-content; max-width:100%; white-space:normal; }
+  .mobile-card-table .total-row { border-top:2px solid var(--accent); }
+  .evidence-table-wrap { max-height:none; }
+  .evidence-register-table { min-width:0 !important; max-width:100% !important; }
+  .research-phase header { align-items:flex-start; flex-direction:column; gap:3px; }
 }
 
 /* Active findings and conclusions */

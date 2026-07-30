@@ -64,6 +64,8 @@ const cdp = new CDP(target.webSocketDebuggerUrl);
 await cdp.ready();
 await cdp.send('Page.enable');
 await cdp.send('Runtime.enable');
+await cdp.send('Network.enable');
+await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
 await mkdir(output, { recursive: true });
 
 const failures = [];
@@ -101,6 +103,7 @@ async function navigate(path, width, height, screenshot) {
 for (const [path, name] of [
   ['/', 'overview'],
   ['/findings-conclusions/', 'findings'],
+  ['/market-research/', 'market-research'],
   ['/sites/full-report-site/category-analysis.html', 'landscape'],
   ['/sites/full-report-site/alternative-workflows.html', 'workflows'],
   ['/presentation/', 'presentation'],
@@ -108,6 +111,72 @@ for (const [path, name] of [
   await navigate(path, 1440, 1000, `${name}-desktop.png`);
   await navigate(path, 375, 812, `${name}-mobile.png`);
 }
+
+await navigate('/market-research/', 1024, 800);
+const marketResult = await cdp.evaluate(`(() => {
+  const sectionLinks = [...document.querySelectorAll('.market-section-nav a')];
+  const targetsResolve = sectionLinks.every(link => {
+    const id = link.getAttribute('href')?.slice(1);
+    return id && document.getElementById(id);
+  });
+  const footer = document.querySelector('.market-footer')?.textContent || '';
+  const evidenceRows = document.querySelectorAll('.evidence-register-table tbody tr').length;
+  const phases = document.querySelectorAll('.research-phase').length;
+  return {
+    sectionLinks: sectionLinks.length,
+    targetsResolve,
+    evidenceRows,
+    phases,
+    footerScoped: !/Competitor tracker|Substitute entities|numeric threat ranking/i.test(footer)
+  };
+})()`);
+check(marketResult.sectionLinks === 11 && marketResult.targetsResolve, 'Market Research on-page navigation resolves all major sections');
+check(marketResult.evidenceRows === 7, 'Market Research renders seven anonymized claim-level evidence records');
+check(marketResult.phases === 5, 'Market Research renders the five-phase next-research plan');
+check(marketResult.footerScoped, 'Market Research footer excludes competitor-specific datasets and ranking language');
+
+await navigate('/market-research/', 768, 1024, 'market-research-tablet.png');
+await navigate('/market-research/?audit=anchor#evidence-register', 375, 812);
+await new Promise(resolve => setTimeout(resolve, 1800));
+const marketEvidenceImage = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+await writeFile(`${output}/market-evidence-mobile.png`, Buffer.from(marketEvidenceImage.data, 'base64'));
+const marketMobileResult = await cdp.evaluate(`(() => {
+  const table = document.querySelector('.evidence-register-table');
+  const firstCell = table?.querySelector('tbody td');
+  const evidenceTop = document.getElementById('evidence-register')?.getBoundingClientRect().top;
+  const currentSection = document.querySelector('.market-section-nav [aria-current="location"]')?.hash || '';
+  return {
+    hash: location.hash,
+    tableDisplay: table ? getComputedStyle(table).display : '',
+    tableWidth: table?.getBoundingClientRect().width || 0,
+    wrapperWidth: table?.closest('.responsive-table')?.getBoundingClientRect().width || 0,
+    tableComputedWidth: table ? getComputedStyle(table).width : '',
+    tableMinWidth: table ? getComputedStyle(table).minWidth : '',
+    rowWidth: table?.querySelector('tbody tr')?.getBoundingClientRect().width || 0,
+    firstCellWidth: firstCell?.getBoundingClientRect().width || 0,
+    firstCellScrollWidth: firstCell?.scrollWidth || 0,
+    firstCellLabel: firstCell ? getComputedStyle(firstCell, '::before').content : '',
+    evidenceTop,
+    currentSection,
+    scrollY: window.scrollY,
+    maxScroll: document.documentElement.scrollHeight - document.documentElement.clientHeight,
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+  };
+})()`);
+check(
+  marketMobileResult.hash === '#evidence-register'
+    && marketMobileResult.evidenceTop >= 0
+    && marketMobileResult.evidenceTop < 100,
+  `Market Research supports direct section-anchor navigation (top ${marketMobileResult.evidenceTop}, current ${marketMobileResult.currentSection}, scroll ${marketMobileResult.scrollY}/${marketMobileResult.maxScroll})`
+);
+check(marketMobileResult.tableDisplay === 'block' && marketMobileResult.firstCellLabel !== 'none', 'Market Research evidence table becomes labelled cards on mobile');
+check(
+  marketMobileResult.tableWidth <= marketMobileResult.wrapperWidth + 1
+    && marketMobileResult.firstCellWidth <= marketMobileResult.tableWidth + 1
+    && marketMobileResult.firstCellScrollWidth <= marketMobileResult.firstCellWidth + 1,
+  `Market Research mobile evidence cells wrap without clipping (wrapper ${marketMobileResult.wrapperWidth}, table ${marketMobileResult.tableWidth}/${marketMobileResult.tableComputedWidth}/${marketMobileResult.tableMinWidth}, row/cell/scroll ${marketMobileResult.rowWidth}/${marketMobileResult.firstCellWidth}/${marketMobileResult.firstCellScrollWidth})`
+);
+check(marketMobileResult.overflow <= 1, 'Market Research evidence register has no page-level mobile overflow');
 
 await navigate('/sites/full-report-site/alternative-workflows.html', 1024, 800);
 const filterResult = await cdp.evaluate(`(() => {

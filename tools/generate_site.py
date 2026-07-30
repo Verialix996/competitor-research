@@ -452,12 +452,16 @@ def nav(active, prefix=""):
         + "</nav>"
     )
 
-def page(title, active, body, subtitle="", prefix="", data_prefix="../../"):
+def page(title, active, body, subtitle="", prefix="", data_prefix="../../", footer_variant="research"):
+    if footer_variant == "market-research":
+        footer = f"""<footer class="footer market-footer"><p><strong>Market-research boundary:</strong> This page uses aggregate, non-identifying founder-interview and secondary-research material. It does not assess the full two-sided marketplace.</p><p><a href="{data_prefix}data/market-research.json">Public aggregate research source</a> · <a href="#evidence-register">Claim-level evidence register</a> · <a href="#next-research">Next Research Phase</a></p><p>Current decision: Narrow the research. Unknown denominators remain undocumented; private participant material is not published.</p></footer>"""
+    else:
+        footer = f"""<footer class="footer"><p><strong>Research boundary:</strong> Company facts, workflow substitutes, aggregate market research, and active conclusions remain separate canonical layers.</p><p><a href="{data_prefix}data/competitive-research-tracker.csv">Competitor tracker</a> · <a href="{data_prefix}data/substitutes-research.csv">Substitute entities</a> · <a href="{data_prefix}data/substitute-evidence.csv">Evidence register</a> · <a href="{data_prefix}data/substitute-workflows.csv">Workflow stages</a> · <a href="{data_prefix}data/findings-and-implications.json">Active findings</a></p><p>Technical reconciliation: {RECONCILIATION_DATE}. Unknown values remain unknown; no numeric threat ranking is published.</p></footer>"""
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta name="description" content="{escape(subtitle)}"/><title>{escape(title)} · BizMatch Research</title><link rel="icon" href="data:,"><link href="{prefix}style.css" rel="stylesheet"/></head><body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <header class="site-header"><div class="header-inner"><div class="brand-line"><a href="/" aria-label="BizMatch Research overview">BizMatch <span>Research</span></a><span>Evidence before strategy</span></div><h1>{escape(title)}</h1><p>{escape(subtitle)}</p>{nav(active, prefix)}</div></header>
-<main id="main-content" tabindex="-1">{body}<footer class="footer"><p><strong>Research boundary:</strong> Company facts, workflow substitutes, aggregate market research, and active conclusions remain separate canonical layers.</p><p><a href="{data_prefix}data/competitive-research-tracker.csv">Competitor tracker</a> · <a href="{data_prefix}data/substitutes-research.csv">Substitute entities</a> · <a href="{data_prefix}data/substitute-evidence.csv">Evidence register</a> · <a href="{data_prefix}data/substitute-workflows.csv">Workflow stages</a> · <a href="{data_prefix}data/findings-and-implications.json">Active findings</a></p><p>Technical reconciliation: {RECONCILIATION_DATE}. Unknown values remain unknown; no numeric threat ranking is published.</p></footer></main><script src="{prefix}site-ui.js"></script></body></html>"""
+<main id="main-content" tabindex="-1">{body}{footer}</main><script src="{prefix}site-ui.js"></script></body></html>"""
 
 def confidence_badge(text):
     t = escape(overall_confidence(text) if text not in ("High", "Medium", "Low") else text)
@@ -1140,6 +1144,25 @@ def market_research_list(items):
     )
 
 
+def market_denominator_audit(values):
+    labels = (
+        ("total_records", "Total records"),
+        ("asked", "Asked"),
+        ("answered", "Answered"),
+        ("missing_or_not_asked", "Missing / not asked"),
+        ("excluded_or_invalid", "Excluded / invalid"),
+        ("usable", "Usable coded responses"),
+    )
+    return (
+        '<dl class="denominator-audit">'
+        + "".join(
+            f"<div><dt>{label}</dt><dd>{escape(values.get(key, 'Not documented'))}</dd></div>"
+            for key, label in labels
+        )
+        + "</dl>"
+    )
+
+
 def market_research_page(research):
     meta = research["meta"]
     executive = research["executive_conclusion"]
@@ -1149,15 +1172,17 @@ def market_research_page(research):
     findings = research["interview_findings"]
     guidance = research["evidence_use_guidance"]
     gate = research["decision_gate"]
+    gate_framework = research["decision_gate_framework"]
 
     inventory_rows = "".join(
-        f'<tr><th scope="row">{escape(row["area"])}</th>'
-        f'<td>{escape(row["material"])}</td><td>{escape(row["status"])}</td></tr>'
+        f'<tr><th scope="row" data-label="Research area">{escape(row["area"])}</th>'
+        f'<td data-label="Existing material">{escape(row["material"])}</td>'
+        f'<td data-label="Current status">{escape(row["status"])}</td></tr>'
         for row in inventory["rows"]
     )
     stage_rows = "".join(
-        f'<tr><th scope="row">{escape(row["stage"])}</th>'
-        f'<td class="numeric-cell">{row["interviews"]}</td></tr>'
+        f'<tr><th scope="row" data-label="Venture stage">{escape(row["stage"])}</th>'
+        f'<td class="numeric-cell" data-label="Interviews">{row["interviews"]}</td></tr>'
         for row in sample["stages"]
     )
     origin_cards = "".join(
@@ -1179,8 +1204,8 @@ def market_research_page(research):
         '<span class="label">Explicitly mentioned using an NDA before disclosure</span></article>'
     )
     hypothesis_rows = "".join(
-        f'<tr><th scope="row">{escape(row["hypothesis"])}</th>'
-        f'<td>{market_research_badge(row["status"])}'
+        f'<tr><th scope="row" data-label="Hypothesis">{escape(row["hypothesis"])}</th>'
+        f'<td data-label="Current evidence status">{market_research_badge(row["status"])}'
         f'{"<small>" + escape(row["detail"]) + "</small>" if row["detail"] else ""}</td></tr>'
         for row in research["hypothesis_register"]
     )
@@ -1194,10 +1219,60 @@ def market_research_page(research):
         f'<p>{escape(source["use"])}</p></article>'
         for source in research["sources"]
     )
+    evidence_rows = "".join(
+        f'<tr id="{escape(row["claim_id"])}">'
+        f'<th scope="row" data-label="Claim ID"><span class="claim-id">{escape(row["claim_id"])}</span></th>'
+        f'<td data-label="Claim">{escape(row["claim"])}</td>'
+        f'<td data-label="Question or evidence source">{escape(row["question_or_evidence_source"])}</td>'
+        f'<td data-label="Population">{escape(row["population"])}</td>'
+        f'<td data-label="Denominator">{escape(row["denominator"])}</td>'
+        f'<td data-label="Coding rule">{escape(row["coding_rule"])}</td>'
+        f'<td data-label="Exclusions">{escape(row["exclusions"])}</td>'
+        f'<td data-label="Evidence type">{market_research_badge(row["evidence_type"])}</td>'
+        f'<td data-label="Research date">{escape(row["research_date"])}</td>'
+        f'<td data-label="Private source reference">{escape(row["private_source_reference"])}</td>'
+        f'<td data-label="Confidence / limitation">{escape(row["confidence_limitation"])}</td>'
+        "</tr>"
+        for row in research["evidence_register"]
+    )
+    phases = []
+    for phase in research["next_research_phase"]:
+        sections = []
+        for key, label in (
+            ("target_participants", "Target participants"),
+            ("tasks", "Tasks"),
+            ("protocol_requirements", "Protocol requirements"),
+            ("comparisons", "Comparison conditions"),
+            ("measures", "Measures"),
+        ):
+            if phase.get(key):
+                sections.append(
+                    f'<div class="phase-block"><h4>{label}</h4>{market_research_list(phase[key])}</div>'
+                )
+        if phase.get("purpose"):
+            sections.insert(0, f'<p>{escape(phase["purpose"])}</p>')
+        if phase.get("deliverable"):
+            sections.append(
+                f'<p class="phase-deliverable"><strong>Deliverable:</strong> {escape(phase["deliverable"])}</p>'
+            )
+        if phase.get("measurement_boundary"):
+            sections.append(
+                f'<p class="measurement-boundary"><strong>Measurement boundary:</strong> {escape(phase["measurement_boundary"])}</p>'
+            )
+        phases.append(
+            f'<article class="research-phase"><header><span>{escape(phase["phase"])}</span>'
+            f'<h3>{escape(phase["title"])}</h3></header>{"".join(sections)}</article>'
+        )
+    decision_rows = "".join(
+        f'<tr><th scope="row" data-label="Observation">{escape(row["observation"])}</th>'
+        f'<td data-label="Evidence required">{escape(row["evidence_required"])}</td>'
+        f'<td data-label="Decision permitted">{escape(row["decision_permitted"])}</td></tr>'
+        for row in gate_framework["rows"]
+    )
 
     body = f"""
 <div class="market-page">
-<section class="research-status-card" aria-labelledby="market-status-title">
+<section class="research-status-card anchored-section" id="executive-conclusion" aria-labelledby="market-status-title">
 <p class="eyebrow">Current research decision</p>
 <h2 id="market-status-title">{escape(meta['status'])}</h2>
 <p class="status-boundary">{escape(meta['evidence_boundary'])}</p>
@@ -1205,55 +1280,84 @@ def market_research_page(research):
 {market_research_list(executive['findings'])}
 </section>
 
-<section class="panel" aria-labelledby="inventory-title"><h2 id="inventory-title">Existing research inventory</h2>
-<div class="table-wrap"><table class="market-table"><caption>Material located in the existing research corpus and its current evidentiary status</caption><thead><tr><th scope="col">Research area</th><th scope="col">Existing material</th><th scope="col">Current status</th></tr></thead><tbody>{inventory_rows}</tbody></table></div>
+<aside class="research-scope-banner" aria-label="Research scope"><strong>Research scope</strong><p>{escape(meta['scope_notice'].removeprefix('Research scope: '))}</p></aside>
+
+<nav class="market-section-nav" aria-label="On this page"><strong>On this page</strong><div>
+<a href="#executive-conclusion">Executive conclusion</a>
+<a href="#research-inventory">Research inventory</a>
+<a href="#secondary-research">Secondary research</a>
+<a href="#interview-sample">Interview sample</a>
+<a href="#methodology-risks">Methodology risks</a>
+<a href="#findings">Findings</a>
+<a href="#hypothesis-register">Hypothesis register</a>
+<a href="#evidence-register">Evidence register</a>
+<a href="#next-research">Next research phase</a>
+<a href="#decision-gate">Decision gate</a>
+<a href="#sources">Sources</a>
+</div></nav>
+
+<section class="panel anchored-section" id="research-inventory" aria-labelledby="inventory-title"><h2 id="inventory-title">Existing research inventory</h2>
+<div class="table-wrap responsive-table"><table class="market-table mobile-card-table"><caption>Material located in the existing research corpus and its current evidentiary status</caption><thead><tr><th scope="col">Research area</th><th scope="col">Existing material</th><th scope="col">Current status</th></tr></thead><tbody>{inventory_rows}</tbody></table></div>
 <blockquote class="research-clarification">{escape(inventory['clarification'])}</blockquote>
 </section>
 
-<section class="panel" aria-labelledby="secondary-title"><h2 id="secondary-title">Secondary research assessment</h2>
+<section class="panel anchored-section" id="secondary-research" aria-labelledby="secondary-title"><h2 id="secondary-title">Secondary research assessment</h2>
 <div class="split-grid"><article class="assessment-card useful"><h3>What is useful</h3>{market_research_list(secondary['useful'])}</article>
 <article class="assessment-card limitation"><h3>What is unreliable or overstated</h3>{market_research_list(secondary['limitations'])}</article></div>
 <p class="scenario-note"><strong>Scenario boundary:</strong> {escape(secondary['scenario_note'])}</p>
 </section>
 
-<section class="panel" aria-labelledby="sample-title"><h2 id="sample-title">Interview sample assessment</h2>
-<div class="sample-layout"><div class="table-wrap"><table class="market-table compact-table"><caption>Interview distribution by reported venture stage</caption><thead><tr><th scope="col">Venture stage</th><th scope="col">Interviews</th></tr></thead><tbody>{stage_rows}<tr class="total-row"><th scope="row">Total</th><td class="numeric-cell">{sample['total']}</td></tr></tbody></table></div>
+<section class="panel anchored-section" id="interview-sample" aria-labelledby="sample-title"><h2 id="sample-title">Interview sample assessment</h2>
+<div class="sample-layout"><div class="table-wrap responsive-table"><table class="market-table compact-table mobile-card-table"><caption>Interview distribution by reported venture stage; current labels require a consistent recoding rule</caption><thead><tr><th scope="col">Venture stage</th><th scope="col">Interviews</th></tr></thead><tbody>{stage_rows}<tr class="total-row"><th scope="row" data-label="Venture stage">Total</th><td class="numeric-cell" data-label="Interviews">{sample['total']}</td></tr></tbody></table></div>
 <article class="assessment-card limitation"><h3>Interpretation boundary</h3>{market_research_list(sample['assessment'])}</article></div>
+<p class="coding-note"><strong>Denominator boundary:</strong> {escape(sample['coding_note'])} See <a href="#MR-CLM-006">active-seeker coding</a> and <a href="#MR-CLM-007">stage coding</a> in the evidence register.</p>
 </section>
 
-<section class="panel" aria-labelledby="method-title"><h2 id="method-title">Interview-methodology problems</h2>
+<section class="panel anchored-section" id="methodology-risks" aria-labelledby="method-title"><h2 id="method-title">Interview-methodology problems</h2>
 <ol class="clean-list numbered methodology-list">{methodology_items}</ol>
 <p class="privacy-note"><strong>Privacy boundary:</strong> {escape(meta['privacy_note'])}</p>
 </section>
 
-<section class="panel" aria-labelledby="findings-title"><h2 id="findings-title">What the interviews actually show</h2>
+<section class="panel anchored-section" id="findings" aria-labelledby="findings-title"><h2 id="findings-title">What the interviews actually show</h2>
 <div class="finding-grid">
-<article class="finding-card negative-finding"><p class="eyebrow">Primary pain</p><span class="finding-number">{escape(findings['primary_pain']['headline'])}</span><h3>{escape(findings['primary_pain']['label'])}</h3>{market_research_list(findings['primary_pain']['details'])}</article>
-<article class="finding-card"><p class="eyebrow">How partners were found</p><h3>{findings['partner_origin']['usable_interviews']} usable records</h3><p>{market_research_badge(findings['partner_origin']['excluded_record_status'])} {escape(findings['partner_origin']['excluded_record_note'])}</p><div class="summary-grid compact-metrics">{origin_cards}</div><p class="positioning">{escape(findings['partner_origin']['conclusion'])}</p></article>
+<article class="finding-card negative-finding"><p class="eyebrow">Primary pain</p><span class="finding-number denominator-unknown">{escape(findings['primary_pain']['headline'])}</span><h3>{escape(findings['primary_pain']['label'])}</h3>{market_denominator_audit(findings['primary_pain']['denominator'])}{market_research_list(findings['primary_pain']['details'])}</article>
+<article class="finding-card"><p class="eyebrow">How partners were found</p><h3>{findings['partner_origin']['usable_interviews']} usable retrospective records</h3><p class="provisional-note"><strong>Requires recoding:</strong> {escape(findings['partner_origin']['provisional_note'])}</p><p>{market_research_badge(findings['partner_origin']['excluded_record_status'])} {escape(findings['partner_origin']['excluded_record_note'])}</p>{market_denominator_audit(findings['partner_origin']['denominator'])}<div class="summary-grid compact-metrics">{origin_cards}</div><p class="positioning">{escape(findings['partner_origin']['conclusion'])}</p></article>
 <article class="finding-card"><p class="eyebrow">How trust is built</p><ul class="clean-list">{trust_items}</ul><blockquote class="hypothesis-callout"><span>{escape(findings['trust']['hypothesis_status'])}</span>{escape(findings['trust']['hypothesis'])}</blockquote></article>
-<article class="finding-card"><p class="eyebrow">Disclosure and NDA</p><div class="summary-grid compact-metrics">{disclosure_metrics}</div>{market_research_list(findings['disclosure']['conclusions'])}</article>
+<article class="finding-card"><p class="eyebrow">Disclosure and NDA</p><div class="summary-grid compact-metrics">{disclosure_metrics}</div>{market_denominator_audit(findings['disclosure']['denominator'])}<p class="positioning">{escape(findings['disclosure']['conclusion'])}</p>{market_research_list(findings['disclosure']['conclusions'])}</article>
 </div>
 </section>
 
-<section class="panel" aria-labelledby="hypothesis-title"><h2 id="hypothesis-title">Hypothesis register</h2>
+<section class="panel anchored-section" id="hypothesis-register" aria-labelledby="hypothesis-title"><h2 id="hypothesis-title">Hypothesis register</h2>
 <p class="muted">Statuses are qualitative evidence labels, not numerical scores.</p>
-<div class="table-wrap"><table class="market-table hypothesis-table"><caption>Current status of core BizMatch market hypotheses</caption><thead><tr><th scope="col">Hypothesis</th><th scope="col">Current evidence status</th></tr></thead><tbody>{hypothesis_rows}</tbody></table></div>
+<div class="table-wrap responsive-table"><table class="market-table hypothesis-table mobile-card-table"><caption>Current status of core BizMatch market hypotheses</caption><thead><tr><th scope="col">Hypothesis</th><th scope="col">Current evidence status</th></tr></thead><tbody>{hypothesis_rows}</tbody></table></div>
 </section>
 
-<section class="panel" aria-labelledby="guidance-title"><h2 id="guidance-title">Evidence-use guidance</h2>
+<section class="panel" id="evidence-guidance" aria-labelledby="guidance-title"><h2 id="guidance-title">Evidence-use guidance</h2>
 <div class="guidance-grid"><article class="guidance-card keep"><h3>Keep as evidence</h3>{market_research_list(guidance['keep'])}</article>
 <article class="guidance-card recode"><h3>Requires recoding</h3>{market_research_list(guidance['recode'])}</article>
 <article class="guidance-card exclude"><h3>Must not support decisions</h3>{market_research_list(guidance['exclude'])}</article></div>
 </section>
 
-<section class="panel decision-panel" aria-labelledby="decision-title"><h2 id="decision-title">Decision gate</h2>
-<div class="decision-grid"><article><h3>What we learned</h3><p>{escape(gate['learned'])}</p></article>
-<article><h3>What remains unknown</h3><p>{escape(gate['unknown'])}</p></article>
-<article><h3>What could falsify the core hypothesis</h3><p>{escape(gate['falsification'])}</p></article>
-<article class="current-decision"><h3>Current decision</h3><p><strong>Allowed:</strong> {escape(gate['allowed'])}</p><p><strong>Not allowed:</strong> {escape(gate['not_allowed'])}</p><p>{market_research_badge(gate['status'])}</p></article></div>
+<section class="panel anchored-section" id="evidence-register" aria-labelledby="evidence-register-title"><h2 id="evidence-register-title">Evidence Register</h2>
+<p class="muted">Claim-level audit metadata is public; participant identities, private URLs, recordings and raw records are not. “Not documented” is preserved wherever the repository does not support a more specific entry.</p>
+<div class="table-wrap responsive-table evidence-table-wrap"><table class="market-table mobile-card-table evidence-register-table"><caption>Anonymized register of the principal interview claims used on this page</caption><thead><tr><th scope="col">Claim ID</th><th scope="col">Claim</th><th scope="col">Question or evidence source</th><th scope="col">Population</th><th scope="col">Denominator</th><th scope="col">Coding rule</th><th scope="col">Exclusions</th><th scope="col">Evidence type</th><th scope="col">Research date</th><th scope="col">Private source reference</th><th scope="col">Confidence / limitation</th></tr></thead><tbody>{evidence_rows}</tbody></table></div>
 </section>
 
-<section class="panel" aria-labelledby="sources-title"><h2 id="sources-title">Sources and interpretation limits</h2>
+<section class="panel anchored-section" id="next-research" aria-labelledby="next-research-title"><h2 id="next-research-title">Next Research Phase</h2>
+<p class="section-lede">“Narrow the research” means recoding the existing material first, then testing defined behavior with separate founder and investor protocols.</p>
+<div class="research-phase-list">{"".join(phases)}</div>
+</section>
+
+<section class="panel decision-panel anchored-section" id="decision-gate" aria-labelledby="decision-title"><h2 id="decision-title">Decision Gate Before Product Expansion</h2>
+<p class="threshold-notice"><strong>Decision rule:</strong> {escape(gate_framework['threshold_notice'])}</p>
+<div class="decision-summary"><article><h3>What remains unknown</h3><p>{escape(gate['unknown'])}</p></article>
+<article><h3>What could falsify the core hypothesis</h3><p>{escape(gate['falsification'])}</p></article>
+<article class="current-decision"><h3>Current operating boundary</h3><p><strong>Allowed:</strong> {escape(gate['allowed'])}</p><p><strong>Not allowed:</strong> {escape(gate['not_allowed'])}</p><p>{market_research_badge(gate['status'])}</p></article></div>
+<h3>Metrics to collect</h3>{market_research_list(gate_framework['metrics_to_collect'])}
+<div class="table-wrap responsive-table"><table class="market-table mobile-card-table decision-gate-table"><caption>Evidence required before each research or product decision</caption><thead><tr><th scope="col">Observation</th><th scope="col">Evidence required</th><th scope="col">Decision permitted</th></tr></thead><tbody>{decision_rows}</tbody></table></div>
+</section>
+
+<section class="panel anchored-section" id="sources" aria-labelledby="sources-title"><h2 id="sources-title">Sources and interpretation limits</h2>
 <p class="muted">The external references below provide context or company documentation. They do not convert the current interview sample into market validation. No private interview artifact is linked from this public page because no approved public internal-document links were supplied in the repository.</p>
 <div class="source-grid">{source_cards}</div>
 </section>
@@ -1266,6 +1370,7 @@ def market_research_page(research):
         meta["subtitle"],
         prefix="../sites/full-report-site/",
         data_prefix="../",
+        footer_variant="market-research",
     )
 
 

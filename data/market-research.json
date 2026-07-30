@@ -4,6 +4,7 @@
     "subtitle": "Critical assessment of the existing BizMatch market-research and interview material",
     "status": "Narrow the research",
     "evidence_boundary": "Exploratory research; not market validation",
+    "scope_notice": "Research scope: The current evidence primarily covers founder and co-founder discovery. Investor demand, project discovery, willingness to pay and the dynamics of a two-sided marketplace remain untested.",
     "privacy_note": "This public report contains aggregate findings only. Participant names, contact details, recordings, transcripts, and other identifying information are intentionally excluded."
   },
   "executive_conclusion": {
@@ -106,9 +107,10 @@
     "total": 15,
     "active_partner_seekers": 2,
     "later_stage_participants": 7,
+    "coding_note": "These are record-level aggregate codes, not question-level prevalence estimates. Active-seeker eligibility, asked and answered counts were not preserved; venture stage and partner type require recoding.",
     "assessment": [
-      "Only 2 of the 15 participants were actively looking for a partner.",
-      "Seven were already in Customers, Revenue, or Scale.",
+      "Two records were coded as actively looking for a partner; the question-level denominator is not documented.",
+      "Seven records were labelled Customers, Revenue, or Scale under the existing stage coding.",
       "The sample did not match the intended Validation/MVP ICP.",
       "Recruitment-source data was not consistently preserved.",
       "Convenience-sample and personal-network bias are plausible.",
@@ -126,8 +128,16 @@
   ],
   "interview_findings": {
     "primary_pain": {
-      "headline": "0/15",
-      "label": "identified finding a co-founder as the single problem they would remove",
+      "headline": "Question-level denominator not documented",
+      "label": "No participant who answered the primary-pain question identified finding a co-founder as the single problem they would remove.",
+      "denominator": {
+        "total_records": "15 interview records",
+        "asked": "Not documented",
+        "answered": "Not documented",
+        "missing_or_not_asked": "Not documented",
+        "excluded_or_invalid": "Not documented",
+        "usable": "Requires recoding"
+      },
       "details": [
         "More common problems included sales, distribution, cash flow, funding, customers, product-market fit, and operational pressure.",
         "This is an important negative finding, but it does not disprove the problem among a narrower sample of active co-founder seekers."
@@ -137,6 +147,15 @@
       "usable_interviews": 10,
       "excluded_record_note": "One intentionally invalid record is excluded from the partner-origin analysis.",
       "excluded_record_status": "Invalid evidence",
+      "provisional_note": "Provisional pending recoding: The original interviews did not consistently distinguish co-founders from other partner types.",
+      "denominator": {
+        "total_records": "15 interview records",
+        "asked": "Not documented",
+        "answered": "Not documented",
+        "missing_or_not_asked": "Four records were not usable; reasons are not fully documented",
+        "excluded_or_invalid": "One intentionally invalid record",
+        "usable": "10 retrospectively coded records"
+      },
       "channels": [
         {
           "channel": "Friends",
@@ -155,7 +174,7 @@
           "count": 0
         }
       ],
-      "conclusion": "The current alternative is not merely LinkedIn or WhatsApp. It is prior relationships, shared work, and warm introductions."
+      "conclusion": "In the ten currently usable retrospective records, partners were found through existing relationships rather than dedicated matching platforms. This suggests that warm networks may be an important substitute, but co-founder-specific recoding and research with active seekers are still required."
     },
     "trust": {
       "mechanisms": [
@@ -174,8 +193,17 @@
       "reported_no_restriction": 1,
       "not_asked_or_no_answer": 2,
       "explicit_nda_mentions": 1,
+      "denominator": {
+        "total_records": "15 interview records",
+        "asked": "Not documented",
+        "answered": "13 coded responses",
+        "missing_or_not_asked": "2 records",
+        "excluded_or_invalid": "None documented for the disclosure count",
+        "usable": "13 coded responses"
+      },
+      "conclusion": "Selective disclosure was common in self-report. The research did not establish that it delayed introductions, prevented meetings, caused abandonment or created demand for an NDA workflow.",
       "conclusions": [
-        "Selective disclosure is supported as a concern.",
+        "Selective disclosure is partially supported as a self-reported concern.",
         "The severity and behavioural effect of that concern were not measured.",
         "NDA was not validated as the preferred solution.",
         "NDA friction and abandonment were not tested."
@@ -190,8 +218,8 @@
     },
     {
       "hypothesis": "The problem is urgent and recurring",
-      "status": "Not supported",
-      "detail": "Not supported by the broad sample"
+      "status": "Unresolved for the target ICP",
+      "detail": "Co-founder search did not emerge as a primary pain in the current broad convenience sample, but the sample contained only two active partner seekers and cannot resolve urgency among Validation/MVP founders actively searching for a co-founder."
     },
     {
       "hypothesis": "Current alternatives are inadequate",
@@ -220,8 +248,8 @@
     },
     {
       "hypothesis": "Early disclosure creates concern",
-      "status": "Partially supported",
-      "detail": "Self-report only"
+      "status": "Partially supported by self-report",
+      "detail": "Behavioural severity and effect were not measured"
     },
     {
       "hypothesis": "NDA solves the concern",
@@ -258,7 +286,7 @@
     "keep": [
       "Raw recordings, JSON, and summaries in the private research repository.",
       "Behaviour-based questions about previous cases, time, money, trust, and partner origin.",
-      "Negative findings such as 0/15.",
+      "Negative findings whose question-level denominators have been audited.",
       "Observations about reference checks, shared work, and selective disclosure."
     ],
     "recode": [
@@ -279,8 +307,211 @@
       "Treating the 15 interviews as representative."
     ]
   },
+  "evidence_register": [
+    {
+      "claim_id": "MR-CLM-001",
+      "claim": "No participant who answered the primary-pain question identified finding a co-founder as the single problem they would remove.",
+      "question_or_evidence_source": "Primary-pain question in the existing structured interview material",
+      "population": "15 interview records; question eligibility by record is not documented",
+      "denominator": "Asked: Not documented; answered: Not documented; usable: Requires recoding",
+      "coding_rule": "Requires recoding; the published aggregate did not preserve a question-level denominator audit",
+      "exclusions": "Missing, not-asked, partial and invalid records: Not documented for this question",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "Observed in current sample, but the denominator and target-ICP relevance cannot be established from the public aggregate."
+    },
+    {
+      "claim_id": "MR-CLM-002",
+      "claim": "In ten usable retrospective records, partners were found through friends, previous work, studies, programs or another existing relationship; none were coded as a dedicated matching platform.",
+      "question_or_evidence_source": "Aggregate retrospective partner-origin coding",
+      "population": "15 interview records with partner-origin data where available",
+      "denominator": "Asked: Not documented; answered: Not documented; usable: 10",
+      "coding_rule": "Channels sum to ten usable records; partner type was not consistently defined and Requires recoding",
+      "exclusions": "One intentionally invalid record; four other non-usable records with reasons not fully documented",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "Provisional pending recoding; this is not co-founder-specific evidence."
+    },
+    {
+      "claim_id": "MR-CLM-003",
+      "claim": "Interview summaries recur on time and shared work, references, reputation, integrity, chemistry, shared values and observed disagreement as trust-building mechanisms.",
+      "question_or_evidence_source": "Aggregate trust-mechanism summary from the existing interviews",
+      "population": "Interview records containing trust discussion",
+      "denominator": "Asked: Not documented; answered: Not documented; usable: Not documented",
+      "coding_rule": "Themes were retained from the aggregate summary; frequency and mutually exclusive coding were not documented",
+      "exclusions": "Not documented",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "The themes are directional; prevalence and behavioural effectiveness are not established."
+    },
+    {
+      "claim_id": "MR-CLM-004",
+      "claim": "Twelve records were coded as describing information the participant would not disclose openly; one reported no such restriction and two were not asked or did not answer.",
+      "question_or_evidence_source": "Aggregate disclosure coding from the existing interviews",
+      "population": "15 interview records",
+      "denominator": "Asked: Not documented; answered: 13; usable: 13; missing or not asked: 2",
+      "coding_rule": "Would not disclose openly, no restriction, or not asked/no answer",
+      "exclusions": "No separate invalid-record exclusion is documented for this count",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "Partially supported by self-report; severity, delay, abandonment and demand for a workflow were not measured."
+    },
+    {
+      "claim_id": "MR-CLM-005",
+      "claim": "One participant explicitly mentioned using an NDA before disclosure.",
+      "question_or_evidence_source": "Aggregate disclosure and NDA coding from the existing interviews",
+      "population": "Interview records containing disclosure or NDA discussion",
+      "denominator": "Asked: Not documented; answered: Not documented; usable for NDA-use prevalence: Not documented",
+      "coding_rule": "Explicit NDA mention only",
+      "exclusions": "Not documented",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "The mention establishes one reported behavior; it does not validate NDA preference, value, friction or prevalence."
+    },
+    {
+      "claim_id": "MR-CLM-006",
+      "claim": "Two records were coded as participants actively looking for a partner.",
+      "question_or_evidence_source": "Aggregate active-partner-seeker field in the interview sample assessment",
+      "population": "15 interview records",
+      "denominator": "Asked: Not documented; answered: Not documented; coded active seekers: 2",
+      "coding_rule": "Existing aggregate active-seeker label; partner type and activity window Require recoding",
+      "exclusions": "Not documented",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "Observed in current sample, but not co-founder-specific and not representative of the target ICP."
+    },
+    {
+      "claim_id": "MR-CLM-007",
+      "claim": "The recorded venture-stage distribution is Idea 3, MVP 3, Product 2, Customers 3, Revenue 3 and Scale 1.",
+      "question_or_evidence_source": "Aggregate interview-stage table",
+      "population": "15 interview records",
+      "denominator": "Coded records: 15; missing: 0 in the aggregate table",
+      "coding_rule": "Existing stage labels; a consistent classification rule was not documented and Requires recoding",
+      "exclusions": "None shown in the aggregate stage table",
+      "evidence_type": "Self-report",
+      "research_date": "Not documented",
+      "private_source_reference": "Not documented",
+      "confidence_limitation": "Counts are preserved, but stage comparability remains provisional until a common rule is applied."
+    }
+  ],
+  "next_research_phase": [
+    {
+      "phase": "Phase A",
+      "title": "Recode the 15 existing interviews",
+      "tasks": [
+        "Define a mutually exclusive partner taxonomy.",
+        "Correct the intentionally invalid partner-status record.",
+        "Audit every question denominator.",
+        "Separate co-founder, investor, sales, funding and trust problems.",
+        "Reclassify venture stage using a consistent rule.",
+        "Record recruitment source where known.",
+        "Mark unknown recruitment sources as unknown.",
+        "Produce an anonymized analysis dataset.",
+        "Preserve the raw records privately and never publish participant PII."
+      ],
+      "deliverable": "A recoded, anonymized dataset with a codebook, exclusion log and claim-level denominator audit."
+    },
+    {
+      "phase": "Phase B",
+      "title": "Focused founder discovery",
+      "target_participants": [
+        "Validation/MVP founders.",
+        "Currently searching for a co-founder or having conducted a recent active search.",
+        "Recruited through more than the team’s immediate personal network."
+      ],
+      "protocol_requirements": [
+        "Do not introduce BizMatch before independent problem discovery.",
+        "Ask about the participant’s most recent actual search.",
+        "Measure search duration, actions taken, alternatives used, outcomes and abandonment.",
+        "Distinguish warm introductions from platform-based discovery.",
+        "Record whether the participant is actively searching now.",
+        "Record recruitment source.",
+        "Avoid leading questions about swipe, AI, NDA or matching."
+      ]
+    },
+    {
+      "phase": "Phase C",
+      "title": "Separate investor research",
+      "protocol_requirements": [
+        "Use a separate research protocol for investors.",
+        "Do not combine co-founder discovery, investor deal flow, trust, fundraising, project discovery or willingness to pay into a single KPI.",
+        "Measure investor demand, sourcing workflow, current alternatives, screening effort, response quality and willingness to trial a new source independently."
+      ]
+    },
+    {
+      "phase": "Phase D",
+      "title": "Behavioural concierge test",
+      "purpose": "Test actual behaviour through curated manual introductions before building a broad MVP.",
+      "measures": [
+        "Profile completion.",
+        "Introduction acceptance.",
+        "Meeting scheduling.",
+        "Meeting completion.",
+        "Second meeting.",
+        "Trial-project or structured collaboration initiation.",
+        "Rejection reasons.",
+        "Disclosure-related delay.",
+        "Abandonment.",
+        "Time required to produce a viable introduction."
+      ],
+      "measurement_boundary": "Profile views, stated interest and match acceptance are not equivalent to a successful partnership."
+    },
+    {
+      "phase": "Phase E",
+      "title": "Disclosure and NDA experiment",
+      "comparisons": [
+        "Staged disclosure without an NDA.",
+        "Optional NDA.",
+        "NDA required before detailed disclosure."
+      ],
+      "measures": [
+        "Actual continuation.",
+        "Delay.",
+        "Abandonment."
+      ],
+      "measurement_boundary": "Do not ask only whether participants say they like NDAs."
+    }
+  ],
+  "decision_gate_framework": {
+    "threshold_notice": "Numerical decision thresholds must be approved before recruitment begins. They must not be selected after seeing the results.",
+    "metrics_to_collect": [
+      "Question-level eligibility, asked, answered, missing, excluded and usable counts.",
+      "Recent search actions, duration, alternatives, outcomes and abandonment.",
+      "Profile completion, introduction acceptance, meetings, second meetings and structured collaboration.",
+      "Disclosure-related continuation, delay and abandonment.",
+      "Investor sourcing behavior, screening effort, response quality and willingness to trial a new source."
+    ],
+    "rows": [
+      {
+        "observation": "Active co-founder seekers repeatedly describe an urgent unresolved search and document failures of the alternatives they actually used.",
+        "evidence_required": "Recent behavior from the target ICP, audited question-level denominators and recruitment beyond the immediate team network.",
+        "decision_permitted": "Continue focused discovery and specify the behavioral problem more precisely."
+      },
+      {
+        "observation": "Eligible participants complete profiles, accept curated introductions and progress through meetings or a structured collaboration.",
+        "evidence_required": "Observed concierge-test behavior with rejection, delay and abandonment recorded.",
+        "decision_permitted": "Consider a limited concierge prototype for the tested Job and segment; this does not authorize a broad marketplace."
+      },
+      {
+        "observation": "Active seekers show low urgency, find warm introductions sufficient, or do not complete the steps required for curated introductions.",
+        "evidence_required": "Repeated behavior in the target ICP, including recent search outcomes and follow-through.",
+        "decision_permitted": "Falsify or materially narrow the co-founder-search hypothesis for the tested segment."
+      },
+      {
+        "observation": "The current broad founder sample, one unstructured investor recording and untested payment and liquidity assumptions remain the evidence base.",
+        "evidence_required": "Separate founder, investor, behavioral, payment and marketplace-liquidity evidence is still missing.",
+        "decision_permitted": "No broad two-sided marketplace build is justified."
+      }
+    ]
+  },
   "decision_gate": {
-    "learned": "Trust and selective disclosure matter, but partnerships were mainly created through existing relationships and shared experience. Co-founder search was not the primary pain in this sample.",
+    "learned": "Trust and selective disclosure appeared in self-report, while the currently usable partner-origin records point to existing relationships and shared experience. Co-founder search was not the primary pain observed in this broad sample.",
     "unknown": "Urgency among active co-founder seekers, dissatisfaction with alternatives, willingness to switch, NDA value and friction, investor demand, willingness to pay, and marketplace liquidity.",
     "falsification": "A focused sample of active Validation/MVP founders may show that the problem is not urgent, warm introductions are sufficient, or users will not complete profiles and participate in curated introductions.",
     "allowed": "Continue with narrower, hypothesis-driven research.",

@@ -46,14 +46,19 @@ MARKET_RESEARCH_TOP_LEVEL_KEYS = {
     "interview_findings",
     "hypothesis_register",
     "evidence_use_guidance",
+    "evidence_register",
+    "next_research_phase",
+    "decision_gate_framework",
     "decision_gate",
     "sources",
 }
 MARKET_RESEARCH_HYPOTHESIS_STATUSES = {
     "Partially supported",
+    "Partially supported by self-report",
     "Not supported",
     "Not tested",
     "Unresolved",
+    "Unresolved for the target ICP",
     "Invalid evidence",
 }
 SUBSTITUTE_JOB_IDS = {
@@ -666,6 +671,18 @@ def check_market_research(validation, artifacts_required):
     )
 
     findings = research.get("interview_findings", {})
+    primary_pain = findings.get("primary_pain", {})
+    primary_denominator = primary_pain.get("denominator", {})
+    validation.check(
+        primary_pain.get("headline") == "Question-level denominator not documented"
+        and primary_pain.get("label")
+        == "No participant who answered the primary-pain question identified finding a co-founder as the single problem they would remove."
+        and primary_denominator.get("asked") == "Not documented"
+        and primary_denominator.get("answered") == "Not documented"
+        and primary_denominator.get("usable") == "Requires recoding"
+        and "0/15" not in json.dumps(primary_pain),
+        "primary-pain finding does not manufacture a question-level denominator",
+    )
     partner_origin = findings.get("partner_origin", {})
     channel_counts = {
         row.get("channel"): row.get("count")
@@ -682,6 +699,15 @@ def check_market_research(validation, artifacts_required):
         and channel_counts.get("Dedicated matching platform") == 0,
         "partner-origin findings preserve the supplied valid-record arithmetic",
     )
+    validation.check(
+        partner_origin.get("provisional_note")
+        == "Provisional pending recoding: The original interviews did not consistently distinguish co-founders from other partner types."
+        and partner_origin.get("conclusion")
+        == "In the ten currently usable retrospective records, partners were found through existing relationships rather than dedicated matching platforms. This suggests that warm networks may be an important substitute, but co-founder-specific recoding and research with active seekers are still required."
+        and partner_origin.get("denominator", {}).get("usable")
+        == "10 retrospectively coded records",
+        "partner-origin interpretation is provisional, bounded, and denominator-aware",
+    )
     disclosure = findings.get("disclosure", {})
     validation.check(
         disclosure.get("would_not_disclose_openly") == 12
@@ -696,6 +722,14 @@ def check_market_research(validation, artifacts_required):
         ),
         "disclosure and NDA findings preserve the supplied interview counts",
     )
+    validation.check(
+        disclosure.get("conclusion")
+        == "Selective disclosure was common in self-report. The research did not establish that it delayed introductions, prevented meetings, caused abandonment or created demand for an NDA workflow."
+        and disclosure.get("denominator", {}).get("answered") == "13 coded responses"
+        and disclosure.get("denominator", {}).get("missing_or_not_asked")
+        == "2 records",
+        "disclosure finding separates self-report from behavioral severity and NDA demand",
+    )
 
     hypotheses = research.get("hypothesis_register", [])
     validation.check(
@@ -705,6 +739,106 @@ def check_market_research(validation, artifacts_required):
             for row in hypotheses
         ),
         "hypothesis register uses qualitative evidence statuses only",
+    )
+    urgency = next(
+        (
+            row
+            for row in hypotheses
+            if row.get("hypothesis") == "The problem is urgent and recurring"
+        ),
+        {},
+    )
+    validation.check(
+        urgency.get("status") == "Unresolved for the target ICP"
+        and urgency.get("detail")
+        == "Co-founder search did not emerge as a primary pain in the current broad convenience sample, but the sample contained only two active partner seekers and cannot resolve urgency among Validation/MVP founders actively searching for a co-founder.",
+        "urgency remains a negative observation but unresolved for the target ICP",
+    )
+
+    evidence_register = research.get("evidence_register", [])
+    required_claim_ids = {f"MR-CLM-{number:03d}" for number in range(1, 8)}
+    required_claim_fields = {
+        "claim_id",
+        "claim",
+        "question_or_evidence_source",
+        "population",
+        "denominator",
+        "coding_rule",
+        "exclusions",
+        "evidence_type",
+        "research_date",
+        "private_source_reference",
+        "confidence_limitation",
+    }
+    claim_ids = [row.get("claim_id") for row in evidence_register]
+    validation.check(
+        len(evidence_register) == 7
+        and set(claim_ids) == required_claim_ids
+        and len(claim_ids) == len(set(claim_ids))
+        and all(set(row) == required_claim_fields for row in evidence_register)
+        and all(
+            row.get("evidence_type") in {"Self-report", "Secondary source", "Inference"}
+            for row in evidence_register
+        ),
+        "anonymized evidence register covers the seven required claims with stable fields",
+    )
+    validation.check(
+        all(
+            any(
+                marker in " ".join(
+                    str(row.get(field, ""))
+                    for field in (
+                        "denominator",
+                        "coding_rule",
+                        "exclusions",
+                        "research_date",
+                        "private_source_reference",
+                        "confidence_limitation",
+                    )
+                )
+                for marker in (
+                    "Not documented",
+                    "Requires recoding",
+                    "Observed in current sample",
+                    "Partially supported by self-report",
+                    "Provisional pending recoding",
+                )
+            )
+            for row in evidence_register
+        ),
+        "evidence-register uncertainty is expressed in plain language rather than scores",
+    )
+
+    next_phases = research.get("next_research_phase", [])
+    validation.check(
+        [phase.get("phase") for phase in next_phases]
+        == ["Phase A", "Phase B", "Phase C", "Phase D", "Phase E"]
+        and [phase.get("title") for phase in next_phases]
+        == [
+            "Recode the 15 existing interviews",
+            "Focused founder discovery",
+            "Separate investor research",
+            "Behavioural concierge test",
+            "Disclosure and NDA experiment",
+        ],
+        "Next Research Phase contains the specified five operational phases",
+    )
+    framework = research.get("decision_gate_framework", {})
+    validation.check(
+        framework.get("threshold_notice")
+        == "Numerical decision thresholds must be approved before recruitment begins. They must not be selected after seeing the results."
+        and len(framework.get("metrics_to_collect", [])) >= 5
+        and len(framework.get("rows", [])) == 4
+        and all(
+            set(row) == {"observation", "evidence_required", "decision_permitted"}
+            for row in framework.get("rows", [])
+        )
+        and any(
+            "No broad two-sided marketplace build is justified."
+            == row.get("decision_permitted")
+            for row in framework.get("rows", [])
+        ),
+        "decision-gate framework requires pre-approved thresholds and permits only bounded next steps",
     )
     all_keys = set(nested_keys(research))
     validation.check(
@@ -742,6 +876,15 @@ def check_market_research(validation, artifacts_required):
         and not re.search(r"\b05\d[- ]?\d{3}[- ]?\d{4}\b", raw_content),
         "public market-research content contains no participant PII fields or contact values",
     )
+    validation.check(
+        not re.search(
+            r"(?:drive\.google\.com|docs\.google\.com|linkedin\.com/in/|"
+            r"(?:recording|transcript)[_-]?url)",
+            raw_content,
+            flags=re.IGNORECASE,
+        ),
+        "public market-research source contains no private document, social-profile, recording, or transcript link",
+    )
 
     if not artifacts_required:
         return
@@ -760,7 +903,9 @@ def check_market_research(validation, artifacts_required):
         "What the interviews actually show",
         "Hypothesis register",
         "Evidence-use guidance",
-        "Decision gate",
+        "Evidence Register",
+        "Next Research Phase",
+        "Decision Gate Before Product Expansion",
         "Sources and interpretation limits",
     )
     validation.check(
@@ -770,7 +915,13 @@ def check_market_research(validation, artifacts_required):
     required_boundaries = (
         "Exploratory research; not market validation",
         "Narrow the research",
-        "0/15",
+        "Question-level denominator not documented",
+        "Research scope",
+        "Investor demand, project discovery, willingness to pay and the dynamics of a two-sided marketplace remain untested.",
+        "Provisional pending recoding",
+        "Unresolved for the target ICP",
+        "Selective disclosure was common in self-report.",
+        "Numerical decision thresholds must be approved before recruitment begins.",
         "Scenario boundary",
         "Hypothesis requiring validation",
         "Statuses are qualitative evidence labels, not numerical scores.",
@@ -781,6 +932,49 @@ def check_market_research(validation, artifacts_required):
         and "does not yet justify Proceed, Pivot, or Stop" in page_text,
         "Market Research page distinguishes evidence, hypothesis, uncertainty, and decision",
     )
+    required_section_ids = (
+        "executive-conclusion",
+        "research-inventory",
+        "secondary-research",
+        "interview-sample",
+        "methodology-risks",
+        "findings",
+        "hypothesis-register",
+        "evidence-register",
+        "next-research",
+        "decision-gate",
+        "sources",
+    )
+    validation.check(
+        'aria-label="On this page"' in page_text
+        and all(
+            f'id="{section_id}"' in page_text
+            and f'href="#{section_id}"' in page_text
+            for section_id in required_section_ids
+        ),
+        "Market Research page provides accessible navigation to stable section anchors",
+    )
+    validation.check(
+        all(claim_id in page_text for claim_id in required_claim_ids)
+        and page_text.count('class="research-phase"') == 5
+        and "mobile-card-table" in page_text
+        and 'data-label="Denominator"' in page_text,
+        "evidence register, five-phase plan, and responsive table metadata are rendered",
+    )
+    validation.check(
+        "0/15" not in page_text
+        and "Not supported by the broad sample" not in page_text
+        and "The current alternative is not merely LinkedIn or WhatsApp" not in page_text,
+        "unverified denominator and overgeneralized market conclusions are absent",
+    )
+    footer = page_text.split('<footer class="footer market-footer">', 1)[-1]
+    validation.check(
+        '<footer class="footer market-footer">' in page_text
+        and "Competitor tracker" not in footer
+        and "Substitute entities" not in footer
+        and "numeric threat ranking" not in footer,
+        "Market Research footer excludes competitor and substitute research material",
+    )
     validation.check(
         all(source["url"] in page_text for source in research.get("sources", [])),
         "all supplied external source links are rendered on the Market Research page",
@@ -790,6 +984,13 @@ def check_market_research(validation, artifacts_required):
         and not re.search(r"\b05\d[- ]?\d{3}[- ]?\d{4}\b", page_text)
         and "mailto:" not in page_text,
         "generated Market Research page exposes no participant contact information",
+    )
+    validation.check(
+        "drive.google.com" not in page_text
+        and "docs.google.com" not in page_text
+        and "linkedin.com/in/" not in page_text
+        and not re.search(r"https?://[^\"']*(?:recording|transcript)", page_text, re.I),
+        "generated Market Research page exposes no private research or participant-profile links",
     )
 
     full_report_pages = list((ROOT / "sites" / "full-report-site").rglob("*.html"))

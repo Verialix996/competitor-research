@@ -29,7 +29,12 @@ The public market-research assessment is stored separately in:
 It contains only aggregate, non-identifying findings from the existing
 research material. It is not a replacement for the private raw interview
 corpus and must never contain participant names, contact details, recordings,
-or transcripts.
+or transcripts. Its public evidence register records claim-level populations,
+denominators, coding rules, exclusions, evidence types, and limitations without
+linking to private artifacts. When the repository does not preserve a
+question-level asked/answered audit, the denominator remains `Not documented`
+or `Requires recoding`; the total number of interview records is never used as
+an automatic question denominator.
 
 Active conclusions are stored separately in:
 
