@@ -6,6 +6,8 @@ from html import escape
 from pathlib import Path
 from urllib.parse import urlparse
 
+from presentation_views import ResearchViews
+
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "competitive-research-tracker.csv"
 SUBSTITUTES_PATH = ROOT / "data" / "substitutes-research.csv"
@@ -19,6 +21,7 @@ CITATION_SITE = ROOT / "sites" / "citation-site"
 REPORTS = ROOT / "reports"
 MARKET_RESEARCH_SITE = ROOT / "market-research"
 FINDINGS_SITE = ROOT / "findings-conclusions"
+PRESENTATION_SITE = ROOT / "presentation"
 RECONCILIATION_DATE = "2026-07-30"
 
 SUBSTITUTE_JOB_LABELS = {
@@ -425,15 +428,15 @@ def enrich(rows):
 
 def nav(active, prefix=""):
     items = [
-        ("index.html", "Evidence Status"),
-        ("/findings-conclusions/", "Findings & Conclusions"),
-        ("alternative-workflows.html", "Alternative Workflows"),
+        ("/", "Overview"),
+        ("/findings-conclusions/", "Findings"),
         ("/market-research/", "Market Research"),
-        ("priority-competitors.html", "Priority Competitors"),
-        ("research-table.html", "Full Research Table"),
-        ("category-analysis.html", "Category Analysis"),
-        ("sources-methodology.html", "Sources & Methodology"),
-        ("archive.html", "Archive"),
+        ("/sites/full-report-site/category-analysis.html", "Competitive Landscape"),
+        ("/sites/full-report-site/alternative-workflows.html", "How Users Solve It Today"),
+        ("/sites/full-report-site/research-table.html", "Evidence"),
+        ("/sites/full-report-site/sources-methodology.html", "Methodology"),
+        ("/presentation/", "Presentation"),
+        ("/sites/full-report-site/archive.html", "Archive"),
     ]
     links = []
     for href, label in items:
@@ -451,9 +454,10 @@ def nav(active, prefix=""):
 
 def page(title, active, body, subtitle="", prefix="", data_prefix="../../"):
     return f"""<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>{escape(title)}</title><link rel="icon" href="data:,"><link href="{prefix}style.css" rel="stylesheet"/></head><body>
-<header class="site-header"><div class="header-inner"><h1>{escape(title)}</h1><p>{escape(subtitle)}</p>{nav(active, prefix)}</div></header>
-<main>{body}<p class="footer">Canonical sources are separated by scope: <a href="{data_prefix}data/competitive-research-tracker.csv">competitor tracker</a> for the 36-company research; <a href="{data_prefix}data/substitutes-research.csv">substitutes research</a> with linked <a href="{data_prefix}data/substitute-evidence.csv">evidence</a> and <a href="{data_prefix}data/substitute-workflows.csv">workflow stages</a>; <a href="{data_prefix}data/market-research.json">market-research assessment</a> for aggregate interview and secondary-research findings; and <a href="{data_prefix}data/findings-and-implications.json">active findings</a> for evidence-linked conclusions. Technical reconciliation: {RECONCILIATION_DATE}.</p></main></body></html>"""
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta name="description" content="{escape(subtitle)}"/><title>{escape(title)} · BizMatch Research</title><link rel="icon" href="data:,"><link href="{prefix}style.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<header class="site-header"><div class="header-inner"><div class="brand-line"><a href="/" aria-label="BizMatch Research overview">BizMatch <span>Research</span></a><span>Evidence before strategy</span></div><h1>{escape(title)}</h1><p>{escape(subtitle)}</p>{nav(active, prefix)}</div></header>
+<main id="main-content" tabindex="-1">{body}<footer class="footer"><p><strong>Research boundary:</strong> Company facts, workflow substitutes, aggregate market research, and active conclusions remain separate canonical layers.</p><p><a href="{data_prefix}data/competitive-research-tracker.csv">Competitor tracker</a> · <a href="{data_prefix}data/substitutes-research.csv">Substitute entities</a> · <a href="{data_prefix}data/substitute-evidence.csv">Evidence register</a> · <a href="{data_prefix}data/substitute-workflows.csv">Workflow stages</a> · <a href="{data_prefix}data/findings-and-implications.json">Active findings</a></p><p>Technical reconciliation: {RECONCILIATION_DATE}. Unknown values remain unknown; no numeric threat ranking is published.</p></footer></main><script src="{prefix}site-ui.js"></script></body></html>"""
 
 def confidence_badge(text):
     t = escape(overall_confidence(text) if text not in ("High", "Medium", "Low") else text)
@@ -1413,10 +1417,22 @@ def main():
     substitute_workflows = list(
         csv.DictReader(SUBSTITUTE_WORKFLOWS_PATH.open(encoding="utf-8"))
     )
+    views = ResearchViews(
+        rows,
+        substitutes,
+        substitute_evidence,
+        substitute_workflows,
+        findings,
+        market_research,
+        page,
+        RECONCILIATION_DATE,
+        SUBSTITUTE_JOB_LABELS,
+    )
     expected_profiles = {f"{slug(row['company'])}.html" for row in rows}
     COMPANY_SITE.mkdir(parents=True, exist_ok=True)
     MARKET_RESEARCH_SITE.mkdir(parents=True, exist_ok=True)
     FINDINGS_SITE.mkdir(parents=True, exist_ok=True)
+    PRESENTATION_SITE.mkdir(parents=True, exist_ok=True)
     for profile in COMPANY_SITE.glob("*.html"):
         if profile.name not in expected_profiles:
             profile.unlink()
@@ -1426,37 +1442,50 @@ def main():
         encoding="utf-8",
     )
     (SITE / "ranker-data.js").write_text(compatibility_ranker_js(rows), encoding="utf-8")
-    (SITE / "index.html").write_text(evidence_status_page(rows), encoding="utf-8")
+    (SITE / "index.html").write_text(views.overview(), encoding="utf-8")
     (SITE / "alternative-workflows.html").write_text(
-        substitutes_page(substitutes, substitute_evidence, substitute_workflows),
+        views.workflows_page(),
         encoding="utf-8",
     )
     (SITE / "strategic-conclusions-historical.html").write_text(
         historical_strategic_page(rows),
         encoding="utf-8",
     )
-    (SITE / "priority-competitors.html").write_text(priority_page(rows), encoding="utf-8")
-    (SITE / "research-table.html").write_text(research_table(rows), encoding="utf-8")
-    (SITE / "category-analysis.html").write_text(category_page(rows), encoding="utf-8")
-    (SITE / "sources-methodology.html").write_text(methodology_page(rows), encoding="utf-8")
+    (SITE / "priority-competitors.html").write_text(
+        page(
+            "Historical Review Scope",
+            "Archive",
+            '<section class="panel warning-panel"><h2>Deprecated presentation framework</h2><p>The former priority list was an editorial review scope, not an evidence-supported ranking. It is retained only as an audit route. Use the active <a href="category-analysis.html">Competitive Landscape</a> and <a href="/findings-conclusions/">Findings</a>.</p></section>',
+            "Historical route retained for deep-link compatibility.",
+        ),
+        encoding="utf-8",
+    )
+    (SITE / "research-table.html").write_text(views.evidence_page(), encoding="utf-8")
+    (SITE / "category-analysis.html").write_text(views.landscape_page(), encoding="utf-8")
+    (SITE / "sources-methodology.html").write_text(views.methodology_page(), encoding="utf-8")
     (SITE / "archive.html").write_text(archive_page(), encoding="utf-8")
     (MARKET_RESEARCH_SITE / "index.html").write_text(
         market_research_page(market_research),
         encoding="utf-8",
     )
     (FINDINGS_SITE / "index.html").write_text(
-        findings_page(findings),
+        views.findings_page(),
+        encoding="utf-8",
+    )
+    (PRESENTATION_SITE / "index.html").write_text(
+        views.presentation_page(),
         encoding="utf-8",
     )
     for r in rows:
         (COMPANY_SITE / f"{slug(r['company'])}.html").write_text(
-            company_page(r),
+            views.company_page(r),
             encoding="utf-8",
         )
     write_citation_site(rows)
-    (ROOT / "index.html").write_text(root_entry(), encoding="utf-8")
-    (ROOT / "START_HERE.html").write_text(root_entry(), encoding="utf-8")
-    (ROOT / "README.html").write_text(root_entry(), encoding="utf-8")
+    root_overview = views.overview(root=True)
+    (ROOT / "index.html").write_text(root_overview, encoding="utf-8")
+    (ROOT / "START_HERE.html").write_text(root_overview, encoding="utf-8")
+    (ROOT / "README.html").write_text(root_overview, encoding="utf-8")
     (REPORTS / "bizmatch-competitive-research-cited-report.html").write_text(archive_notice("Old Cited Report"), encoding="utf-8")
     (REPORTS / "competitive-research-tracker-preview.html").write_text(archive_notice("Old Tracker Preview"), encoding="utf-8")
     (REPORTS / "bizmatch-competitive-research-cited-report.md").write_text(
@@ -1478,7 +1507,7 @@ def main():
         )
     print(
         f"Generated {len(rows)} company profiles and {len(substitutes)} substitute "
-        "patterns plus the Market Research and Findings & Conclusions routes "
+        "patterns plus the Market Research, Findings, and Presentation routes "
         "from their separated sources"
     )
 

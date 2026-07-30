@@ -80,9 +80,16 @@ data/findings-and-implications.json
   -> tools/build_findings_report.py
   -> FINDINGS_AND_STRATEGIC_IMPLICATIONS.md
   -> tools/generate_site.py
-  -> findings-conclusions/index.html
+  -> index.html / findings-conclusions/index.html / presentation/index.html
   -> tools/validate_data.py (traceability, route, wording, and deterministic checks)
 ```
+
+`tools/presentation_views.py` is a presentation renderer, not a research source.
+It builds lookup tables from canonical competitor slugs, substitute IDs,
+evidence IDs, and Job IDs. Primary interface labels use the resolved company,
+substitute, source, and Job names; internal identifiers remain secondary audit
+metadata. A missing lookup is a build error and must never silently degrade to
+a raw slug.
 
 `tools/generate_site.py` is read-only with respect to the canonical CSV. Derived
 files must not be hand-edited to synchronize facts. Before writing company
@@ -138,6 +145,14 @@ directory whose filename is not one of the canonical company slugs.
 - Every active finding must resolve its evidence, substitute, Job, competitor,
   and market-research references, or carry an explicit `Insufficient Evidence`
   boundary.
+- Overview and presentation claims must resolve to the active findings source;
+  presentation mode cannot maintain a parallel claim list.
+- Every displayed substitute, evidence record, and competitor must resolve to
+  a human-readable canonical label.
+- Top-level navigation and contextual links must resolve, and all active pages
+  must include semantic landmarks, a skip link, visible keyboard focus,
+  reduced-motion handling, responsive layout, and printable presentation
+  styling.
 - Active conclusions use qualitative statuses and contain no numeric threat,
   opportunity, readiness, priority, or thesis-fit score.
 

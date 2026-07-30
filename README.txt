@@ -22,7 +22,16 @@ Market-research build flow:
 Active-conclusions build flow:
   evidence-linked findings and conditional implications -> validation
   -> FINDINGS_AND_STRATEGIC_IMPLICATIONS.md
-  -> /findings-conclusions/ -> validation
+  -> /, /findings-conclusions/, and /presentation/ -> validation
+
+Presentation architecture:
+  Overview -> Findings -> Market Research -> Competitive Landscape
+  -> How Users Solve It Today -> Evidence -> Methodology -> Presentation -> Archive
+
+The overview and executive brief do not maintain separate research claims.
+`tools/presentation_views.py` resolves human-readable competitor, substitute,
+Job, and evidence labels from the canonical sources at generation time. Missing
+references fail validation instead of falling back to raw IDs or slugs.
 
 Run:
   python3 tools/build_all.py
@@ -42,6 +51,11 @@ Important boundaries:
   aggregate market-research paths, or an explicit Insufficient Evidence status.
 - FINDINGS_AND_STRATEGIC_IMPLICATIONS.md and
   findings-conclusions/index.html are generated; do not edit them manually.
+- index.html, presentation/index.html, the workflow explorer, competitive
+  landscape, evidence library, and company profiles are generated presentation
+  views; do not edit them manually.
+- sites/full-report-site/site-ui.js contains only filtering, presentation
+  navigation, and URL-state behavior. It contains no research dataset.
 - Substitute records never enter the 36-company tracker. Existing companies are
   linked through existing_competitor_slug.
 - archive/data/bizmatch-competitive-research-cited.* is historical audit material.

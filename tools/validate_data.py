@@ -13,7 +13,7 @@ import sys
 import time
 import zipfile
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 from openpyxl import load_workbook
 
@@ -28,6 +28,7 @@ MARKET_RESEARCH_PAGE = ROOT / "market-research" / "index.html"
 FINDINGS_PATH = ROOT / "data" / "findings-and-implications.json"
 FINDINGS_PAGE = ROOT / "findings-conclusions" / "index.html"
 FINDINGS_REPORT = ROOT / "FINDINGS_AND_STRATEGIC_IMPLICATIONS.md"
+PRESENTATION_PAGE = ROOT / "presentation" / "index.html"
 SUBSTITUTE_REPORT_SCRIPT = ROOT / "tools" / "build_substitute_reports.py"
 FINDINGS_REPORT_SCRIPT = ROOT / "tools" / "build_findings_report.py"
 GENERATOR = ROOT / "tools" / "generate_site.py"
@@ -1036,12 +1037,11 @@ def check_findings(validation, competitor_rows, artifacts_required):
         bool(full_report_pages)
         and all(
             'href="/findings-conclusions/"' in path.read_text(encoding="utf-8")
-            and ">Findings &amp; Conclusions</a>"
-            in path.read_text(encoding="utf-8")
+            and ">Findings</a>" in path.read_text(encoding="utf-8")
             for path in full_report_pages
         )
-        and 'aria-current="page">Findings &amp; Conclusions</a>' in page_text,
-        "Findings & Conclusions is a keyboard-accessible top-level tab across existing routes",
+        and 'aria-current="page">Findings</a>' in page_text,
+        "Findings is a keyboard-accessible top-level tab across existing routes",
     )
     netlify_config = (ROOT / "netlify.toml").read_text(encoding="utf-8")
     validation.check(
@@ -1189,8 +1189,8 @@ def check_profiles(validation, by_company, required):
         for field in fields:
             if html.escape(by_company[company][field]) not in content:
                 missing.append(f"{company}.{field}")
-        if "Insufficient Evidence" not in content or "N/A" not in content:
-            missing.append(f"{company}: score status")
+        if "no numeric relationship or threat score is published" not in content:
+            missing.append(f"{company}: scoring boundary")
     validation.check(not missing, "six reconciled company pages reflect canonical values")
 
 
@@ -1231,11 +1231,152 @@ def check_investor_facing_strategy(validation, required):
     validation.check(
         not any(phrase in active_text for phrase in investor_risk_phrases)
         and not any(phrase in findings_text for phrase in investor_risk_phrases)
-        and "No final product or market recommendation is published" in active_text
+        and "What BizMatch is really competing against" in active_text
+        and "Current research decision" in active_text
         and "Conditional strategic implications" in findings_text
         and "ARCHIVED — not current investor conclusions" in historical_text,
-        "strategic recommendations are isolated from the active page",
+        "strategic recommendations are isolated from the active presentation",
     )
+
+
+def check_presentation_ux(validation, rows, required):
+    active_pages = (
+        ROOT / "index.html",
+        FINDINGS_PAGE,
+        PRESENTATION_PAGE,
+        MARKET_RESEARCH_PAGE,
+        ROOT / "sites" / "full-report-site" / "category-analysis.html",
+        ROOT / "sites" / "full-report-site" / "alternative-workflows.html",
+        ROOT / "sites" / "full-report-site" / "research-table.html",
+        ROOT / "sites" / "full-report-site" / "sources-methodology.html",
+    )
+    validation.check(
+        all(path.exists() for path in active_pages) if required else True,
+        "all presentation-first top-level pages are generated",
+    )
+    if not required or not all(path.exists() for path in active_pages):
+        return
+
+    contents = {path: path.read_text(encoding="utf-8") for path in active_pages}
+    findings = json.loads(FINDINGS_PATH.read_text(encoding="utf-8"))
+    _, substitute_rows = read_csv_table(SUBSTITUTES_PATH)
+    _, evidence_rows = read_csv_table(SUBSTITUTE_EVIDENCE_PATH)
+    overview = contents[ROOT / "index.html"]
+    presentation = contents[PRESENTATION_PAGE]
+    findings_page = contents[FINDINGS_PAGE]
+    workflows = contents[ROOT / "sites" / "full-report-site" / "alternative-workflows.html"]
+    landscape = contents[ROOT / "sites" / "full-report-site" / "category-analysis.html"]
+
+    validation.check(
+        findings["executive_conclusion"]["headline"] in overview
+        and findings["executive_conclusion"]["headline"] in presentation
+        and str(len(rows)) in overview
+        and str(len(substitute_rows)) in overview
+        and str(len(evidence_rows)) in overview,
+        "overview metrics and central conclusion derive from canonical sources",
+    )
+    job_titles = [job["title"] for job in findings["jobs"]]
+    validation.check(
+        all(
+            all(title in contents[path] for title in job_titles)
+            for path in (ROOT / "index.html", FINDINGS_PAGE, PRESENTATION_PAGE)
+        ),
+        "all four Jobs appear in the overview, findings, and presentation",
+    )
+    validation.check(
+        all(item["finding"] in presentation for item in findings["cross_market_findings"])
+        and all(
+            item["assumption"] in presentation
+            for item in findings["assumptions_strengthened"]
+            + findings["assumptions_weakened"]
+        ),
+        "presentation claims resolve to active canonical findings",
+    )
+    validation.check(
+        all(
+            html.escape(row["name"]) in workflows
+            and f'id="substitute-{row["substitute_id"]}"' in workflows
+            for row in substitute_rows
+        )
+        and all(
+            html.escape(row["source_title"]) in workflows
+            and f'id="evidence-{row["evidence_id"]}"' in workflows
+            for row in evidence_rows
+        ),
+        "workflow explorer uses human labels with resolvable canonical records",
+    )
+    validation.check(
+        all(
+            row["company"] in landscape
+            and f'companies/{slug(row["company"])}.html' in landscape
+            for row in rows
+        ),
+        "every competitor slug resolves to a human-readable company label",
+    )
+    raw_primary_label = re.compile(
+        r"<(?:a|h[1-6])[^>]*>\s*(?:EV-\d+|SUB-\d+|JOB-[A-Z-]+)\s*</",
+        flags=re.IGNORECASE,
+    )
+    validation.check(
+        not any(raw_primary_label.search(content) for content in contents.values()),
+        "raw evidence, substitute, and Job IDs are never primary interface labels",
+    )
+    validation.check(
+        'id="substituteSearch"' in workflows
+        and 'id="substituteJob"' in workflows
+        and 'id="substituteCategory"' in workflows
+        and 'id="substituteStrength"' in workflows
+        and 'id="substituteStatus"' in workflows
+        and 'id="substituteStage"' in workflows
+        and all(row["substitute_id"] in workflows for row in substitute_rows),
+        "workflow filters derive from the canonical substitute layer",
+    )
+    validation.check(
+        "Company-level competitive relationship" in landscape
+        and "Workflow substitute" in landscape
+        and "Company-level competitive relationship" in findings_page
+        and "Workflow substitutes" in findings_page,
+        "company competitors and workflow substitutes are explicitly distinguished",
+    )
+    validation.check(
+        all(
+            'class="skip-link"' in content
+            and 'id="main-content"' in content
+            and 'aria-label="Primary research navigation"' in content
+            for content in contents.values()
+        ),
+        "top-level pages include semantic landmarks and a keyboard skip link",
+    )
+    css = (ROOT / "sites" / "full-report-site" / "style.css").read_text(encoding="utf-8")
+    validation.check(
+        ":focus-visible" in css
+        and "prefers-reduced-motion" in css
+        and "@media print" in css
+        and "@media (max-width:700px)" in css,
+        "focus, reduced-motion, print, and mobile styles are present",
+    )
+    validation.check(
+        'from = "/presentation"' in (ROOT / "netlify.toml").read_text(encoding="utf-8")
+        and 'aria-current="page">Presentation</a>' in presentation
+        and "data-presentation-next" in presentation,
+        "presentation mode has a stable route and keyboard-friendly controls",
+    )
+
+    broken = []
+    for page_path, content in contents.items():
+        for href in re.findall(r'href="([^"]+)"', content):
+            parsed = urlparse(href)
+            if parsed.scheme or href.startswith(("mailto:", "data:")):
+                continue
+            clean = unquote(parsed.path)
+            if not clean:
+                continue
+            target = ROOT / clean.lstrip("/") if clean.startswith("/") else page_path.parent / clean
+            if clean.endswith("/"):
+                target = target / "index.html"
+            if not target.exists():
+                broken.append(f"{page_path.relative_to(ROOT)} -> {href}")
+    validation.check(not broken, "top-level navigation and contextual links resolve locally")
 
 
 def artifact_paths():
@@ -1255,6 +1396,7 @@ def artifact_paths():
         ROOT / "sites" / "full-report-site",
         ROOT / "sites" / "citation-site",
         ROOT / "reports",
+        ROOT / "presentation",
     ):
         paths.extend(
             path
@@ -1317,6 +1459,7 @@ def main():
             "company profile directory contains exactly the canonical profiles",
         )
         check_investor_facing_strategy(validation, required=True)
+        check_presentation_ux(validation, rows, required=True)
     if args.check_build:
         run_build_twice(validation)
         check_profile_manifest(
